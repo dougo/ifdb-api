@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+adventure:
+  title: Adventure
+  sort_title: ADVENTURE
+  author: Will Crowther
+  sort_author: CROWTHER, WILL
+  created: <%= Time.now %>
+  moddate: <%= Time.now %>
+
+zork:
+  title: Zork
+  author: Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling
+  sort_title: ZORK
+  sort_author: ANDERSON, TIM; BLANK, MARC; DANIELS, BRUCE; LEBLING, DAVE
+  created: <%= Time.now %>
+  moddate: <%= Time.now %>
