@@ -9,11 +9,12 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     get game_url(@model), as: :json
     assert_response :success
     assert_equal 'application/hal+json', @response.content_type
-    resource = JSON.parse(@response.body).symbolize_keys
+    resource = JSON.parse(@response.body).deep_symbolize_keys
     assert_equal @model.id, resource[:id]
     assert_equal 'Adventure', resource[:title]
     assert_equal 'ADVENTURE', resource[:sort_title]
     assert_equal 'Will Crowther', resource[:author]
     assert_equal 'CROWTHER, WILL', resource[:sort_author]
+    assert_equal "/games/#{@model.id}", resource[:_links][:self][:href]
   end
 end
