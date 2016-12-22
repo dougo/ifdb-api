@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   def show
     @model = Game.find(params[:id])
-    render json: @model
+    yaks = Yaks.new
+    render json: yaks.call(@model)
   end
 end
