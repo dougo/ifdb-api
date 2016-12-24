@@ -18,6 +18,9 @@ gem 'puma', '~> 3.0'
 # Use Yaks to serialize as HAL+JSON
 gem 'yaks'
 
+# Use JSON Schema for JSON validation.
+gem 'json-schema'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

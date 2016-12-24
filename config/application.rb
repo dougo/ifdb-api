@@ -27,7 +27,7 @@ module IfdbApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Autoload the Yaks mappers.
-    config.autoload_paths << Rails.root.join('app/mappers')
+    # Autoload the Yaks mappers and JSON Schemas.
+    config.autoload_paths << Rails.root.join('app/mappers', 'app/schemas')
   end
 end

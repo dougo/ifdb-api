@@ -14,4 +14,9 @@ class GameMapperTest < ActiveSupport::TestCase
     assert_equal :self, link.rel
     assert_equal '/games/{id}', link.template
   end
+
+  test 'conforms to schema' do
+    json = Yaks.new.call(games(:zork))
+    assert_valid_json GameSchema.new.schema, json
+  end
 end
