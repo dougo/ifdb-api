@@ -29,5 +29,8 @@ module IfdbApi
 
     # Autoload the Yaks mappers and JSON Schemas.
     config.autoload_paths << Rails.root.join('app/mappers', 'app/schemas')
+
+    # Respond with 404 when a schema class is not found.
+    config.action_dispatch.rescue_responses['NameError'] = :not_found
   end
 end
