@@ -14,9 +14,10 @@ class GameSchema
         title:       { type: :string },
         sort_title:  { type: :string },
         author:      { type: :string },
-        sort_author: { type: :string }
+        sort_author: { type: :string },
+        authorExt:   { type: %i(string null) }
       },
-      required: %i(_links id title sort_title author sort_author)
+      required: %i(_links id title sort_title author sort_author authorExt)
     }
   end
 end

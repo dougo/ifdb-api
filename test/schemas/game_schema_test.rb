@@ -22,6 +22,9 @@ class GameSchemaTest < ActiveSupport::TestCase
       assert_equal :string, props[attr][:type], attr
       assert_includes required, attr
     end
+    assert_includes props[:authorExt][:type], :string
+    assert_includes props[:authorExt][:type], :null
+    assert_includes required, :authorExt
   end
 
   test 'links' do

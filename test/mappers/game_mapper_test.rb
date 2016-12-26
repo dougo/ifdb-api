@@ -6,7 +6,7 @@ class GameMapperTest < ActiveSupport::TestCase
   end
 
   test 'attributes' do
-    assert_equal %i(id title sort_title author sort_author), GameMapper.config.attributes.map(&:name)
+    assert_equal %i(id title sort_title author sort_author authorExt), GameMapper.config.attributes.map(&:name)
   end
 
   test 'self link' do
