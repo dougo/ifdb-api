@@ -16,6 +16,6 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'ADVENTURE', resource[:sort_title]
     assert_equal 'Will Crowther', resource[:author]
     assert_equal 'CROWTHER, WILL', resource[:sort_author]
-    assert_equal game_path(@model, format: :json), resource[:_links][:self][:href]
+    assert_equal "/games/#{@model.id}", resource[:_links][:self][:href]
   end
 end

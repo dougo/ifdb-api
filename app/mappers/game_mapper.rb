@@ -1,4 +1,4 @@
 class GameMapper < Yaks::Mapper
-  link :self, '/games/{id}.json'
+  link :self, '/games/{id}'
   attributes *%i(id title sort_title author sort_author)
 end

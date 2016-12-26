@@ -12,7 +12,7 @@ class GameMapperTest < ActiveSupport::TestCase
   test 'self link' do
     link = GameMapper.config.links.first
     assert_equal :self, link.rel
-    assert_equal '/games/{id}.json', link.template
+    assert_equal '/games/{id}', link.template
   end
 
   test 'conforms to schema' do
