@@ -1,6 +1,7 @@
 class GameSchema
   def schema
     {
+      :$schema => JSON::Validator.validator_for_name(:draft4).uri.to_s,
       type: :object,
       properties: {
         _links: {

@@ -9,7 +9,8 @@ class GameSchemaTest < ActiveSupport::TestCase
     assert_valid_json JSON::Validator.default_validator.metaschema, @schema
   end
 
-  test 'object type' do
+  test '$schema and type' do
+    assert_equal JSON::Validator.validator_for_name(:draft4).uri.to_s, @schema[:$schema]
     assert_equal :object, @schema[:type]
   end
 
