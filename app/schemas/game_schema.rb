@@ -1,5 +1,5 @@
 class GameSchema
-  def schema
+  def as_json
     schema = {}
     schema[:$schema] = schema_uri.to_s
     schema[:type] = type

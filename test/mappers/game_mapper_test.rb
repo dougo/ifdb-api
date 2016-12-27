@@ -17,6 +17,6 @@ class GameMapperTest < ActiveSupport::TestCase
 
   test 'conforms to schema' do
     json = Yaks.new.call(games(:zork))
-    assert_valid_json GameSchema.new.schema, json
+    assert_valid_json GameSchema.new, json
   end
 end

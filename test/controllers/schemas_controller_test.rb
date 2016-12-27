@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TestModel; end
 class TestModelSchema
-  def schema
+  def as_json
     { type: :object }
   end
 end

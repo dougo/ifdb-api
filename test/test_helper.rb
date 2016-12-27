@@ -22,7 +22,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   def assert_valid_json(schema, json, msg=nil)
-    errors = JSON::Validator.fully_validate(schema, json)
+    errors = JSON::Validator.fully_validate(schema.as_json, json)
     assert errors.empty?, msg || errors.join("\n")
   end
 end

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class GameSchemaTest < ActiveSupport::TestCase
   setup do
-    @schema = GameSchema.new.schema
+    @schema = GameSchema.new.as_json
   end
 
   test 'valid schema' do
