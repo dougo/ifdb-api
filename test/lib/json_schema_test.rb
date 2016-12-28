@@ -31,12 +31,13 @@ class JSONSchemaTest < ActiveSupport::TestCase
       properties :bar, :baz, type: :object
     end
     schema = PropTestSchema.new
-    assert_equal :foo,    schema.properties[0].name
-    assert_equal :string, schema.properties[0].type
-    assert_equal :bar,    schema.properties[1].name
-    assert_equal :object, schema.properties[1].type
-    assert_equal :baz,    schema.properties[2].name
-    assert_equal :object, schema.properties[2].type
+    assert_equal [schema.property(:foo), schema.property(:bar), schema.property(:baz)], schema.properties
+    assert_equal :foo,    schema.property(:foo).name
+    assert_equal :string, schema.property(:foo).type
+    assert_equal :bar,    schema.property(:bar).name
+    assert_equal :object, schema.property(:bar).type
+    assert_equal :baz,    schema.property(:baz).name
+    assert_equal :object, schema.property(:baz).type
 
     expected_json = { foo: { type: :string }, bar: { type: :object }, baz: { type: :object } }
     assert_equal expected_json, schema.as_json[:properties]
@@ -47,10 +48,10 @@ class JSONSchemaTest < ActiveSupport::TestCase
       string :foo, :bar, required: true
     end
     schema = StringTestSchema.new
-    assert_equal :foo,    schema.properties[0].name
-    assert_equal :string, schema.properties[0].type
-    assert_equal :bar,    schema.properties[1].name
-    assert_equal :string, schema.properties[1].type
+    assert_equal :foo,    schema.property(:foo).name
+    assert_equal :string, schema.property(:foo).type
+    assert_equal :bar,    schema.property(:bar).name
+    assert_equal :string, schema.property(:bar).type
     assert_equal [:foo, :bar], schema.required
   end
 

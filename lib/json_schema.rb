@@ -31,6 +31,10 @@ class JSONSchema
     properties(*names, type: :string, **opts)
   end
 
+  def property(name)
+    _properties.find { |p| p.name == name }
+  end
+
   def properties
     _properties
   end
