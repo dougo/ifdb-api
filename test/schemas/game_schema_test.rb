@@ -14,12 +14,15 @@ class GameSchemaTest < ActiveSupport::TestCase
   end
 
   test 'attribute properties' do
-    attrs = %i(id title sort_title author sort_author authorExt)
+    attrs = %i(id title sort_title author sort_author authorExt tags)
     attrs.each do |attr|
       assert_equal :string, @schema.property(attr).type, attr
       assert_predicate @schema.property(attr), :required?
     end
-    assert_predicate @schema.property(:authorExt), :null?
+    null_attrs = %i(authorExt tags)
+    null_attrs.each do |attr|
+      assert_predicate @schema.property(:authorExt), :null?
+    end
   end
 
   test 'links' do
