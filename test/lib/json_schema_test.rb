@@ -82,23 +82,38 @@ class JSONSchemaTest < ActiveSupport::TestCase
     refute_predicate foo, :required?
     refute_predicate foo, :null?
     assert_nil foo.all_of
+    assert_nil foo.format
     assert_equal({}, foo.as_json)
+  end
 
+  test 'Property#type' do
     str = JSONSchema::Property.new(:foo, type: :string)
     assert_equal :string, str.type
     assert_equal({ type: :string }, str.as_json)
+  end
 
+  test 'Property#null?' do
     null_str = JSONSchema::Property.new(:foo, type: :string, null: true)
     assert_equal :string, null_str.type
     assert_predicate null_str, :null?
     assert_equal({ type: [:string, :null] }, null_str.as_json)
+  end
 
+  test 'Property#required?' do
     req = JSONSchema::Property.new(:foo, required: true)
     assert req.required?
+  end
 
+  test 'Property#all_of' do
     schemas_json = [{ '$ref': 'ref-uri' }, { required: [:foo] }]
     all_of = JSONSchema::Property.new(:foo, all_of: schemas_json)
     assert_equal schemas_json, all_of.all_of
     assert_equal({ allOf: schemas_json }, all_of.as_json)
+  end
+
+  test 'Property#format' do
+    datetime = JSONSchema::Property.new(:foo, format: 'date-time')
+    assert_equal 'date-time', datetime.format
+    assert_equal({ format: 'date-time' }, datetime.as_json)
   end
 end

@@ -53,10 +53,10 @@ class JSONSchema
   end
 
   class Property
-    attr_reader :name, :type, :all_of
+    attr_reader :name, :type, :all_of, :format
 
-    def initialize(name, type: nil, null: false, required: false, all_of: nil)
-      @name, @type, @null, @required, @all_of = name, type, null, required, all_of
+    def initialize(name, type: nil, null: false, required: false, all_of: nil, format: nil)
+      @name, @type, @null, @required, @all_of, @format = name, type, null, required, all_of, format
     end
 
     def required?
@@ -73,6 +73,7 @@ class JSONSchema
         json[:type] = null? ? [type, :null] : type
       end
       json[:allOf] = all_of if all_of
+      json[:format] = format if format
       json
     end
   end

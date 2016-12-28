@@ -13,5 +13,6 @@ zork:
   author: Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling
   sort_title: ZORK
   sort_author: ANDERSON, TIM; BLANK, MARC; DANIELS, BRUCE; LEBLING, DAVE
+  published: 1979-01-01
   created: <%= Time.now %>
   moddate: <%= Time.now %>

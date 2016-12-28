@@ -6,7 +6,8 @@ class GameMapperTest < ActiveSupport::TestCase
   end
 
   test 'attributes' do
-    assert_equal %i(id title sort_title author sort_author authorExt tags), GameMapper.config.attributes.map(&:name)
+    attrs = %i(id title sort_title author sort_author authorExt tags published)
+    assert_equal attrs, GameMapper.config.attributes.map(&:name)
   end
 
   test 'self link' do
@@ -16,7 +17,6 @@ class GameMapperTest < ActiveSupport::TestCase
   end
 
   test 'conforms to schema' do
-    json = Yaks.new.call(games(:zork))
-    assert_valid_json GameSchema.new, json
+    assert_valid_json GameSchema.new, games(:zork).to_hal
   end
 end
