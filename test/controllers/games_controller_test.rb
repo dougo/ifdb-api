@@ -8,8 +8,8 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
   test 'show game' do
     get game_url(@model), as: :json
     assert_response :success
-    assert_equal 'application/hal+json', @response.content_type
-    resource = JSON.parse(@response.body).deep_symbolize_keys
+    assert_equal 'application/hal+json', response.content_type
+    resource = response.parsed_body
     assert_valid_json GameSchema.new, resource
     assert_equal @model.id, resource[:id]
     assert_equal 'Adventure', resource[:title]
