@@ -79,7 +79,8 @@ class JSONSchemaTest < ActiveSupport::TestCase
     foo = JSONSchema::Property.new(:foo)
     assert_equal :foo, foo.name
     assert_nil foo.type
-    refute foo.required?
+    refute_predicate foo, :required?
+    refute_predicate foo, :null?
     assert_nil foo.all_of
     assert_equal({}, foo.as_json)
 
@@ -88,7 +89,9 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal({ type: :string }, str.as_json)
 
     null_str = JSONSchema::Property.new(:foo, type: :string, null: true)
-    assert_equal [:string, :null], null_str.type
+    assert_equal :string, null_str.type
+    assert_predicate null_str, :null?
+    assert_equal({ type: [:string, :null] }, null_str.as_json)
 
     req = JSONSchema::Property.new(:foo, required: true)
     assert req.required?
