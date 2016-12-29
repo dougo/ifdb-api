@@ -39,12 +39,4 @@ class GameSchemaTest < ActiveSupport::TestCase
       assert_equal 'date-time', @schema.property(:published).format
     end
   end
-
-  test 'links' do
-    assert_predicate @schema.property(:_links), :required?
-    links_schemas = @schema.property(:_links).all_of
-    assert_equal 2, links_schemas.size
-    assert_equal 'http://hyperschema.org/mediatypes/hal#/definitions/links', links_schemas[0][:$ref]
-    assert_includes links_schemas[1][:required], :self
-  end
 end

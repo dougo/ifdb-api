@@ -1,4 +1,4 @@
-class GameSchema < JSONSchema
+class GameSchema < HALSchema
   type :object
   string *%i(id title sort_title author sort_author), required: true
   string *%i(authorExt tags), required: true, null: true
@@ -11,9 +11,4 @@ class GameSchema < JSONSchema
   string *%i(created moddate), format: 'date-time', required: true
   string :editedby, required: true
   integer :pagevsn, required: true
-  property :_links, required: true, all_of: [
-    # TODO: make a DSL for these
-    { '$ref': 'http://hyperschema.org/mediatypes/hal#/definitions/links' },
-    { required: %i(self) }
-  ]
 end
