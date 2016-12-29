@@ -7,7 +7,8 @@ class GameMapperTest < ActiveSupport::TestCase
 
   test 'attributes' do
     attrs = %i(id title sort_title author sort_author authorExt tags published version license system language desc
-               coverart seriesname seriesnumber genre forgiveness)
+               coverart seriesname seriesnumber genre forgiveness bafsid website downloadnotes created editedby
+               moddate pagevsn)
     assert_equal attrs, GameMapper.config.attributes.map(&:name)
   end
 

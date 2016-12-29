@@ -55,6 +55,18 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal [:foo, :bar], schema.required
   end
 
+  test 'integer' do
+    class IntegerTestSchema < JSONSchema
+      integer :foo, :bar, required: true
+    end
+    schema = IntegerTestSchema.new
+    assert_equal :foo,     schema.property(:foo).name
+    assert_equal :integer, schema.property(:foo).type
+    assert_equal :bar,     schema.property(:bar).name
+    assert_equal :integer, schema.property(:bar).type
+    assert_equal [:foo, :bar], schema.required
+  end
+
   test 'required' do
     assert_empty EmptyTestSchema.new.required
 
