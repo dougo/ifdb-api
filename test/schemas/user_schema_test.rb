@@ -21,12 +21,11 @@ class UserSchemaTest < ActiveSupport::TestCase
     str_attrs = %i(id name gender publicemail location profile picture created)
     str_attrs.each do |attr|
       assert_equal :string, @schema.property(attr).type, attr
-      assert_predicate @schema.property(attr), :required?
     end
 
-    null_attrs = %i(gender publicemail profile picture created)
-    null_attrs.each do |attr|
-      assert_predicate @schema.property(attr), :null?
+    nonnull_attrs = %i(id name location)
+    nonnull_attrs.each do |attr|
+      refute_predicate @schema.property(attr), :null?
     end
 
     assert_equal 1, @schema.property(:gender).max_length
