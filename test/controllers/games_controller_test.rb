@@ -6,7 +6,9 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'show game' do
-    get game_url(@model), as: :json
+    assert_raises(ActiveRecord::RecordNotFound) { get game_path(0), as: :json }
+
+    get game_path(@model), as: :json
     assert_response :success
     assert_equal 'application/hal+json', response.content_type
     resource = response.parsed_body

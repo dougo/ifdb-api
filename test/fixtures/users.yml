@@ -1,0 +1,7 @@
+molydeux:
+  name: Peter Molydeux
+  gender: M
+  publicemail: petermolydeux@twitter.com
+  location: Twitter
+  picture: http://ifdb.tads.org/showimage?id=4%3A701
+  created: <%= Time.now %>

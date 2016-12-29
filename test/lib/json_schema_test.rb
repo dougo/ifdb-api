@@ -95,6 +95,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
     refute_predicate foo, :null?
     assert_nil foo.all_of
     assert_nil foo.format
+    assert_nil foo.max_length
     assert_equal({}, foo.as_json)
   end
 
@@ -127,5 +128,11 @@ class JSONSchemaTest < ActiveSupport::TestCase
     datetime = JSONSchema::Property.new(:foo, format: 'date-time')
     assert_equal 'date-time', datetime.format
     assert_equal({ format: 'date-time' }, datetime.as_json)
+  end
+
+  test 'Property#max_length' do
+    prop = JSONSchema::Property.new(:foo, max_length: 1)
+    assert_equal 1, prop.max_length
+    assert_equal({ maxLength: 1 }, prop.as_json)
   end
 end

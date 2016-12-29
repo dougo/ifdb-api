@@ -9,6 +9,8 @@ end
 
 class SchemasControllerTest < ActionDispatch::IntegrationTest
   test 'show schema' do
+    assert_raises(NameError) { get schema_path(:xyzzy), as: :json }
+
     get schema_path(:test_model), as: :json
     assert_response :success
     resource = response.parsed_body
