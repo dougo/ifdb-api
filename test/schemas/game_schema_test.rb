@@ -5,6 +5,10 @@ class GameSchemaTest < ActiveSupport::TestCase
     @schema = GameSchema.new
   end
 
+  test 'is a HALSchema' do
+    assert_kind_of HALSchema, @schema
+  end
+
   test 'valid schema' do
     assert_valid_json JSON::Validator.default_validator.metaschema, @schema.as_json
   end
@@ -37,6 +41,11 @@ class GameSchemaTest < ActiveSupport::TestCase
     datetime_attrs = %i(published created moddate)
     datetime_attrs.each do |attr|
       assert_equal 'date-time', @schema.property(:published).format
+    end
+
+    uri_attrs = %i(coverart website)
+    uri_attrs.each do |attr|
+      assert_equal :uri, @schema.property(attr).format, attr
     end
   end
 end
