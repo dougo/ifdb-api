@@ -92,7 +92,6 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_nil foo.type
     assert_predicate foo, :required?
     assert_predicate foo, :null?
-    assert_nil foo.all_of
     assert_nil foo.format
     assert_nil foo.max_length
     assert_equal({}, foo.as_json)
@@ -113,13 +112,6 @@ class JSONSchemaTest < ActiveSupport::TestCase
   test 'Property#required?' do
     req = JSONSchema::Property.new(:foo, required: false)
     refute_predicate req, :required?
-  end
-
-  test 'Property#all_of' do
-    schemas_json = [{ '$ref': 'ref-uri' }, { required: [:foo] }]
-    all_of = JSONSchema::Property.new(:foo, all_of: schemas_json)
-    assert_equal schemas_json, all_of.all_of
-    assert_equal schemas_json, all_of.as_json[:allOf]
   end
 
   test 'Property#format' do

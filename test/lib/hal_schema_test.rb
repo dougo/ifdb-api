@@ -2,6 +2,8 @@ require 'test_helper'
 
 class HALSchemaTest < ActiveSupport::TestCase
   class TestHALSchema < HALSchema
+    link :foo
+    links :bar, :baz
   end
 
   setup do
@@ -13,9 +15,28 @@ class HALSchemaTest < ActiveSupport::TestCase
   end
 
   test 'links' do
-    links_schemas = @schema.property(:_links).all_of
+    class EmptyHALSchema < HALSchema; end
+    assert_equal %i(self), EmptyHALSchema.new.links
+    assert_equal %i(self foo bar baz), @schema.links
+  end
+
+  test '_links property' do
+    assert_kind_of HALSchema::LinksProperty, @schema.property(:_links)
+    assert_equal @schema.links, @schema.property(:_links).links
+  end
+
+  test '_links is required' do
+    assert_includes @schema.required, :_links
+  end
+
+  test 'LinksProperty' do
+    prop = HALSchema::LinksProperty.new(@schema.class)
+    assert_equal :_links, prop.name
+    assert_predicate prop, :required?
+
+    links_schemas = prop.as_json[:allOf]
     assert_equal 2, links_schemas.size
     assert_equal 'http://hyperschema.org/mediatypes/hal#/definitions/links', links_schemas[0][:$ref]
-    assert_includes links_schemas[1][:required], :self
+    assert_equal %i(self foo bar baz), links_schemas[1][:required]
   end
 end

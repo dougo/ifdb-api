@@ -57,10 +57,10 @@ class JSONSchema
   end
 
   class Property
-    attr_reader :name, :type, :all_of, :format, :max_length
+    attr_reader :name, :type, :format, :max_length
 
-    def initialize(name, type: nil, null: true, required: true, all_of: nil, format: nil, max_length: nil)
-      @name, @type, @null, @required, @all_of, @format = name, type, null, required, all_of, format
+    def initialize(name, type: nil, null: true, required: true, format: nil, max_length: nil)
+      @name, @type, @null, @required, @format = name, type, null, required, format
       @max_length = max_length
     end
 
@@ -77,7 +77,6 @@ class JSONSchema
       if type
         json[:type] = null? ? [type, :null] : type
       end
-      json[:allOf] = all_of if all_of
       json[:format] = format if format
       json[:maxLength] = max_length if max_length
       json
