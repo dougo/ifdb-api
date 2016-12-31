@@ -1,13 +1,17 @@
 class HALSchema < JSONSchema
   class Link
-    attr_reader :name
+    attr_reader :rel
 
-    def initialize(name, required: true)
-      @name, @required = name, required
+    def initialize(rel, required: true)
+      @rel, @required = rel, required
     end
 
     def required?
       @required
+    end
+
+    def as_json
+      { '$ref': 'http://hyperschema.org/mediatypes/hal#/definitions/linkObject' }
     end
   end
 
@@ -25,12 +29,12 @@ class HALSchema < JSONSchema
     _links
   end
 
-  def self.links(*names, **opts)
-    names.each { |name| link(name, **opts) }
+  def self.links(*rels, **opts)
+    rels.each { |rel| link(rel, **opts) }
   end
 
-  def self.link(name, **opts)
-    _links << Link.new(name, **opts)
+  def self.link(rel, **opts)
+    _links << Link.new(rel, **opts)
   end
 
   class LinksProperty < Property
@@ -44,13 +48,14 @@ class HALSchema < JSONSchema
     end
 
     def required_links
-      links.select(&:required?).map(&:name)
+      links.select(&:required?).map(&:rel)
     end
 
     def as_json
       json = super
       json[:allOf] = [ { '$ref': 'http://hyperschema.org/mediatypes/hal#/definitions/links' },
-                       { required: required_links } ]
+                       { properties: links.map { |l| [l.rel, l.as_json] }.to_h,
+                         required: required_links } ]
       json
     end
   end
