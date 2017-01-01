@@ -12,13 +12,22 @@ class GameMapperTest < ActiveSupport::TestCase
     assert_equal attrs, GameMapper.config.attributes.map(&:name)
   end
 
-  test 'self link' do
-    link = GameMapper.config.links.first
-    assert_equal :self, link.rel
-    assert_equal '/games/{id}', link.template
+  test 'links' do
+    links = GameMapper.config.links.index_by &:rel
+    # TODO: use URL helpers, e.g. game_path(game) ?
+    assert_equal '/games/{id}', links[:self].template
+    assert_equal '/users/{author_id}', links[:author].template
   end
 
   test 'conforms to schema' do
     assert_valid_json GameSchema.new, games(:zork).to_hal
+  end
+
+  test 'author link only if author ID exists' do
+    adv = JSON.parse(games(:adventure).to_hal).deep_symbolize_keys
+    assert_equal '/users/willc', adv[:_links][:author][:href]
+
+    zork = JSON.parse(games(:zork).to_hal).deep_symbolize_keys
+    refute_includes zork[:_links], :author
   end
 end

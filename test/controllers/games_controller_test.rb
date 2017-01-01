@@ -13,11 +13,12 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'application/hal+json', response.content_type
     resource = response.parsed_body
     assert_valid_json GameSchema.new, resource
-    assert_equal @model.id, resource[:id]
+    assert_equal 'xyzzy', resource[:id]
     assert_equal 'Adventure', resource[:title]
     assert_equal 'ADVENTURE', resource[:sort_title]
     assert_equal 'Will Crowther', resource[:author]
     assert_equal 'CROWTHER, WILL', resource[:sort_author]
-    assert_equal "/games/#{@model.id}", resource[:_links][:self][:href]
+    assert_equal game_path(@model), resource[:_links][:self][:href]
+    assert_equal user_path(@model.author_id), resource[:_links][:author][:href]
   end
 end
