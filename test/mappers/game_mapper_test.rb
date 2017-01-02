@@ -13,10 +13,13 @@ class GameMapperTest < ActiveSupport::TestCase
   end
 
   test 'links' do
-    links = GameMapper.config.links.index_by &:rel
+    links = GameMapper.config.links.group_by &:rel
     # TODO: use URL helpers, e.g. game_path(game) ?
-    assert_equal '/games/{id}', links[:self].template
-    assert_equal '/users/{author_id}', links[:author].template
+    assert_equal '/games/{id}', links[:self][0].template
+    assert_equal '/users/{author_id}',    links[:author][0].template
+    assert_kind_of Proc, links[:author][0].options[:if]
+    assert_equal '/users?id={author_id}', links[:author][1].template
+    assert_kind_of Proc, links[:author][1].options[:if]
   end
 
   test 'conforms to schema' do
@@ -29,5 +32,11 @@ class GameMapperTest < ActiveSupport::TestCase
 
     zork = JSON.parse(games(:zork).to_hal).deep_symbolize_keys
     refute_includes zork[:_links], :author
+  end
+
+  test 'author link is a collection if multiple author IDs' do
+    game = Game.new(authorExt: 'Xavier Yzzy {xyzzy} and Phineas Lugh {plugh}')
+    hal = JSON.parse(game.to_hal).deep_symbolize_keys
+    assert_equal '/users?id=xyzzy,plugh', hal[:_links][:author][:href]
   end
 end
