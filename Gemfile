@@ -18,6 +18,9 @@ gem 'puma', '~> 3.0'
 # Use Yaks to serialize as HAL+JSON
 gem 'yaks'
 
+# Use JR to conform to the JSON API spec.
+gem 'jsonapi-resources', '~> 0.9.0.beta1'
+
 # Use JSON Schema for JSON validation.
 gem 'json-schema'
 
