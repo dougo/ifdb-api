@@ -181,4 +181,13 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal 1, prop.max_length
     assert_equal 1, prop.as_json[:maxLength]
   end
+
+  test 'Property#schema' do
+    assert_nil JSONSchema::Property.new(:foo).schema
+    prop = JSONSchema::Property.new(:foo, type: :object, null: false) { string :bar, null: false }
+    assert_kind_of JSONSchema, prop.schema
+    assert_equal :string, prop.schema.property(:bar).type
+    assert_equal :string, prop.as_json[:properties][:bar][:type]
+    assert_equal :object, prop.as_json[:type]
+  end
 end

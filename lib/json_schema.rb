@@ -11,7 +11,7 @@ class JSONSchema
   end
 
   def initialize(&block)
-    if block_given?
+    if block
       @builder = Builder.new
       @builder.instance_eval(&block)
     else
@@ -94,11 +94,12 @@ class JSONSchema
   end
 
   class Property
-    attr_reader :name, :type, :format, :max_length
+    attr_reader :name, :type, :format, :max_length, :schema
 
-    def initialize(name, type: nil, null: true, required: true, format: nil, max_length: nil)
+    def initialize(name, type: nil, null: true, required: true, format: nil, max_length: nil, &block)
       @name, @type, @null, @required, @format = name, type, null, required, format
       @max_length = max_length
+      @schema = JSONSchema.new(&block) if block
     end
 
     def required?
@@ -110,7 +111,7 @@ class JSONSchema
     end
 
     def as_json
-      json = {}
+      json = schema ? schema.as_json : {}
       if type
         json[:type] = null? ? [type, :null] : type
       end
