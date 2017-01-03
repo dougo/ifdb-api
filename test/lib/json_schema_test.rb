@@ -126,24 +126,22 @@ class JSONSchemaTest < ActiveSupport::TestCase
 
   test 'Builder#string' do
     b = JSONSchema::Builder.new
-    b.string :foo, :bar, required: false
-    assert_equal :foo,    b._properties[0].name
-    assert_equal :string, b._properties[0].type
-    refute_predicate      b._properties[0], :required?
-    assert_equal :bar,    b._properties[1].name
-    assert_equal :string, b._properties[1].type
-    refute_predicate      b._properties[1], :required?
+    b.string :foo, :bar, required: false do end
+    assert_equal :foo,         b._properties[0].name
+    assert_equal :string,      b._properties[0].type
+    refute_predicate           b._properties[0], :required?
+    assert_kind_of JSONSchema, b._properties[0].schema
+    assert_equal :bar,         b._properties[1].name
   end
 
   test 'Builder#integer' do
     b = JSONSchema::Builder.new
-    b.integer :foo, :bar, required: false
-    assert_equal :foo,     b._properties[0].name
-    assert_equal :integer, b._properties[0].type
-    refute_predicate       b._properties[0], :required?
-    assert_equal :bar,     b._properties[1].name
-    assert_equal :integer, b._properties[1].type
-    refute_predicate       b._properties[1], :required?
+    b.integer :foo, :bar, required: false do end
+    assert_equal :foo,         b._properties[0].name
+    assert_equal :integer,     b._properties[0].type
+    refute_predicate           b._properties[0], :required?
+    assert_kind_of JSONSchema, b._properties[0].schema
+    assert_equal :bar,         b._properties[1].name
   end
 
   test 'Builder#required' do

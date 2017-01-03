@@ -46,10 +46,10 @@ class JSONSchema
   def as_json
     json = {}
     json[:$schema] = schema_uri.to_s if schema_uri
+    json[:allOf] = [{ '$ref': base }] if base
     json[:type] = type if type
     json[:properties] = properties.map { |p| [p.name, p.as_json] }.to_h if properties.any?
     json[:required] = required if required.any?
-    json[:allOf] = [{ '$ref': base }] if base
     json
   end
 
@@ -73,20 +73,20 @@ class JSONSchema
       @_type = type
     end
 
-    def property(name, **opts)
-      _add_property(Property.new(name, **opts))
+    def property(name, **opts, &block)
+      _add_property(Property.new(name, **opts, &block))
     end
 
-    def properties(*names, **opts)
-      names.each { |name| property(name, **opts) }
+    def properties(*names, **opts, &block)
+      names.each { |name| property(name, **opts, &block) }
     end
 
-    def string(*names, **opts)
-      properties(*names, type: :string, **opts)
+    def string(*names, **opts, &block)
+      properties(*names, type: :string, **opts, &block)
     end
 
-    def integer(*names, **opts)
-      properties(*names, type: :integer, **opts)
+    def integer(*names, **opts, &block)
+      properties(*names, type: :integer, **opts, &block)
     end
 
     def required(*names)
