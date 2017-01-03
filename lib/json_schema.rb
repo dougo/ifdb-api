@@ -2,7 +2,7 @@ class JSONSchema
   class_attribute :_builder
 
   class << self
-    delegate :type, :property, :properties, :string, :integer, :required, to: :_builder
+    delegate :type, :property, :properties, :string, :integer, :required, :extend, to: :_builder
 
     def inherited(subclass)
       subclass._builder = Builder.new
@@ -39,12 +39,17 @@ class JSONSchema
     properties.select(&:required?).map(&:name) + @builder._required
   end
 
+  def base
+    @builder.base
+  end
+
   def as_json
     json = {}
     json[:$schema] = schema_uri.to_s if schema_uri
     json[:type] = type if type
     json[:properties] = properties.map { |p| [p.name, p.as_json] }.to_h if properties.any?
     json[:required] = required if required.any?
+    json[:allOf] = [{ '$ref': base }] if base
     json
   end
 
@@ -54,7 +59,7 @@ class JSONSchema
       @_required = []
     end
 
-    attr_reader :_type, :_properties, :_required
+    attr_reader :_type, :_properties, :_required, :base
 
     def top_level?
       @top_level
@@ -86,6 +91,10 @@ class JSONSchema
 
     def required(*names)
       @_required += names
+    end
+
+    def extend(base)
+      @base = base
     end
 
     def _add_property(property)

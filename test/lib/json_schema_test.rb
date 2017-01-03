@@ -8,6 +8,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
     string :str
     integer :int
     required :req
+    extend 'http://example.com/schema'
   end
 
   test 'class DSL methods delegate to _builder' do
@@ -16,6 +17,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal :object, b._type
     assert_equal [:foo, :bar, :baz, :str, :int], b._properties.map(&:name)
     assert_equal [:req], b._required
+    assert_equal 'http://example.com/schema', b.base
   end
 
   test 'class builder is top_level' do
@@ -51,18 +53,25 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal [:foo, :bar, :quux, :garply], schema.required
   end
 
+  test 'base' do
+    assert_nil JSONSchema.new.base
+    assert_equal '#foo', JSONSchema.new { extend '#foo' }.base
+  end
+
   test 'as_json' do
     json = JSONSchema.new.as_json
     refute_includes json, :$schema
     refute_includes json, :type
     refute_includes json, :properties
     refute_includes json, :required
+    refute_includes json, :allOf
 
     schema = JSONSchema.new do
       top_level
       type :object
       string :foo
       properties :bar, :baz
+      extend 'http://example.com/schema'
     end
     expected = {
       '$schema': schema.schema_uri.to_s,
@@ -72,7 +81,8 @@ class JSONSchemaTest < ActiveSupport::TestCase
         bar: schema.property(:bar).as_json,
         baz: schema.property(:baz).as_json
       },
-      required: [:foo, :bar, :baz]
+      required: [:foo, :bar, :baz],
+      allOf: [{ '$ref': 'http://example.com/schema' }]
     }
     assert_equal expected, schema.as_json
   end
@@ -83,6 +93,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_nil b._type
     assert_empty b._properties
     assert_empty b._required
+    assert_nil b.base
   end
 
   test 'Builder#top_level' do
@@ -140,6 +151,12 @@ class JSONSchemaTest < ActiveSupport::TestCase
     b.required :foo, :bar
     b.required :baz
     assert_equal [:foo, :bar, :baz], b._required
+  end
+
+  test 'Builder#extend' do
+    b = JSONSchema::Builder.new
+    b.extend 'http://example.com/schema'
+    assert_equal 'http://example.com/schema', b.base
   end
 
   test 'Property' do
