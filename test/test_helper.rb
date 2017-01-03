@@ -29,5 +29,6 @@ class ActiveSupport::TestCase
 end
 
 json_response_parser = -> body { JSON.parse(body).deep_symbolize_keys }
-ActionDispatch::IntegrationTest.register_encoder :json, response_parser: json_response_parser
-ActionDispatch::IntegrationTest.register_encoder :hal,  response_parser: json_response_parser
+ActionDispatch::IntegrationTest.register_encoder :json,     response_parser: json_response_parser
+ActionDispatch::IntegrationTest.register_encoder :api_json, response_parser: json_response_parser
+ActionDispatch::IntegrationTest.register_encoder :hal,      response_parser: json_response_parser
