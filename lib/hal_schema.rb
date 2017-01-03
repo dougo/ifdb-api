@@ -20,7 +20,8 @@ class HALSchema < JSONSchema
   self._links = [Link.new(:self)]
 
   def self.inherited(subclass)
-    subclass._properties += [LinksProperty.new(subclass)]
+    super
+    subclass._builder._add_property LinksProperty.new(subclass)
   end
 
   def links

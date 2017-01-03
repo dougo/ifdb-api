@@ -1,100 +1,145 @@
 require 'test_helper'
 
 class JSONSchemaTest < ActiveSupport::TestCase
-  class EmptyTestSchema < JSONSchema
+  class DSLTestSchema < JSONSchema
+    type :object
+    property :foo
+    properties :bar, :baz
+    string :str
+    integer :int
+    required :req
+  end
+
+  test 'class DSL methods delegate to _builder' do
+    b = DSLTestSchema._builder
+    assert_kind_of JSONSchema::Builder, b
+    assert_equal :object, b._type
+    assert_equal [:foo, :bar, :baz, :str, :int], b._properties.map(&:name)
+    assert_equal [:req], b._required
+  end
+
+  test 'class builder is top_level' do
+    assert_predicate DSLTestSchema._builder, :top_level?
   end
 
   test 'schema_uri' do
+    assert_nil JSONSchema.new.schema_uri
     draft4_uri = JSON::Validator.validator_for_name(:draft4).uri
-    assert_equal draft4_uri, EmptyTestSchema.new.schema_uri
-    assert_equal draft4_uri.to_s, EmptyTestSchema.new.as_json[:$schema]
+    assert_equal draft4_uri, JSONSchema.new { top_level }.schema_uri
   end
 
   test 'type' do
-    assert_nil EmptyTestSchema.new.type
-    refute_includes EmptyTestSchema.new.as_json, :type
-
-    class ObjectTypeTestSchema < JSONSchema
-      type :object
-    end
-    schema = ObjectTypeTestSchema.new
-    assert_equal :object, schema.type
-    assert_equal :object, schema.as_json[:type]
+    assert_nil JSONSchema.new.type
+    assert_equal :object, JSONSchema.new { type :object }.type
   end
 
-  test 'properties' do
-    assert_empty EmptyTestSchema.new.properties
-    refute_includes EmptyTestSchema.new.as_json, :properties
-
-    class PropTestSchema < JSONSchema
-      property :foo, type: :string, null: false
-      properties :bar, :baz, type: :object, null: false
-    end
-    schema = PropTestSchema.new
-    assert_equal [schema.property(:foo), schema.property(:bar), schema.property(:baz)], schema.properties
-    assert_equal :foo,    schema.property(:foo).name
-    assert_equal :string, schema.property(:foo).type
-    assert_equal :bar,    schema.property(:bar).name
-    assert_equal :object, schema.property(:bar).type
-    assert_equal :baz,    schema.property(:baz).name
-    assert_equal :object, schema.property(:baz).type
-
-    expected_json = { foo: { type: :string }, bar: { type: :object }, baz: { type: :object } }
-    assert_equal expected_json, schema.as_json[:properties]
-  end
-
-  test 'string' do
-    class StringTestSchema < JSONSchema
-      string :foo, :bar, required: false
-    end
-    schema = StringTestSchema.new
-    assert_equal :foo,    schema.property(:foo).name
-    assert_equal :string, schema.property(:foo).type
-    assert_equal :bar,    schema.property(:bar).name
-    assert_equal :string, schema.property(:bar).type
-    assert_empty schema.required
-  end
-
-  test 'integer' do
-    class IntegerTestSchema < JSONSchema
-      integer :foo, :bar, required: false
-    end
-    schema = IntegerTestSchema.new
-    assert_equal :foo,     schema.property(:foo).name
-    assert_equal :integer, schema.property(:foo).type
-    assert_equal :bar,     schema.property(:bar).name
-    assert_equal :integer, schema.property(:bar).type
-    assert_empty schema.required
+  test 'property and properties' do
+    schema = JSONSchema.new { properties :foo, :bar }
+    assert_equal [schema.property(:foo), schema.property(:bar)], schema.properties
   end
 
   test 'required' do
-    assert_empty EmptyTestSchema.new.required
+    assert_empty JSONSchema.new.required
+    assert_empty JSONSchema.new { properties :foo, :bar, required: false }.required
 
-    class NoReqTestSchema < JSONSchema
-      properties :foo, :bar, required: false
-    end
-    schema = NoReqTestSchema.new
-    assert_empty schema.required
-    refute_includes schema.as_json, :required
-
-    class ReqTestSchema < JSONSchema
+    schema = JSONSchema.new do
       properties :foo, :bar
       property :baz, required: false
       property :quux
-    end
-    schema = ReqTestSchema.new
-    assert_equal [:foo, :bar, :quux], schema.required
-    assert_equal [:foo, :bar, :quux], schema.as_json[:required]
-  end
-
-  test '::required' do
-    class ExtraReqTestSchema < JSONSchema
-      property :foo, required: true
-      required :bar, :baz
       required :garply
     end
-    schema = ExtraReqTestSchema.new
-    assert_equal [:foo, :bar, :baz, :garply], schema.required
+    assert_equal [:foo, :bar, :quux, :garply], schema.required
+  end
+
+  test 'as_json' do
+    json = JSONSchema.new.as_json
+    refute_includes json, :$schema
+    refute_includes json, :type
+    refute_includes json, :properties
+    refute_includes json, :required
+
+    schema = JSONSchema.new do
+      top_level
+      type :object
+      string :foo
+      properties :bar, :baz
+    end
+    expected = {
+      '$schema': schema.schema_uri.to_s,
+      type: :object,
+      properties: {
+        foo: schema.property(:foo).as_json,
+        bar: schema.property(:bar).as_json,
+        baz: schema.property(:baz).as_json
+      },
+      required: [:foo, :bar, :baz]
+    }
+    assert_equal expected, schema.as_json
+  end
+
+  test 'Builder defaults' do
+    b = JSONSchema::Builder.new
+    refute_predicate b, :top_level?
+    assert_nil b._type
+    assert_empty b._properties
+    assert_empty b._required
+  end
+
+  test 'Builder#top_level' do
+    b = JSONSchema::Builder.new
+    b.top_level
+    assert_predicate b, :top_level?
+  end
+
+  test 'Builder#type' do
+    b = JSONSchema::Builder.new
+    b.type :object
+    assert_equal :object, b._type
+  end
+
+  test 'Builder#properties' do
+    b = JSONSchema::Builder.new
+    b.property :foo, type: :string, null: false
+    b.properties :bar, :baz, type: :object, null: false
+    assert_equal :foo,    b._properties[0].name
+    assert_equal :string, b._properties[0].type
+    assert_equal :bar,    b._properties[1].name
+    assert_equal :object, b._properties[1].type
+    assert_equal :baz,    b._properties[2].name
+    assert_equal :object, b._properties[2].type
+
+    q = JSONSchema::Property.new(:quux)
+    b._add_property(q)
+    assert_equal q, b._properties.last
+  end
+
+  test 'Builder#string' do
+    b = JSONSchema::Builder.new
+    b.string :foo, :bar, required: false
+    assert_equal :foo,    b._properties[0].name
+    assert_equal :string, b._properties[0].type
+    refute_predicate      b._properties[0], :required?
+    assert_equal :bar,    b._properties[1].name
+    assert_equal :string, b._properties[1].type
+    refute_predicate      b._properties[1], :required?
+  end
+
+  test 'Builder#integer' do
+    b = JSONSchema::Builder.new
+    b.integer :foo, :bar, required: false
+    assert_equal :foo,     b._properties[0].name
+    assert_equal :integer, b._properties[0].type
+    refute_predicate       b._properties[0], :required?
+    assert_equal :bar,     b._properties[1].name
+    assert_equal :integer, b._properties[1].type
+    refute_predicate       b._properties[1], :required?
+  end
+
+  test 'Builder#required' do
+    b = JSONSchema::Builder.new
+    b.required :foo, :bar
+    b.required :baz
+    assert_equal [:foo, :bar, :baz], b._required
   end
 
   test 'Property' do
