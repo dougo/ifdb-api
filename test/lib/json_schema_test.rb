@@ -1,4 +1,5 @@
 require 'test_helper'
+
 class JSONSchemaTest < ActiveSupport::TestCase
   class EmptyTestSchema < JSONSchema
   end
@@ -84,6 +85,16 @@ class JSONSchemaTest < ActiveSupport::TestCase
     schema = ReqTestSchema.new
     assert_equal [:foo, :bar, :quux], schema.required
     assert_equal [:foo, :bar, :quux], schema.as_json[:required]
+  end
+
+  test '::required' do
+    class ExtraReqTestSchema < JSONSchema
+      property :foo, required: true
+      required :bar, :baz
+      required :garply
+    end
+    schema = ExtraReqTestSchema.new
+    assert_equal [:foo, :bar, :baz, :garply], schema.required
   end
 
   test 'Property' do

@@ -3,9 +3,10 @@ class JSONSchema
     JSON::Validator.validator_for_name(:draft4).uri
   end
 
-  class_attribute :_type, :_properties
+  class_attribute :_type, :_properties, :_required
 
   self._properties = []
+  self._required = []
 
   def self.type(type)
     self._type = type
@@ -31,6 +32,10 @@ class JSONSchema
     properties(*names, type: :integer, **opts)
   end
 
+  def self.required(*names)
+    self._required += names
+  end
+
   def property(name)
     _properties.find { |p| p.name == name }
   end
@@ -40,7 +45,7 @@ class JSONSchema
   end
 
   def required
-    properties.select(&:required?).map(&:name)
+    properties.select(&:required?).map(&:name) + _required
   end
 
   def as_json
