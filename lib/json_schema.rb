@@ -7,10 +7,6 @@ class JSONSchema
 
   self._properties = []
 
-  def self.inherited(subclass)
-    subclass._properties = _properties.dup
-  end
-
   def self.type(type)
     self._type = type
   end
@@ -20,7 +16,7 @@ class JSONSchema
   end
 
   def self.property(name, **opts)
-    _properties << Property.new(name, **opts)
+    self._properties += [Property.new(name, **opts)]
   end
 
   def self.properties(*names, **opts)

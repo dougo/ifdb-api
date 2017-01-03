@@ -20,9 +20,7 @@ class HALSchema < JSONSchema
   self._links = [Link.new(:self)]
 
   def self.inherited(subclass)
-    super
-    subclass._links = _links.dup
-    subclass._properties << LinksProperty.new(subclass)
+    subclass._properties += [LinksProperty.new(subclass)]
   end
 
   def links
@@ -34,7 +32,7 @@ class HALSchema < JSONSchema
   end
 
   def self.link(rel, **opts)
-    _links << Link.new(rel, **opts)
+    self._links += [Link.new(rel, **opts)]
   end
 
   class LinksProperty < Property
