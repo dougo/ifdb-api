@@ -14,6 +14,7 @@ end
 add_vendor_schema('core-base', 'http://hyperschema.org/core/base#')
 add_vendor_schema('core-link', 'http://hyperschema.org/core/link#')
 add_vendor_schema('hal', 'http://hyperschema.org/mediatypes/hal#')
+add_vendor_schema('jsonapi', 'http://jsonapi.org/schema#')
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
