@@ -105,7 +105,7 @@ class JSONSchema
   class Property
     attr_reader :name, :type, :format, :max_length, :schema
 
-    def initialize(name, type: nil, null: true, required: true, format: nil, max_length: nil, &block)
+    def initialize(name, type: nil, null: false, required: false, format: nil, max_length: nil, &block)
       @name, @type, @null, @required, @format = name, type, null, required, format
       @max_length = max_length
       @schema = JSONSchema.new(&block) if block

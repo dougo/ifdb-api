@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class UserResourceTest < ActiveSupport::TestCase
-  test 'UserResource' do
-    assert_equal JSONAPI::Resource, UserResource.superclass
+  test 'is an immutable ApplicationResource' do
+    assert_equal ApplicationResource, UserResource.superclass
     refute_predicate UserResource, :mutable?
   end
 
@@ -14,8 +14,17 @@ class UserResourceTest < ActiveSupport::TestCase
 
   test 'conforms to schema' do
     schema = UserResourceSchema.new.as_json
-    ser = JSONAPI::ResourceSerializer.new(UserResource)
-    json = ser.serialize_to_hash(UserResource.new(users(:molydeux), {}))
-    assert_valid_json schema, json
+    assert_valid_json schema, serialize(users(:minimal))
+    assert_valid_json schema, serialize(users(:maximal))
+  end
+
+  private
+
+  def resource(model)
+    UserResource.new(model, {})
+  end
+  
+  def serialize(model)
+    JSONAPI::ResourceSerializer.new(UserResource).serialize_to_hash(resource(model))
   end
 end

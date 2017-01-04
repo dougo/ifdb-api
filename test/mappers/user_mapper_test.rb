@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class UserMapperTest < ActiveSupport::TestCase
-  test 'is a Mapper' do
-    assert_equal Yaks::Mapper, UserMapper.superclass
+  test 'is an ApplicationMapper' do
+    assert_equal ApplicationMapper, UserMapper.superclass
   end
 
   test 'attributes' do
@@ -17,6 +17,7 @@ class UserMapperTest < ActiveSupport::TestCase
   end
 
   test 'conforms to schema' do
-    assert_valid_json UserSchema.new, users(:molydeux).to_hal
+    assert_valid_json UserSchema.new, users(:minimal).to_hal
+    assert_valid_json UserSchema.new, users(:maximal).to_hal
   end
 end

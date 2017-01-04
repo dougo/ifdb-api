@@ -39,7 +39,7 @@ class HALSchema < JSONSchema
   class LinksProperty < Property
     def initialize(schema_class)
       @schema_class = schema_class
-      super(:_links)
+      super(:_links, required: true)
     end
 
     def links

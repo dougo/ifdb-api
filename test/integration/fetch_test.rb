@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FetchTest < ActionDispatch::IntegrationTest
   setup do
-    @model = users(:molydeux)
+    @model = users(:maximal)
   end
 
   test 'fetch user and user schema' do

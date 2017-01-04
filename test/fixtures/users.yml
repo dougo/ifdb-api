@@ -1,7 +1,13 @@
-molydeux:
+minimal:
+  name: Minny Malle
+  created: <%= Time.now %>
+        
+maximal:
   name: Peter Molydeux
   gender: M
   publicemail: petermolydeux@twitter.com
+  profile: Imagine a game where every now and again the game pauses, whilst all NPCs gather to decide if to
+           reset your save progress or not
   location: Twitter
   picture: http://ifdb.tads.org/showimage?id=4%3A701
   created: <%= Time.now %>

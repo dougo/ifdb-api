@@ -45,9 +45,9 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_empty JSONSchema.new { properties :foo, :bar, required: false }.required
 
     schema = JSONSchema.new do
-      properties :foo, :bar
-      property :baz, required: false
-      property :quux
+      properties :foo, :bar, required: true
+      property :baz
+      property :quux, required: true
       required :garply
     end
     assert_equal [:foo, :bar, :quux, :garply], schema.required
@@ -69,7 +69,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
     schema = JSONSchema.new do
       top_level
       type :object
-      string :foo
+      string :foo, required: true
       properties :bar, :baz
       extend 'http://example.com/schema'
     end
@@ -81,7 +81,7 @@ class JSONSchemaTest < ActiveSupport::TestCase
         bar: schema.property(:bar).as_json,
         baz: schema.property(:baz).as_json
       },
-      required: [:foo, :bar, :baz],
+      required: [:foo],
       allOf: [{ '$ref': 'http://example.com/schema' }]
     }
     assert_equal expected, schema.as_json
@@ -157,12 +157,12 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal 'http://example.com/schema', b.base
   end
 
-  test 'Property' do
+  test 'Property defaults' do
     foo = JSONSchema::Property.new(:foo)
     assert_equal :foo, foo.name
     assert_nil foo.type
-    assert_predicate foo, :required?
-    assert_predicate foo, :null?
+    refute_predicate foo, :required?
+    refute_predicate foo, :null?
     assert_nil foo.format
     assert_nil foo.max_length
     assert_equal({}, foo.as_json)
@@ -171,18 +171,18 @@ class JSONSchemaTest < ActiveSupport::TestCase
   test 'Property#type' do
     str = JSONSchema::Property.new(:foo, type: :string)
     assert_equal :string, str.type
-    assert_equal [:string, :null], str.as_json[:type]
+    assert_equal :string, str.as_json[:type]
   end
 
   test 'Property#null?' do
-    null_str = JSONSchema::Property.new(:foo, type: :string, null: false)
-    refute_predicate null_str, :null?
-    assert_equal :string, null_str.as_json[:type]
+    null_str = JSONSchema::Property.new(:foo, type: :string, null: true)
+    assert_predicate null_str, :null?
+    assert_equal [:string, :null], null_str.as_json[:type]
   end
 
   test 'Property#required?' do
-    req = JSONSchema::Property.new(:foo, required: false)
-    refute_predicate req, :required?
+    req = JSONSchema::Property.new(:foo, required: true)
+    assert_predicate req, :required?
   end
 
   test 'Property#format' do

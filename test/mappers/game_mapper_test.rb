@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class GameMapperTest < ActiveSupport::TestCase
-  test 'is a Mapper' do
-    assert_equal Yaks::Mapper, GameMapper.superclass
+  test 'is an ApplicationMapper' do
+    assert_equal ApplicationMapper, GameMapper.superclass
   end
 
   test 'attributes' do

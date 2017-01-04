@@ -1,4 +1,4 @@
-class GameMapper < Yaks::Mapper
+class GameMapper < ApplicationMapper
   link :self, '/games/{id}'
   link :author, '/users/{author_id}',    if: ->{ object.author_id.is_a? Symbol }
   link :author, '/users?id={author_id}', if: ->{ object.author_id.is_a? Array }

@@ -23,9 +23,9 @@ class UserSchemaTest < ActiveSupport::TestCase
       assert_equal :string, @schema.property(attr).type, attr
     end
 
-    nonnull_attrs = %i(id name location)
-    nonnull_attrs.each do |attr|
-      refute_predicate @schema.property(attr), :null?
+    required_attrs = %i(id name location)
+    required_attrs.each do |attr|
+      assert_predicate @schema.property(attr), :required?
     end
 
     assert_equal 1, @schema.property(:gender).max_length

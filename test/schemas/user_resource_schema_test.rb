@@ -19,15 +19,15 @@ class UserResourceSchemaTest < ActiveSupport::TestCase
 
   test 'attributes' do
     attrs_prop = @schema.property(:data).schema.property(:attributes)
+    assert_predicate attrs_prop, :required?
     attrs = attrs_prop.schema.properties.index_by(&:name)
 
     %i(name gender publicemail location profile picture created).each do |attr|
       assert_equal :string, attrs[attr].type, attr
-      assert_predicate attrs[attr], :required?
     end
 
     %i(name location created).each do |attr|
-      refute_predicate attrs[attr], :null?
+      assert_predicate attrs[attr], :required?
     end
 
     assert_equal 1, attrs[:gender].max_length

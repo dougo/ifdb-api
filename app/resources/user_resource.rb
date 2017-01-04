@@ -1,4 +1,4 @@
-class UserResource < JSONAPI::Resource
+class UserResource < ApplicationResource
   immutable
 
   attributes *%i(name gender location publicemail profile picture created)
