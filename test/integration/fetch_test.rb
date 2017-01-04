@@ -31,4 +31,17 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_equal '404', resource[:errors][0][:status]
     assert_equal 'Record not found', resource[:errors][0][:title]
   end
+
+  test 'fetch users by page' do
+    get users_path, as: :jsonapi
+    assert_response :success
+    page1 = response.parsed_body
+    resources = page1[:data]
+    assert_equal 10, resources.size
+
+    get page1[:links][:next], as: :jsonapi
+    assert_response :success
+    page2 = response.parsed_body
+    assert_includes page2[:links], :prev
+  end
 end
