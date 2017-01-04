@@ -12,7 +12,7 @@ class FetchTest < ActionDispatch::IntegrationTest
     resource = response.parsed_body
 
     # TODO: describedby link
-    get schema_path(:user_resource), as: :json
+    get schema_path(:user), as: :json
     assert_response :success
     schema = response.parsed_body
 

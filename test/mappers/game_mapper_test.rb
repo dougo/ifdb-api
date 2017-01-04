@@ -23,7 +23,7 @@ class GameMapperTest < ActiveSupport::TestCase
   end
 
   test 'conforms to schema' do
-    assert_valid_json GameSchema.new, games(:zork).to_hal
+    assert_valid_json HAL::GameSchema.new, games(:zork).to_hal
   end
 
   test 'author link only if author ID exists' do

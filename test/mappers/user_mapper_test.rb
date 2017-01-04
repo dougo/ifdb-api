@@ -17,7 +17,8 @@ class UserMapperTest < ActiveSupport::TestCase
   end
 
   test 'conforms to schema' do
-    assert_valid_json UserSchema.new, users(:minimal).to_hal
-    assert_valid_json UserSchema.new, users(:maximal).to_hal
+    schema = HAL::UserSchema.new
+    assert_valid_json schema, users(:minimal).to_hal
+    assert_valid_json schema, users(:maximal).to_hal
   end
 end

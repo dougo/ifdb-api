@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class GameSchemaTest < ActiveSupport::TestCase
+class HAL::GameSchemaTest < ActiveSupport::TestCase
   setup do
-    @schema = GameSchema.new
+    @schema = HAL::GameSchema.new
   end
 
   test 'is a HALSchema' do

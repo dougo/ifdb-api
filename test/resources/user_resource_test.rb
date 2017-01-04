@@ -13,7 +13,7 @@ class UserResourceTest < ActiveSupport::TestCase
   end
 
   test 'conforms to schema' do
-    schema = UserResourceSchema.new.as_json
+    schema = UserSchema.new.as_json
     assert_valid_json schema, serialize(users(:minimal))
     assert_valid_json schema, serialize(users(:maximal))
   end
