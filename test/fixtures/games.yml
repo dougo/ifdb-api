@@ -19,3 +19,53 @@ zork:
   published: 1979-01-01
   created: <%= Time.now %>
   moddate: <%= Time.now %>
+
+minimal:
+  title: The Minimalist
+  sort_title: MINIMALIST, THE
+  author: Mark Cook
+  sort_author: COOK, MARK
+  created: <%= Time.now %>
+  moddate: <%= Time.now %>
+
+maximal:
+  title: Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus
+  author: Dan Shiovitz and Emily Short
+  authorExt: Dan Shiovitz {bpeqxxavilmzmej} and Emily Short {4onqcn9pq2wtd3vb}
+  sort_title: MAX BLASTER AND DORIS DE LIGHTNING AGAINST THE PARROT CREATURES OF VENUS
+  sort_author: SHIOVITZ, DAN; SHORT, EMILY
+  tags: Spring Thing 2003,Xyzzy Awards 2003,evil protagonist,female protagonist,gender
+    choice,graphics,multiple protagonists,nonhuman protagonist,highly branching,multiple
+    protagonists,mad scientist,gender choice,pulpy,spaceship,Venus,graphics,gender choice,food
+    puzzle,female protagonist,collaboration,multiple protagonists,nonhuman protagonist,Spring
+    Thing Winner
+  published: 2003-01-01
+  version: '1.0'
+  license: Freeware
+  system: TADS 3
+  language: en-US
+  desc: Someplace on Venus a secret weapon is being built that threatens Earth with
+    total destruction. You and your comrade must penetrate the Xavian base and save
+    the world -- before it's too late!
+  coverart: http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs
+  seriesname: Max Blaster
+  seriesnumber: 1
+  genre: Superhero/Espionage/Humor/Science Fiction
+  forgiveness: Polite
+  bafsid: 2096
+  website: http://example.com/max
+  downloadnotes: To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.
+  created: 2007-09-29
+  editedby: gy4p10myt2srnjyp
+  moddate: 2013-06-16 03:27:34Z
+  pagevsn: 4
+
+ <% 100.times do |n| %>
+game_<%= n %>:
+  title: <%= "game#{n}" %>
+  sort_title: <%= "GAME#{n}" %>
+  author: <%= "John #{n}" %>
+  sort_author: <%= "#{n}, JOHN" %>
+  created: <%= Time.now %>
+  moddate: <%= Time.now %>
+<% end %>
