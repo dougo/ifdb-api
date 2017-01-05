@@ -20,4 +20,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     resource = TestModelResource.new(TestModel.new, {})
     assert_equal [:id, :bar], resource.fetchable_fields
   end
+
+  test 'custom links' do
+    resource = TestModelResource.new(TestModel.new, {})
+    links = resource.custom_links({})
+    assert_equal '/schemas/test_model', links[:describedby]
+  end
 end

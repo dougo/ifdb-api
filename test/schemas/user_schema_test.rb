@@ -5,20 +5,16 @@ class UserSchemaTest < ActiveSupport::TestCase
     @schema = UserSchema.new
   end
 
-  test 'JSONSchema' do
-    assert_equal JSONSchema, UserSchema.superclass
+  test 'superclass' do
+    assert_equal ApplicationSchema, UserSchema.superclass
   end
 
   test 'valid schema' do
     assert_valid_json JSON::Validator.default_validator.metaschema, @schema.as_json
   end
 
-  test 'extend JSON API schema' do
-    assert_equal 'http://jsonapi.org/schema#/definitions/success', @schema.base
-  end
-
   test 'attributes' do
-    attrs_prop = @schema.property(:data).schema.property(:attributes)
+    attrs_prop = @schema.property(:attributes)
     assert_predicate attrs_prop, :required?
     attrs = attrs_prop.schema.properties.index_by(&:name)
 
@@ -34,11 +30,5 @@ class UserSchemaTest < ActiveSupport::TestCase
     assert_equal :email, attrs[:publicemail].format
     assert_equal :uri, attrs[:picture].format
     assert_equal 'date-time', attrs[:created].format
-  end
-
-  test 'links' do
-    links_prop = @schema.property(:data).schema.property(:links)
-    assert_predicate links_prop, :required?
-    assert_equal [:self], links_prop.schema.required
   end
 end

@@ -41,7 +41,7 @@ module ResourceTesting
   end
 
   def serialize(model)
-    JSONAPI::ResourceSerializer.new(resource_class).serialize_to_hash(resource(model))
+    JSONAPI::ResourceSerializer.new(resource_class).serialize_to_hash(resource(model))[:data]
   end
 
   def resource_schema

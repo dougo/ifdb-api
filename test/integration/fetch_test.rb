@@ -1,27 +1,25 @@
 require 'test_helper'
 
 class FetchTest < ActionDispatch::IntegrationTest
-  setup do
-    @model = users(:maximal)
-  end
+  # TODO: DRY this up a bit
 
   test 'fetch game and game schema' do
     @model = games(:adventure)
     get game_path(@model), as: :jsonapi
     assert_response :success
     assert_equal 'application/vnd.api+json', response.content_type
-    resource = response.parsed_body
+    resource = response.parsed_body[:data]
+    req_url = request.url
 
-    # TODO: describedby link
-    get schema_path(:game), as: :json
+    get resource[:links][:describedby], as: :json
     assert_response :success
     schema = response.parsed_body
 
     assert_valid_json schema, resource
-    assert_equal 'xyzzy', resource[:data][:id]
-    assert_equal 'Adventure', resource[:data][:attributes][:title]
-    assert_equal 'Will Crowther', resource[:data][:attributes][:author]
-    assert_equal game_url(@model), resource[:data][:links][:self]
+    assert_equal 'xyzzy', resource[:id]
+    assert_equal 'Adventure', resource[:attributes][:title]
+    assert_equal 'Will Crowther', resource[:attributes][:author]
+    assert_equal req_url, resource[:links][:self]
     # TODO: author relationship
     # assert_equal user_path(@model.author_id), resource[:_links][:author][:href]
   end
@@ -40,20 +38,21 @@ class FetchTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch user and user schema' do
+    @model = users(:maximal)
     get user_path(@model), as: :jsonapi
     assert_response :success
     assert_equal 'application/vnd.api+json', response.content_type
-    resource = response.parsed_body
+    resource = response.parsed_body[:data]
+    req_url = request.url
 
-    # TODO: describedby link
-    get schema_path(:user), as: :json
+    get resource[:links][:describedby], as: :json
     assert_response :success
     schema = response.parsed_body
 
     assert_valid_json schema, resource
-    assert_equal @model.id, resource[:data][:id]
-    assert_equal 'Peter Molydeux', resource[:data][:attributes][:name]
-    assert_equal user_url(@model), resource[:data][:links][:self]
+    assert_equal @model.id, resource[:id]
+    assert_equal 'Peter Molydeux', resource[:attributes][:name]
+    assert_equal req_url, resource[:links][:self]
   end
 
   test 'fetch user not found' do

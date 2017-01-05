@@ -5,20 +5,16 @@ class GameSchemaTest < ActiveSupport::TestCase
     @schema = GameSchema.new
   end
 
-  test 'JSONSchema' do
-    assert_equal JSONSchema, GameSchema.superclass
+  test 'superclass' do
+    assert_equal ApplicationSchema, GameSchema.superclass
   end
 
   test 'valid schema' do
     assert_valid_json JSON::Validator.default_validator.metaschema, @schema.as_json
   end
 
-  test 'extend JSON API schema' do
-    assert_equal 'http://jsonapi.org/schema#/definitions/success', @schema.base
-  end
-
   test 'attributes' do
-    attrs_prop = @schema.property(:data).schema.property(:attributes)
+    attrs_prop = @schema.property(:attributes)
     assert_predicate attrs_prop, :required?
     attrs_schema = attrs_prop.schema
 
@@ -44,11 +40,5 @@ class GameSchemaTest < ActiveSupport::TestCase
     end
   end
 
-  test 'links' do
-    links_prop = @schema.property(:data).schema.property(:links)
-    assert_predicate links_prop, :required?
-    assert_equal [:self], links_prop.schema.required
-
-    # TODO: authors
-  end
+  # TODO: authors link
 end
