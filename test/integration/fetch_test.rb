@@ -4,9 +4,11 @@ class FetchTest < ActionDispatch::IntegrationTest
   # TODO: DRY this up a bit
 
   test 'fetch game and game schema' do
-    @model = games(:adventure)
+    # TODO: navigate from home page
+
+    @model = games(:maximal)
     get game_path(@model), as: :jsonapi
-    assert_response :success
+    assert_response :success, response.parsed_body
     assert_equal 'application/vnd.api+json', response.content_type
     resource = response.parsed_body[:data]
     req_url = request.url
@@ -16,12 +18,16 @@ class FetchTest < ActionDispatch::IntegrationTest
     schema = response.parsed_body
 
     assert_valid_json schema, resource
-    assert_equal 'xyzzy', resource[:id]
-    assert_equal 'Adventure', resource[:attributes][:title]
-    assert_equal 'Will Crowther', resource[:attributes][:author]
-    assert_equal req_url, resource[:links][:self]
+    assert_equal @model.id, resource[:id]
+    assert_match /Max Blaster/, resource[:attributes][:title]
+    assert_equal game_url(@model), resource[:links][:self]
     # TODO: author relationship
     # assert_equal user_path(@model.author_id), resource[:_links][:author][:href]
+
+    editor_rel = resource[:relationships][:editor]
+    assert_equal 'users',         editor_rel[:data][:type]
+    assert_equal @model.editedby, editor_rel[:data][:id]
+    # TODO: follow editor relationship link?
   end
 
   test 'fetch games by page' do

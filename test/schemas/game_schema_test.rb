@@ -19,7 +19,7 @@ class GameSchemaTest < ActiveSupport::TestCase
     attrs_schema = attrs_prop.schema
 
     %i(title sort-title author sort-author author-ext tags published version license system language desc coverart
-       seriesname seriesnumber genre forgiveness website downloadnotes created moddate editedby).each do |attr|
+       seriesname seriesnumber genre forgiveness website downloadnotes created moddate).each do |attr|
       assert_equal :string, attrs_schema.property(attr).type
     end
 
@@ -27,7 +27,7 @@ class GameSchemaTest < ActiveSupport::TestCase
       assert_equal :integer, attrs_schema.property(attr).type
     end      
 
-    %i(title sort-title author sort-author created moddate editedby pagevsn).each do |attr|
+    %i(title sort-title author sort-author created moddate pagevsn).each do |attr|
       assert_predicate attrs_schema.property(attr), :required?
     end
 
@@ -40,5 +40,24 @@ class GameSchemaTest < ActiveSupport::TestCase
     end
   end
 
-  # TODO: authors link
+  test 'relationships' do
+    rels = @schema.property(:relationships)
+
+    %i(editor).each do |rel_name|
+      rel = rels.schema.property(rel_name)
+
+      rel_links = rel.schema.property(:links)
+      assert_predicate rel_links, :required?
+      assert_equal %i(self related), rel_links.schema.required
+
+      rel_data = rel.schema.property(:data)
+      assert_equal :object, rel_data.type
+      assert_predicate rel_data, :required?
+
+      data_type_prop = rel_data.schema.property(:type)
+      assert_equal :users, data_type_prop.value
+    end
+
+    # TODO: authors relationship
+  end
 end

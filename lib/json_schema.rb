@@ -103,11 +103,12 @@ class JSONSchema
   end
 
   class Property
-    attr_reader :name, :type, :format, :max_length, :schema
+    attr_reader :name, :type, :format, :max_length, :enum, :value, :schema
 
-    def initialize(name, type: nil, null: false, required: false, format: nil, max_length: nil, &block)
-      @name, @type, @null, @required, @format = name, type, null, required, format
-      @max_length = max_length
+    def initialize(name, type: nil, null: false, required: false, format: nil, max_length: nil, enum: nil,
+                   value: nil, &block)
+      @name, @type, @null, @required, @format, @max_length = name, type, null, required, format, max_length
+      @enum, @value = enum, value
       @schema = JSONSchema.new(&block) if block
     end
 
@@ -126,6 +127,8 @@ class JSONSchema
       end
       json[:format] = format if format
       json[:maxLength] = max_length if max_length
+      json[:enum] = enum if enum
+      json[:enum] = [value] if value
       json
     end
   end

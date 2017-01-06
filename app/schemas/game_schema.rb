@@ -18,7 +18,14 @@ class GameSchema < ApplicationSchema
     string :website, format: :uri
     string :downloadnotes
     string *%i(created moddate), format: 'date-time', required: true
-    string :editedby, required: true
     integer :pagevsn, required: true
+  end
+  property :relationships do
+    property :editor do
+      property :links, required: true do required *%i(self related) end
+      property :data, type: :object, required: true do
+        property :type, value: :users
+      end
+    end
   end
 end

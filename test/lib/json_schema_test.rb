@@ -197,6 +197,18 @@ class JSONSchemaTest < ActiveSupport::TestCase
     assert_equal 1, prop.as_json[:maxLength]
   end
 
+  test 'Property#enum' do
+    prop = JSONSchema::Property.new(:foo, enum: [:bar, :baz])
+    assert_equal [:bar, :baz], prop.enum
+    assert_equal [:bar, :baz], prop.as_json[:enum]
+  end
+
+  test 'Property#value' do
+    prop = JSONSchema::Property.new(:foo, value: :bar)
+    assert_equal :bar, prop.value
+    assert_equal [:bar], prop.as_json[:enum]
+  end
+
   test 'Property#schema' do
     assert_nil JSONSchema::Property.new(:foo).schema
     prop = JSONSchema::Property.new(:foo, type: :object, null: false) { string :bar, null: false }
