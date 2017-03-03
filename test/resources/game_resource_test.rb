@@ -10,7 +10,7 @@ class GameResourceTest < ActiveSupport::TestCase
   test 'relationships' do
     rel = resource_class._relationship(:editor)
     assert_kind_of JSONAPI::Relationship::ToOne, rel
-    assert_equal 'User', rel.class_name
+    assert_equal 'Member', rel.class_name
     assert_equal :editedby, rel.foreign_key
   end
 end

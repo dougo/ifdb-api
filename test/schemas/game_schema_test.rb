@@ -55,7 +55,7 @@ class GameSchemaTest < ActiveSupport::TestCase
       assert_predicate rel_data, :required?
 
       data_type_prop = rel_data.schema.property(:type)
-      assert_equal :users, data_type_prop.value
+      assert_equal :members, data_type_prop.value
     end
 
     # TODO: authors relationship

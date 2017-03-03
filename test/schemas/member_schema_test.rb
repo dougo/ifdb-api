@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class UserSchemaTest < ActiveSupport::TestCase
+class MemberSchemaTest < ActiveSupport::TestCase
   setup do
-    @schema = UserSchema.new
+    @schema = MemberSchema.new
   end
 
   test 'superclass' do
-    assert_equal ApplicationSchema, UserSchema.superclass
+    assert_equal ApplicationSchema, MemberSchema.superclass
   end
 
   test 'valid schema' do

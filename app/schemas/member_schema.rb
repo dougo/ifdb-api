@@ -1,4 +1,4 @@
-class UserSchema < ApplicationSchema
+class MemberSchema < ApplicationSchema
   property :attributes, required: true do
     string :name, required: true
     string :gender, max_length: 1

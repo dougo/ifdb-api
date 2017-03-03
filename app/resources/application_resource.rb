@@ -4,7 +4,8 @@ class ApplicationResource < JSONAPI::Resource
   end
 
   def custom_links(_options)
+    base_name = self.class.name.demodulize.sub('Resource', '').underscore
     # TODO: use schema_path helper?
-    { describedby: "/schemas/#{self.class._model_name.to_s.demodulize.underscore}" }
+    { describedby: "/schemas/#{base_name}" }
   end
 end

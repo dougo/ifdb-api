@@ -11,19 +11,19 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     def bar; 42 end
   end
 
-  class TestModelResource < ApplicationResource
+  class TestResource < ApplicationResource
     model_name TestModel.name
     attributes :foo, :bar
   end
 
   test 'omits nil attributes' do
-    resource = TestModelResource.new(TestModel.new, {})
+    resource = TestResource.new(TestModel.new, {})
     assert_equal [:id, :bar], resource.fetchable_fields
   end
 
   test 'custom links' do
-    resource = TestModelResource.new(TestModel.new, {})
+    resource = TestResource.new(TestModel.new, {})
     links = resource.custom_links({})
-    assert_equal '/schemas/test_model', links[:describedby]
+    assert_equal '/schemas/test', links[:describedby]
   end
 end

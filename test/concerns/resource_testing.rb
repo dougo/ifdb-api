@@ -27,9 +27,13 @@ module ResourceTesting
     $1
   end
 
-  def model_name
+  def resource_base_name
     resource_name =~ /(.*)Resource/
     $1
+  end
+
+  def model_name
+    resource_base_name
   end
 
   def resource_class
@@ -45,7 +49,7 @@ module ResourceTesting
   end
 
   def resource_schema
-    "#{model_name}Schema".constantize.new
+    "#{resource_base_name}Schema".constantize.new
   end
 
   def resource_fixture(name)

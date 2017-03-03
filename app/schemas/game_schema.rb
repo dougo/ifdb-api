@@ -24,7 +24,7 @@ class GameSchema < ApplicationSchema
     property :editor do
       property :links, required: true do required *%i(self related) end
       property :data, type: :object, required: true do
-        property :type, value: :users
+        property :type, value: :members
       end
     end
   end

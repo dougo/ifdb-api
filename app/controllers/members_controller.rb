@@ -1,3 +1,3 @@
-class UsersController < ApplicationController
+class MembersController < ApplicationController
   include JSONAPI::ActsAsResourceController
 end

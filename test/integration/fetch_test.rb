@@ -22,10 +22,10 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_match /Max Blaster/, resource[:attributes][:title]
     assert_equal game_url(@model), resource[:links][:self]
     # TODO: author relationship
-    # assert_equal user_path(@model.author_id), resource[:_links][:author][:href]
+    # assert_equal member_path(@model.author_id), resource[:_links][:author][:href]
 
     editor_rel = resource[:relationships][:editor]
-    assert_equal 'users',         editor_rel[:data][:type]
+    assert_equal 'members',       editor_rel[:data][:type]
     assert_equal @model.editedby, editor_rel[:data][:id]
     # TODO: follow editor relationship link?
   end
@@ -43,9 +43,9 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_includes page2[:links], :prev
   end
 
-  test 'fetch user and user schema' do
+  test 'fetch member and member schema' do
     @model = users(:maximal)
-    get user_path(@model), as: :jsonapi
+    get member_path(@model), as: :jsonapi
     assert_response :success
     assert_equal 'application/vnd.api+json', response.content_type
     resource = response.parsed_body[:data]
@@ -61,8 +61,8 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_equal req_url, resource[:links][:self]
   end
 
-  test 'fetch user not found' do
-    get user_path(0), as: :jsonapi
+  test 'fetch member not found' do
+    get member_path(0), as: :jsonapi
     assert_response :not_found
     assert_equal 'application/vnd.api+json', response.content_type
     resource = response.parsed_body
@@ -71,8 +71,8 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_equal 'Record not found', resource[:errors][0][:title]
   end
 
-  test 'fetch users by page' do
-    get users_path, as: :jsonapi
+  test 'fetch members by page' do
+    get members_path, as: :jsonapi
     assert_response :success
     page1 = response.parsed_body
     resources = page1[:data]
