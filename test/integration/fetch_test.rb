@@ -39,7 +39,7 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_response :success
     page1 = response.parsed_body
     resources = page1[:data]
-    assert_equal 10, resources.size
+    assert_equal 20, resources.size
 
     get page1[:links][:next], as: :jsonapi
     assert_response :success
@@ -84,7 +84,7 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_response :success
     page1 = response.parsed_body
     resources = page1[:data]
-    assert_equal 10, resources.size
+    assert_equal 20, resources.size
 
     get page1[:links][:next], as: :jsonapi
     assert_response :success
