@@ -66,6 +66,6 @@ game_<%= n %>:
   sort_title: <%= "GAME#{n}" %>
   author: <%= "John #{n}" %>
   sort_author: <%= "#{n}, JOHN" %>
-  created: <%= Time.now %>
-  moddate: <%= Time.now %>
+  created: <%= Time.now - n.days %>
+  moddate: <%= Time.now - n.days %>
 <% end %>

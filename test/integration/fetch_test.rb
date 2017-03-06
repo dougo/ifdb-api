@@ -36,10 +36,12 @@ class FetchTest < ActionDispatch::IntegrationTest
     games_link = response.parsed_body[:links][:games]
 
     get games_link, as: :jsonapi
-    assert_response :success
+    assert_response :success, response.parsed_body[:errors]
     page1 = response.parsed_body
     resources = page1[:data]
     assert_equal 20, resources.size
+    timestamps = resources.map { |r| r[:attributes][:created] }
+    assert_equal timestamps.sort.reverse, timestamps
 
     get page1[:links][:next], as: :jsonapi
     assert_response :success

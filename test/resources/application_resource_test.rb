@@ -26,4 +26,8 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     links = resource.custom_links({})
     assert_equal '/schemas/test', links[:describedby]
   end
+
+  test 'sort by creation time by default' do
+    assert_equal [{ field: 'created', direction: :desc }], TestResource.default_sort
+  end
 end

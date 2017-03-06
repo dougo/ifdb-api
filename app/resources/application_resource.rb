@@ -8,4 +8,8 @@ class ApplicationResource < JSONAPI::Resource
     # TODO: use schema_path helper?
     { describedby: "/schemas/#{base_name}" }
   end
+
+  def self.default_sort
+    [{ field: 'created', direction: :desc }]
+  end
 end
