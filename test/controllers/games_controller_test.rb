@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class GamesControllerTest < ActionDispatch::IntegrationTest
+  test 'ApplicationController' do
+    assert_kind_of ApplicationController, GamesController.new
+  end
+
   test 'JSONAPI' do
     assert_includes GamesController, JSONAPI::ActsAsResourceController
   end
