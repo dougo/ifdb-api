@@ -1,6 +1,6 @@
 class ApplicationResource < JSONAPI::Resource
   def fetchable_fields
-    super.reject { |name| public_send(name).nil? }
+    super.reject { |name| public_send(name).blank? }
   end
 
   def custom_links(options)

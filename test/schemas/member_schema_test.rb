@@ -22,7 +22,7 @@ class MemberSchemaTest < ActiveSupport::TestCase
       assert_equal :string, attrs[attr].type, attr
     end
 
-    %i(name location created).each do |attr|
+    %i(name created).each do |attr|
       assert_predicate attrs[attr], :required?
     end
 
