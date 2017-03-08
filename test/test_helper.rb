@@ -20,10 +20,7 @@ add_vendor_schema('hal', 'http://hyperschema.org/mediatypes/hal#')
 add_vendor_schema('jsonapi', 'http://jsonapi.org/schema#')
 
 class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
-
-  # Add more helper methods to be used by all tests here...
 
   def assert_valid_json(schema, json, msg=nil)
     errors = JSON::Validator.fully_validate(schema.as_json, json)
@@ -35,3 +32,10 @@ json_response_parser = -> body { JSON.parse(body).deep_symbolize_keys }
 ActionDispatch::IntegrationTest.register_encoder :json,     response_parser: json_response_parser
 ActionDispatch::IntegrationTest.register_encoder :api_json, response_parser: json_response_parser
 ActionDispatch::IntegrationTest.register_encoder :hal,      response_parser: json_response_parser
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :minitest
+    with.library :rails
+  end
+end

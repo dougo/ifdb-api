@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/thoughtbot/shoulda.git
+  revision: 0e1d08d1df610e221fa757a6b2d9551035cc8184
+  specs:
+    shoulda (3.5.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (~> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -126,6 +134,9 @@ GEM
     rb-fsevent (0.9.8)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
+    shoulda-context (1.2.2)
+    shoulda-matchers (3.1.1)
+      activesupport (>= 4.0.0)
     simplecov (0.13.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -172,6 +183,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.5)
   puma (~> 3.0)
   rails (~> 5.1.0.beta1)
+  shoulda!
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
