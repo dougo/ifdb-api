@@ -7,6 +7,8 @@ class GameTest < ActiveSupport::TestCase
 
   should belong_to(:editor).class_name('User').with_foreign_key(:editedby)
   should have_many(:links).class_name('GameLink').with_foreign_key(:gameid)
+  should have_many(:list_items).class_name('RecommendedListItem').with_foreign_key(:gameid)
+  should have_many(:lists).through(:list_items)
 
   test 'author_id' do
     assert_nil Game.new.author_id
