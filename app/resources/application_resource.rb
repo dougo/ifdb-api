@@ -3,10 +3,10 @@ class ApplicationResource < JSONAPI::Resource
     super.reject { |name| public_send(name).nil? }
   end
 
-  def custom_links(_options)
+  def custom_links(options)
     base_name = self.class.name.demodulize.sub('Resource', '').underscore
-    # TODO: use schema_path helper?
-    { describedby: "/schemas/#{base_name}" }
+    base_url = options[:serializer].link_builder.base_url
+    { describedby: Rails.application.routes.url_helpers.schema_url(base_name, host: base_url) }
   end
 
   def self.default_sort
