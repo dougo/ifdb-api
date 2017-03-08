@@ -1,7 +1,6 @@
 module HAL
   class GameSchema < HALSchema
     type :object
-    link :author, required: false
     string *%i(id title sort_title author sort_author), null: false
     string *%i(authorExt tags)
     string :published, format: 'date-time'

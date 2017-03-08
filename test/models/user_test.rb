@@ -5,5 +5,6 @@ class UserTest < ActiveSupport::TestCase
     assert_kind_of ApplicationRecord, subject
   end
 
+  should have_and_belong_to_many(:games).join_table('gameprofilelinks')
   should have_many(:lists).class_name('RecommendedList').with_foreign_key(:userid)
 end

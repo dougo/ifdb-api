@@ -45,9 +45,4 @@ class HAL::GameSchemaTest < ActiveSupport::TestCase
       assert_equal :uri, @schema.property(attr).format, attr
     end
   end
-
-  test 'links' do
-    links = @schema.links.index_by &:rel
-    refute_predicate links[:author], :required?
-  end
 end
