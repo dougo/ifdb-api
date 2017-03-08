@@ -5,4 +5,6 @@ class Game < ApplicationRecord
   has_many :links, class_name: 'GameLink', foreign_key: :gameid
   has_many :list_items, class_name: 'RecommendedListItem', foreign_key: :gameid
   has_many :lists, through: :list_items
+  has_many :poll_votes, foreign_key: :gameid
+  has_many :polls, -> { distinct }, through: :poll_votes
 end
