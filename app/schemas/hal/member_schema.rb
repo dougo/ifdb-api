@@ -1,5 +1,5 @@
 module HAL
-  class UserSchema < HALSchema
+  class MemberSchema < HALSchema
     type :object
     string *%i(id name), required: true
     string :gender, max_length: 1

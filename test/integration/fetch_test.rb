@@ -50,7 +50,7 @@ class FetchTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch member and member schema' do
-    @model = users(:maximal)
+    @model = members(:maximal)
     get member_path(@model), as: :jsonapi
     assert_response :success
     assert_equal 'application/vnd.api+json', response.content_type

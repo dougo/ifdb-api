@@ -13,8 +13,8 @@ maximal:
   created: <%= Time.now %>
 
 <% 100.times do |n| %>
-user_<%= n %>:
-  name: <%= "user#{n}" %>
-  publicemail: <%= "user#{n}@example.com" %>
+member_<%= n %>:
+  name: <%= "member#{n}" %>
+  publicemail: <%= "member#{n}@example.com" %>
   created: <%= Time.now %>
 <% end %>

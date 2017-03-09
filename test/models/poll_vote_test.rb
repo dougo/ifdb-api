@@ -7,5 +7,5 @@ class PollVoteTest < ActiveSupport::TestCase
 
   should belong_to(:poll).with_foreign_key(:pollid)
   should belong_to(:game).with_foreign_key(:gameid)
-  should belong_to(:voter).class_name('User').with_foreign_key(:userid)
+  should belong_to(:voter).class_name('Member').with_foreign_key(:userid)
 end

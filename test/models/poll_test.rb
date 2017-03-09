@@ -5,7 +5,7 @@ class PollTest < ActiveSupport::TestCase
     assert_kind_of ApplicationRecord, subject
   end
 
-  should belong_to(:creator).class_name('User').with_foreign_key(:userid)
+  should belong_to(:creator).class_name('Member').with_foreign_key(:userid)
   should have_many(:votes).class_name('PollVote').with_foreign_key(:pollid)
   should have_many(:games).through(:votes)
   should have_many(:game_comments).class_name('PollComment').with_foreign_key(:pollid)

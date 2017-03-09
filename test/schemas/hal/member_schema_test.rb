@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class HAL::UserSchemaTest < ActiveSupport::TestCase
+class HAL::MemberSchemaTest < ActiveSupport::TestCase
   setup do
-    @schema = HAL::UserSchema.new
+    @schema = HAL::MemberSchema.new
   end
 
   test 'is a HALSchema' do

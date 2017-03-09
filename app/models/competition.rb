@@ -2,10 +2,10 @@ class Competition < ApplicationRecord
   has_many :divisions, class_name: 'CompetitionDivision', foreign_key: :compid
   has_many :competition_games, foreign_key: :compid
   has_many :games, through: :competition_games
-  has_many :organizer_competition_users, ->{ where(role: 'O') },
-           class_name: 'CompetitionUser', foreign_key: :compid
-  has_many :judge_competition_users, ->{ where(role: 'J') },
-           class_name: 'CompetitionUser', foreign_key: :compid
-  has_many :organizer_users, through: :organizer_competition_users, source: :user
-  has_many :judge_users, through: :judge_competition_users, source: :user
+  has_many :organizer_competition_members, ->{ where(role: 'O') },
+           class_name: 'CompetitionMember', foreign_key: :compid
+  has_many :judge_competition_members, ->{ where(role: 'J') },
+           class_name: 'CompetitionMember', foreign_key: :compid
+  has_many :organizer_members, through: :organizer_competition_members, source: :member
+  has_many :judge_members, through: :judge_competition_members, source: :member
 end

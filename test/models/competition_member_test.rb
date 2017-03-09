@@ -1,10 +1,10 @@
 require 'test_helper'
 
-class RecommendedListTest < ActiveSupport::TestCase
+class CompetitionMemberTest < ActiveSupport::TestCase
   test 'is an ApplicationRecord' do
     assert_kind_of ApplicationRecord, subject
   end
 
+  should belong_to(:competition).with_foreign_key(:compid)
   should belong_to(:member).with_foreign_key(:userid)
-  should have_many(:items).class_name('RecommendedListItem').with_foreign_key(:listid)
 end
