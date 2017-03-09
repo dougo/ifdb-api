@@ -53,7 +53,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 group :test do
   # DSL for Rails testing.
   gem 'shoulda', github: 'thoughtbot/shoulda'
-
-  # Code coverage.
-  gem 'simplecov'
 end
