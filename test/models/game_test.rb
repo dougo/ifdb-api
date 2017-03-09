@@ -6,6 +6,7 @@ class GameTest < ActiveSupport::TestCase
   end
 
   should have_and_belong_to_many(:author_members).class_name('Member').join_table('gameprofilelinks')
+  should have_many(:reviews).with_foreign_key(:gameid)
   should belong_to(:editor).class_name('Member').with_foreign_key(:editedby)
   should have_many(:links).class_name('GameLink').with_foreign_key(:gameid)
   should have_many(:list_items).class_name('RecommendedListItem').with_foreign_key(:gameid)

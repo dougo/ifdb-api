@@ -6,6 +6,7 @@ class MemberTest < ActiveSupport::TestCase
   end
 
   should have_and_belong_to_many(:games).join_table('gameprofilelinks')
+  should have_many(:reviews).with_foreign_key(:userid)
   should have_many(:lists).class_name('RecommendedList').with_foreign_key(:userid)
   should have_many(:polls).with_foreign_key(:userid)
   should have_many(:club_memberships).with_foreign_key(:userid)
