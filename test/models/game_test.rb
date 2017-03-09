@@ -19,4 +19,7 @@ class GameTest < ActiveSupport::TestCase
     rel = reflector.association_relation
     assert_kind_of Arel::Nodes::Distinct, rel.ast.cores.last.set_quantifier
   end
+
+  should have_many(:competition_games).with_foreign_key(:gameid)
+  should have_many(:competitions).through(:competition_games)
 end

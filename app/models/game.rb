@@ -7,4 +7,6 @@ class Game < ApplicationRecord
   has_many :lists, through: :list_items
   has_many :poll_votes, foreign_key: :gameid
   has_many :polls, -> { distinct }, through: :poll_votes
+  has_many :competition_games, foreign_key: :gameid
+  has_many :competitions, through: :competition_games
 end
