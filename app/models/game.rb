@@ -2,12 +2,16 @@ class Game < ApplicationRecord
   has_and_belongs_to_many :author_members, class_name: 'Member', join_table: :gameprofilelinks,
                           foreign_key: :gameid, association_foreign_key: :userid
   has_many :reviews, foreign_key: :gameid
-  belongs_to :editor, class_name: 'Member', foreign_key: :editedby
-  has_many :links, class_name: 'GameLink', foreign_key: :gameid
+  has_many :awards, class_name: 'CompetitionGame', foreign_key: :gameid
+  has_many :competitions, through: :awards
   has_many :list_items, class_name: 'RecommendedListItem', foreign_key: :gameid
   has_many :lists, through: :list_items
   has_many :poll_votes, foreign_key: :gameid
   has_many :polls, -> { distinct }, through: :poll_votes
-  has_many :competition_games, foreign_key: :gameid
-  has_many :competitions, through: :competition_games
+  belongs_to :editor, class_name: 'Member', foreign_key: :editedby
+  has_many :links, class_name: 'GameLink', foreign_key: :gameid
+  has_and_belongs_to_many :players, class_name: 'Member', join_table: :playedgames,
+                          foreign_key: :gameid, association_foreign_key: :userid
+  has_and_belongs_to_many :wishlists, class_name: 'Member', join_table: :wishlists,
+                          foreign_key: :gameid, association_foreign_key: :userid
 end
