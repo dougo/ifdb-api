@@ -1,6 +1,7 @@
 class Member < ApplicationRecord
   self.table_name = 'users'
 
+  has_many :comments, as: :commentable, foreign_key: :sourceid, foreign_type: :source
   has_and_belongs_to_many :games, join_table: 'gameprofilelinks', foreign_key: :userid,
                           association_foreign_key: :gameid
   has_many :reviews, foreign_key: :userid

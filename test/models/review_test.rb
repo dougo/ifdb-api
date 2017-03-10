@@ -9,4 +9,5 @@ class ReviewTest < ActiveSupport::TestCase
   should belong_to(:game).with_foreign_key(:gameid)
   should have_many(:tags).class_name('ReviewTag').with_foreign_key(:reviewid)
   should have_many(:votes).class_name('ReviewVote').with_foreign_key(:reviewid)
+  should have_many(:comments).with_foreign_key(:sourceid) # .as(:commentable).with_foreign_type(:source)
 end

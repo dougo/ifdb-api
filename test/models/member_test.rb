@@ -5,6 +5,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_kind_of ApplicationRecord, subject
   end
 
+  should have_many(:comments).with_foreign_key(:sourceid) # .as(:commentable).with_foreign_type(:source)
   should have_and_belong_to_many(:games).join_table('gameprofilelinks')
   should have_many(:reviews).with_foreign_key(:userid)
   # TODO: discussions
