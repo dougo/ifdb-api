@@ -13,8 +13,9 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:competitions).through(:awards)
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)
+  should have_many(:editorial_reviews).with_foreign_key(:gameid)
   # TODO: tags
-  should have_many(:reviews).with_foreign_key(:gameid)
+  should have_many(:member_reviews).class_name('Review').with_foreign_key(:gameid)
   should have_many(:list_items).class_name('RecommendedListItem').with_foreign_key(:gameid)
   should have_many(:lists).through(:list_items)
   should have_many(:poll_votes).with_foreign_key(:gameid)
@@ -24,16 +25,18 @@ class GameTest < ActiveSupport::TestCase
   should have_and_belong_to_many(:players).class_name('Member').join_table('playedgames')
   should have_and_belong_to_many(:wishlists).class_name('Member').join_table('wishlists')
 
+  # TODO: use mock, expect call to :ratings scope?
   test 'ratings collection omits review-only' do
-    assert_same_elements reviews(:of_zork, :rating_only), games(:zork).ratings
-  end
-
-  test 'reviews collection omits ratings-only' do
-    assert_same_elements reviews(:of_zork, :review_only), games(:zork).reviews
+    assert_same_elements reviews(:of_zork, :rating_only, :editorial), games(:zork).ratings
   end
 
   test 'reviews_and_ratings collection includes all' do
-    assert_same_elements reviews(:of_zork, :rating_only, :review_only), games(:zork).reviews_and_ratings
+    assert_same_elements reviews(:of_zork, :rating_only, :review_only, :editorial), games(:zork).reviews_and_ratings
+  end
+
+  # TODO: use mock, expect call to :member_reviews scope?
+  test 'member_reviews collection omits ratings-only and editorial' do
+    assert_same_elements reviews(:of_zork, :review_only), games(:zork).member_reviews
   end
 
   test 'polls collection is distinct' do

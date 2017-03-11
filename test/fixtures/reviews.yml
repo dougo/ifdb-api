@@ -16,3 +16,10 @@ review_only:
   author: trillian
   review: Don't panic!
   createdate: <%= Time.now %>
+
+editorial:
+  game: zork
+  userid: $system
+  rating: 4
+  review: Xyzzylicious!
+  createdate: <%= Time.now %>
