@@ -3,6 +3,7 @@ class Game < ApplicationRecord
                           foreign_key: :gameid, association_foreign_key: :userid
   has_many :ratings, -> { where.not(rating: nil) }, class_name: 'Review', foreign_key: :gameid
   has_many :reviews_and_ratings, class_name: 'Review', foreign_key: :gameid
+  has_many :ifids, class_name: 'IFID', foreign_key: :gameid
   has_many :awards, class_name: 'CompetitionGame', foreign_key: :gameid
   has_many :competitions, through: :awards
   has_many :news, as: :newsworthy, class_name: 'NewsItem', foreign_key: :sourceid, foreign_type: :source
