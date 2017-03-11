@@ -25,7 +25,7 @@ on_arthur_poll:
 on_trillian_profile:
   commentable: trillian (U)
   author: arthur
-  comment: What\'s wrong with being drunk?
+  comment: What's wrong with being drunk?
   created: <%= Time.now %>
 
 reply_to_arthur:

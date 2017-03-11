@@ -1,5 +1,18 @@
 of_zork:
   game: zork
   author: arthur
+  rating: 2
   review: Mostly harmless.
+  createdate: <%= Time.now %>
+
+rating_only:
+  game: zork
+  author: trillian
+  rating: 5
+  createdate: <%= Time.now %>
+
+review_only:
+  game: zork
+  author: trillian
+  review: Don't panic!
   createdate: <%= Time.now %>
