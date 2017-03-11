@@ -5,6 +5,8 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_kind_of ApplicationRecord, subject
   end
 
+  should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
+    # .as(:newsworthy).with_foreign_type(:source)
   should have_many(:divisions).with_foreign_key(:compid)
   should have_many(:competition_games).with_foreign_key(:compid)
   should have_many(:games).through(:competition_games)

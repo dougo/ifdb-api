@@ -4,6 +4,7 @@ class Game < ApplicationRecord
   has_many :reviews, foreign_key: :gameid
   has_many :awards, class_name: 'CompetitionGame', foreign_key: :gameid
   has_many :competitions, through: :awards
+  has_many :news, as: :newsworthy, class_name: 'NewsItem', foreign_key: :sourceid, foreign_type: :source
   has_many :list_items, class_name: 'RecommendedListItem', foreign_key: :gameid
   has_many :lists, through: :list_items
   has_many :poll_votes, foreign_key: :gameid

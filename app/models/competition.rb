@@ -1,4 +1,5 @@
 class Competition < ApplicationRecord
+  has_many :news, class_name: 'NewsItem', as: :newsworthy, foreign_key: :sourceid, foreign_type: :source
   has_many :divisions, class_name: 'CompetitionDivision', foreign_key: :compid
   has_many :competition_games, foreign_key: :compid
   has_many :games, through: :competition_games

@@ -1,6 +1,8 @@
 class Comment < ApplicationRecord
   self.table_name = 'ucomments'
 
+  attribute :source, SourceTypeName.new('L' => 'RecommendedList', 'P' => 'Poll', 'R' => 'Review', 'U' => 'Member')
+
   belongs_to :parent_comment, class_name: 'Comment', foreign_key: :parent
   belongs_to :commentable, polymorphic: true, foreign_key: :sourceid, foreign_type: :source
   belongs_to :author, class_name: 'Member', foreign_key: :userid
@@ -9,20 +11,6 @@ class Comment < ApplicationRecord
   scope :inbox_for, -> (member) do
     includes_commentable.includes_parent.relevant_to(member)
   end
-
-  class SourceTypeName < ActiveRecord::Type::String
-    TYPE_NAMES = { 'L' => 'RecommendedList', 'P' => 'Poll', 'R' => 'Review', 'U' => 'Member' }.freeze
-
-    def serialize(value)
-      TYPE_NAMES.invert[value]
-    end
-
-    def deserialize(value)
-      TYPE_NAMES[value]
-    end
-  end
-
-  attribute :source, SourceTypeName.new
 
   private
 
