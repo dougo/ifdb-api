@@ -11,7 +11,6 @@ adventure:
   moddate: <%= Time.now %>
 
 zork:
-  id: plugh
   title: Zork
   author: Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling
   sort_title: ZORK

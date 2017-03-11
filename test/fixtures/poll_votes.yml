@@ -1,0 +1,14 @@
+zork_from_earth_by_trillian:
+  poll: games_from_earth
+  game: zork
+  voter: trillian
+
+zork_from_earth_by_arthur:
+  poll: games_from_earth
+  game: zork
+  voter: arthur
+
+adventure_from_earth:
+  poll: games_from_earth
+  game: adventure
+  voter: trillian

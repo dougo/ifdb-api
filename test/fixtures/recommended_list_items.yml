@@ -1,0 +1,9 @@
+favorite_game_adventure:
+  list: favorite_games
+  displayorder: 1
+  gameid: xyzzy
+
+favorite_game_zork:
+  list: favorite_games
+  displayorder: 2
+  game: zork

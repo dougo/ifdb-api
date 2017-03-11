@@ -1,0 +1,5 @@
+of_zork:
+  game: zork
+  author: arthur
+  review: Mostly harmless.
+  createdate: <%= Time.now %>

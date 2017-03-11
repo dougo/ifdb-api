@@ -12,6 +12,16 @@ maximal:
   picture: http://ifdb.tads.org/showimage?id=4%3A701
   created: <%= Time.now %>
 
+arthur:
+  name: Arthur Dent
+  gender: M
+  created: <%= Time.now %>
+
+trillian:
+  name: Tricia McMillan
+  gender: F
+  created: <%= Time.now %>
+
 <% 100.times do |n| %>
 member_<%= n %>:
   name: <%= "member#{n}" %>

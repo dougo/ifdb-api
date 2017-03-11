@@ -20,6 +20,26 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   should have_many(:replies).class_name('Comment').with_foreign_key(:parent)
+
+  context 'inbox_for' do
+    subject { Comment.inbox_for(members(:arthur)) }
+
+    should 'include comments on member profile' do
+      assert_includes subject, comments(:on_arthur_profile)
+    end
+    should 'include comments on member reviews' do
+      assert_includes subject, comments(:on_arthur_review)
+    end
+    should 'include comments on member lists' do
+      assert_includes subject, comments(:on_arthur_list)
+    end
+    should 'include comments on member polls' do
+      assert_includes subject, comments(:on_arthur_poll)
+    end
+    should 'include replies to member comments' do
+      assert_includes subject, comments(:reply_to_arthur)
+    end
+  end
 end
 
 class Comment::SourceTypeNameTest < ActiveSupport::TestCase

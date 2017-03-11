@@ -1,0 +1,4 @@
+favorite_games:
+  title: Arthur\'s Favorite Games
+  recommender: arthur
+  createdate: <%= Time.now %>

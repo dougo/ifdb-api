@@ -1,0 +1,36 @@
+on_arthur_profile:
+  commentable: arthur (U)
+  author: trillian
+  comment: Did you remember to bring your pocket fluff?
+  created: <%= Time.now %>
+
+on_arthur_review:
+  commentable: of_zork (R)
+  author: trillian
+  comment: Well said.
+  created: <%= Time.now %>
+
+on_arthur_list:
+  commentable: favorite_games (L)
+  author: trillian
+  comment: I think Planetfall is better.
+  created: <%= Time.now %>
+
+on_arthur_poll:
+  commentable: games_from_earth (P)
+  author: trillian
+  comment: I miss Earth :(
+  created: <%= Time.now %>
+
+on_trillian_profile:
+  commentable: trillian (U)
+  author: arthur
+  comment: What\'s wrong with being drunk?
+  created: <%= Time.now %>
+
+reply_to_arthur:
+  parent_comment: on_trillian_profile
+  commentable: trillian (U)
+  author: trillian
+  comment: You ask a glass of water!
+  created: <%= Time.now %>

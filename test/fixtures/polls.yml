@@ -1,0 +1,4 @@
+games_from_earth:
+  title: Games From Earth Before It Was Destroyed
+  creator: arthur
+  created: <%= Time.now %>
