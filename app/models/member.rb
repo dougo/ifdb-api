@@ -15,9 +15,13 @@ class Member < ApplicationRecord
                           foreign_key: :userid, association_foreign_key: :gameid
   has_many :club_memberships, foreign_key: :userid
 
-  # Visible on personal page only:
+  # Visible on Your Page only:
 
   has_many :posted_comments, class_name: 'Comment', foreign_key: :userid
+
+  # Visible on Custom Styles page only:
+
+  has_many :stylesheets, foreign_key: :userid
 
   # Not shown anywhere on the website, but could be useful:
 
