@@ -18,4 +18,9 @@ class Member < ApplicationRecord
   # Visible on personal page only:
 
   has_many :posted_comments, class_name: 'Comment', foreign_key: :userid
+
+  # Not shown anywhere on the website, but could be useful:
+
+  has_many :game_tags, foreign_key: :userid
+  has_many :cross_recommendations, foreign_key: :userid
 end

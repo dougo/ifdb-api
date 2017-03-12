@@ -21,4 +21,7 @@ class MemberTest < ActiveSupport::TestCase
 
   # TODO: catalog contributions
   # TODO: frequent fiction points?
+
+  should have_many(:game_tags).with_foreign_key(:userid)
+  should have_many(:cross_recommendations).with_foreign_key(:userid)
 end

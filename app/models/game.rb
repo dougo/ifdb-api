@@ -11,6 +11,8 @@ class Game < ApplicationRecord
   has_many :game_tags, foreign_key: :gameid
   has_many :tag_stats, through: :game_tags, source: :stats
   has_many :member_reviews, -> { member_reviews }, class_name: 'Review', foreign_key: :gameid
+  has_many :cross_recommendations, foreign_key: :fromgame
+  has_many :related, through: :cross_recommendations, source: :to
   has_many :list_items, class_name: 'RecommendedListItem', foreign_key: :gameid
   has_many :lists, through: :list_items
   has_many :poll_votes, foreign_key: :gameid
