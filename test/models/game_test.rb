@@ -14,7 +14,8 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)
   should have_many(:editorial_reviews).with_foreign_key(:gameid)
-  # TODO: tags
+  should have_many(:game_tags).with_foreign_key(:gameid)
+  should have_many(:tag_stats).through(:game_tags).source(:stats)
   should have_many(:member_reviews).class_name('Review').with_foreign_key(:gameid)
   should have_many(:list_items).class_name('RecommendedListItem').with_foreign_key(:gameid)
   should have_many(:lists).through(:list_items)

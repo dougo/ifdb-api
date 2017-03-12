@@ -8,6 +8,8 @@ class Game < ApplicationRecord
   has_many :competitions, through: :awards
   has_many :news, as: :newsworthy, class_name: 'NewsItem', foreign_key: :sourceid, foreign_type: :source
   has_many :editorial_reviews, foreign_key: :gameid
+  has_many :game_tags, foreign_key: :gameid
+  has_many :tag_stats, through: :game_tags, source: :stats
   has_many :member_reviews, -> { member_reviews }, class_name: 'Review', foreign_key: :gameid
   has_many :list_items, class_name: 'RecommendedListItem', foreign_key: :gameid
   has_many :lists, through: :list_items
