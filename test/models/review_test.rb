@@ -5,7 +5,8 @@ class ReviewTest < ActiveSupport::TestCase
     assert_kind_of ApplicationRecord, subject
   end
 
-  should belong_to(:author).class_name('Member').with_foreign_key(:userid)
+  should belong_to(:reviewer).class_name('Member').with_foreign_key(:userid)
+  should belong_to(:special).class_name('SpecialReviewer').with_foreign_key(:special)
   should belong_to(:game).with_foreign_key(:gameid)
   should have_many(:tags).class_name('ReviewTag').with_foreign_key(:reviewid)
   should have_many(:votes).class_name('ReviewVote').with_foreign_key(:reviewid)
