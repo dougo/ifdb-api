@@ -1,0 +1,2 @@
+class Mirror < ApplicationRecord
+end
