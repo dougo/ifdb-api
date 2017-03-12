@@ -25,6 +25,7 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:poll_votes).with_foreign_key(:gameid)
   should have_many(:polls).through(:poll_votes)
   should belong_to(:editor).class_name('Member').with_foreign_key(:editedby)
+  should have_many(:history).class_name('GameVersion').with_foreign_key(:id)
   should have_many(:links).class_name('GameLink').with_foreign_key(:gameid)
   should have_and_belong_to_many(:players).class_name('Member').join_table('playedgames')
   should have_and_belong_to_many(:wishlists).class_name('Member').join_table('wishlists')

@@ -16,4 +16,6 @@ class CompetitionTest < ActiveSupport::TestCase
           .class_name('CompetitionMember').with_foreign_key(:compid)
   should have_many(:organizer_members).through(:organizer_competition_members).source(:member)
   should have_many(:judge_members).through(:judge_competition_members).source(:member)
+  should belong_to(:editor).class_name('Member').with_foreign_key(:editedby)
+  should have_many(:history).class_name('CompetitionVersion').with_foreign_key(:compid)
 end

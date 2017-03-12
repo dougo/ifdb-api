@@ -9,4 +9,6 @@ class Competition < ApplicationRecord
            class_name: 'CompetitionMember', foreign_key: :compid
   has_many :organizer_members, through: :organizer_competition_members, source: :member
   has_many :judge_members, through: :judge_competition_members, source: :member
+  belongs_to :editor, class_name: 'Member', foreign_key: :editedby
+  has_many :history, class_name: 'CompetitionVersion', foreign_key: :compid
 end
