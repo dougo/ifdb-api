@@ -1,0 +1,4 @@
+zork:
+  gameid: oldid
+  fwdgameid: newid
+  created: <%= Time.now %>
