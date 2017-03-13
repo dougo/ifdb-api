@@ -3,7 +3,7 @@ require 'test_helper'
 class FetchTest < ActionDispatch::IntegrationTest
   # TODO: DRY this up a bit
 
-  test 'fetch game and game schema' do
+  test 'fetch game' do
     # TODO: navigate from home page
 
     @model = games(:maximal)
@@ -11,13 +11,7 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_response :success, response.parsed_body
     assert_equal 'application/vnd.api+json', response.content_type
     resource = response.parsed_body[:data]
-    req_url = request.url
 
-    get resource[:links][:describedby], as: :json
-    assert_response :success
-    schema = response.parsed_body
-
-    assert_valid_json schema, resource
     assert_equal @model.id, resource[:id]
     assert_match /Max Blaster/, resource[:attributes][:title]
     assert_equal game_url(@model), resource[:links][:self]
@@ -49,22 +43,16 @@ class FetchTest < ActionDispatch::IntegrationTest
     assert_includes page2[:links], :prev
   end
 
-  test 'fetch member and member schema' do
+  test 'fetch member' do
     @model = members(:maximal)
     get member_path(@model), as: :jsonapi
     assert_response :success
     assert_equal 'application/vnd.api+json', response.content_type
     resource = response.parsed_body[:data]
-    req_url = request.url
 
-    get resource[:links][:describedby], as: :json
-    assert_response :success
-    schema = response.parsed_body
-
-    assert_valid_json schema, resource
     assert_equal @model.id, resource[:id]
     assert_equal 'Peter Molydeux', resource[:attributes][:name]
-    assert_equal req_url, resource[:links][:self]
+    assert_equal request.url, resource[:links][:self]
   end
 
   test 'fetch member not found' do

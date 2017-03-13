@@ -17,13 +17,11 @@ class ApplicationSchemaTest < ActiveSupport::TestCase
   test 'links' do
     assert_predicate @schema.property(:links), :required?
 
-    %i(describedby self).each do |link_name|
-      link = @schema.property(:links).schema.property(link_name)
-      refute_nil link, "Missing link: #{link_name}"
-      assert_equal :string, link.type
-      assert_equal :uri, link.format
-      assert_predicate link, :required?
-    end
+    link = @schema.property(:links).schema.property(:self)
+    refute_nil link, "Should have self link"
+    assert_equal :string, link.type
+    assert_equal :uri, link.format
+    assert_predicate link, :required?
   end
 
   # TODO: jsonapi link

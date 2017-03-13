@@ -24,16 +24,6 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     assert_equal [:id, :bar], resource.fetchable_fields
   end
 
-  test 'custom links' do
-    resource = TestResource.new(TestModel.new, {})
-    serializer = OpenStruct.new(link_builder: OpenStruct.new(base_url: 'http://example.com'))
-    links = resource.custom_links(serializer: serializer)
-    url = URI.parse(links[:describedby])
-    assert_predicate url, :absolute?
-    assert_equal 'example.com', url.host
-    assert_equal Rails.application.routes.url_helpers.schema_path('test'), url.path
-  end
-
   test 'sort by creation time by default' do
     assert_equal [{ field: 'created', direction: :desc }], TestResource.default_sort
   end
