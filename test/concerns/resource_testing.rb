@@ -2,8 +2,9 @@ module ResourceTesting
   extend ActiveSupport::Concern
 
   included do
-    test 'is an immutable ApplicationResource' do
-      assert_equal ApplicationResource, resource_class.superclass
+    test_extends ApplicationResource
+
+    test 'immutable' do
       refute_predicate resource_class, :mutable?
     end
 

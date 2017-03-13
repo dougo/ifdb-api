@@ -18,6 +18,8 @@ add_vendor_schema('hal', 'http://hyperschema.org/mediatypes/hal#')
 add_vendor_schema('jsonapi', 'http://jsonapi.org/schema#')
 
 class ActiveSupport::TestCase
+  include TestMethods
+
   fixtures :all
 
   def assert_valid_json(schema, json, msg=nil)

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class MemberMapperTest < ActiveSupport::TestCase
-  test 'is an ApplicationMapper' do
-    assert_equal ApplicationMapper, MemberMapper.superclass
-  end
+  test_extends ApplicationMapper
 
   test 'attributes' do
     attrs = %i(id name gender publicemail location profile picture created)

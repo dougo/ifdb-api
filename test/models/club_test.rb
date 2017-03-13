@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class ClubTest < ActiveSupport::TestCase
-  test 'is an ApplicationRecord' do
-    assert_kind_of ApplicationRecord, subject
-  end
+  test_extends ApplicationRecord
 
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)

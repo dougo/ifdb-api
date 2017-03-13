@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class VersionTest < ActiveSupport::TestCase
-  test 'is an ApplicationRecord' do
-    assert_operator self.class.described_type, :<, ApplicationRecord
-  end
+  test_extends ApplicationRecord
 
   test 'is abstract' do
     assert_predicate self.class.described_type, :abstract_class?

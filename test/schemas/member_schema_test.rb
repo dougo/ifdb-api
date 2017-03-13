@@ -1,12 +1,10 @@
 require 'test_helper'
 
 class MemberSchemaTest < ActiveSupport::TestCase
+  test_extends ApplicationSchema
+
   setup do
     @schema = MemberSchema.new
-  end
-
-  test 'superclass' do
-    assert_equal ApplicationSchema, MemberSchema.superclass
   end
 
   test 'valid schema' do

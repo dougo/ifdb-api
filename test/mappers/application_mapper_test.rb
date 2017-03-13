@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class ApplicationMapperTest < ActiveSupport::TestCase
-  test 'extends Yaks::Mapper' do
-    assert_equal Yaks::Mapper, ApplicationMapper.superclass
-  end
+  test_extends Yaks::Mapper
 
   class TestModel
     def foo; nil end

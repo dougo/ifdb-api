@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class RootControllerTest < ActionDispatch::IntegrationTest
-  test 'ApplicationController' do
-    assert_kind_of ApplicationController, RootController.new
-  end
+  test_extends ApplicationController
 
   test 'JSONAPI' do
     assert_includes RootController, JSONAPI::ActsAsResourceController

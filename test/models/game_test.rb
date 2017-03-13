@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class GameTest < ActiveSupport::TestCase
-  test 'is an ApplicationRecord' do
-    assert_kind_of ApplicationRecord, subject
-  end
+  test_extends ApplicationRecord
 
   should have_and_belong_to_many(:author_members).class_name('Member').join_table('gameprofilelinks')
   should have_many(:ratings).class_name('Review').with_foreign_key(:gameid)

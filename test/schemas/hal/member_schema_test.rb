@@ -1,12 +1,10 @@
 require 'test_helper'
 
 class HAL::MemberSchemaTest < ActiveSupport::TestCase
+  test_extends HALSchema
+
   setup do
     @schema = HAL::MemberSchema.new
-  end
-
-  test 'is a HALSchema' do
-    assert_kind_of HALSchema, @schema
   end
 
   test 'valid schema' do

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class ReviewTest < ActiveSupport::TestCase
-  test 'is an ApplicationRecord' do
-    assert_kind_of ApplicationRecord, subject
-  end
+  test_extends ApplicationRecord
 
   should belong_to(:reviewer).class_name('Member').with_foreign_key(:userid)
   should belong_to(:special).class_name('SpecialReviewer').with_foreign_key(:special)

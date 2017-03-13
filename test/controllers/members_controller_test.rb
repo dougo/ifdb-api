@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class MembersControllerTest < ActionDispatch::IntegrationTest
-  test 'ApplicationController' do
-    assert_kind_of ApplicationController, MembersController.new
-  end
+  test_extends ApplicationController
 
   test 'JSONAPI' do
     assert_includes MembersController, JSONAPI::ActsAsResourceController

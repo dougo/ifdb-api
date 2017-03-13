@@ -1,12 +1,10 @@
 require 'test_helper'
 
 class GameSchemaTest < ActiveSupport::TestCase
+  test_extends ApplicationSchema
+
   setup do
     @schema = GameSchema.new
-  end
-
-  test 'superclass' do
-    assert_equal ApplicationSchema, GameSchema.superclass
   end
 
   test 'valid schema' do

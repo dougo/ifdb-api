@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class MemberTest < ActiveSupport::TestCase 
-  test 'is an ApplicationRecord' do
-    assert_kind_of ApplicationRecord, subject
-  end
+  test_extends ApplicationRecord
 
   should have_many(:comments).with_foreign_key(:sourceid) # .as(:commentable).with_foreign_type(:source)
   should have_and_belong_to_many(:games).join_table('gameprofilelinks')

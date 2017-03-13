@@ -1,12 +1,10 @@
 require 'test_helper'
 
 class HAL::GameSchemaTest < ActiveSupport::TestCase
+  test_extends HALSchema
+
   setup do
     @schema = HAL::GameSchema.new
-  end
-
-  test 'is a HALSchema' do
-    assert_kind_of HALSchema, @schema
   end
 
   test 'valid schema' do

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class ApplicationResourceTest < ActiveSupport::TestCase
-  test 'is a JSONAPI::Resource' do
-    assert_equal JSONAPI::Resource, ApplicationResource.superclass
-  end
+  test_extends JSONAPI::Resource
 
   class TestModel
     def id; :xyzzy end

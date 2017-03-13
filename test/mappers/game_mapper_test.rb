@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class GameMapperTest < ActiveSupport::TestCase
-  test 'is an ApplicationMapper' do
-    assert_equal ApplicationMapper, GameMapper.superclass
-  end
+  test_extends ApplicationMapper
 
   test 'attributes' do
     attrs = %i(id title sort_title author sort_author authorExt tags published version license system language desc

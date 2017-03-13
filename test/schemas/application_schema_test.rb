@@ -1,15 +1,13 @@
 require 'test_helper'
 
 class ApplicationSchemaTest < ActiveSupport::TestCase
+  test_extends JSONSchema
+
   class TestSchema < ApplicationSchema
   end
 
   setup do
     @schema = TestSchema.new
-  end
-
-  test 'extends JSONSchema' do
-    assert_equal JSONSchema, ApplicationSchema.superclass
   end
 
   test 'extend JSON API schema' do

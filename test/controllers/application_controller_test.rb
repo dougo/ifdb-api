@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ApplicationControllerTest < ActionDispatch::IntegrationTest
+  test_extends ActionController::API
+
   test 'hal renderer' do
     class TestModel
       def to_hal

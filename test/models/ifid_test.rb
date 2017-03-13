@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class IFIDTest < ActiveSupport::TestCase
-  test 'is an ApplicationRecord' do
-    assert_kind_of ApplicationRecord, subject
-  end
+  test_extends ApplicationRecord
 
   should belong_to(:game).with_foreign_key(:gameid)
 
