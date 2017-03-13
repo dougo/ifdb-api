@@ -4,10 +4,6 @@ module ResourceTesting
   included do
     test_extends ApplicationResource
 
-    test 'immutable' do
-      refute_predicate resource_class, :mutable?
-    end
-
     test 'attributes' do
       self.class.const_get(:EXPECTED_ATTRS).each do |attr|
         assert_includes resource_class._attributes, attr

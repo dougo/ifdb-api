@@ -15,6 +15,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     attributes :foo, :bar, :baz
   end
 
+  test 'immutable' do
+    refute_predicate TestResource, :mutable?
+  end
+
   test 'omits blank attributes' do
     resource = TestResource.new(TestModel.new, {})
     assert_equal [:id, :bar], resource.fetchable_fields
