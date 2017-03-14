@@ -5,7 +5,11 @@ class ApplicationResource < JSONAPI::Resource
   end
 
   def fetchable_fields
-    super.reject { |name| public_send(name).blank? }
+    super.select do |field|
+      rel = self.class._relationships[field]
+      field = rel.foreign_key if rel&.belongs_to?
+      public_send(field).present?
+    end
   end
 
   def self.default_sort

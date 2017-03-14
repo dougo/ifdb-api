@@ -5,10 +5,6 @@ class JSONAPIConfigTest < ActiveSupport::TestCase
     assert_equal :string, JSONAPI.configuration.resource_key_type
   end
 
-  test 'resource linkage' do
-    assert JSONAPI.configuration.always_include_to_one_linkage_data
-  end
-
   test 'default paginator' do
     assert_equal :paged, JSONAPI.configuration.default_paginator
   end

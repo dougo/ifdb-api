@@ -49,9 +49,6 @@ class GameSchemaTest < ActiveSupport::TestCase
       assert_equal %i(self related), rel_links.schema.required
 
       rel_data = rel.schema.property(:data)
-      assert_equal :object, rel_data.type
-      assert_predicate rel_data, :required?
-
       data_type_prop = rel_data.schema.property(:type)
       assert_equal :members, data_type_prop.value
     end

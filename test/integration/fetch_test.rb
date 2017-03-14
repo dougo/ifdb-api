@@ -19,9 +19,7 @@ class FetchTest < ActionDispatch::IntegrationTest
     # assert_equal member_path(@model.author_id), resource[:_links][:author][:href]
 
     editor_rel = resource[:relationships][:editor]
-    assert_equal 'members',       editor_rel[:data][:type]
-    assert_equal @model.editedby, editor_rel[:data][:id]
-    # TODO: follow editor relationship link?
+    # TODO: follow editor relationship link
   end
 
   test 'fetch games by page' do
