@@ -3,7 +3,7 @@ require 'test_helper'
 class GameTest < ActiveSupport::TestCase
   test_extends ApplicationRecord
 
-  should have_and_belong_to_many(:author_members).class_name('Member').join_table('gameprofilelinks')
+  should have_and_belong_to_many(:author_profiles).class_name('Member').join_table('gameprofilelinks')
   should have_many(:ratings).class_name('Review').with_foreign_key(:gameid)
   should have_many(:reviews_and_ratings).class_name('Review').with_foreign_key(:gameid)
   should have_many(:ifids).class_name('IFID').with_foreign_key(:gameid)

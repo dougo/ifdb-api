@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  has_and_belongs_to_many :author_members, class_name: 'Member', join_table: :gameprofilelinks,
+  has_and_belongs_to_many :author_profiles, class_name: 'Member', join_table: :gameprofilelinks,
                           foreign_key: :gameid, association_foreign_key: :userid
   has_many :ratings, -> { ratings }, class_name: 'Review', foreign_key: :gameid
   has_many :reviews_and_ratings, class_name: 'Review', foreign_key: :gameid

@@ -3,5 +3,7 @@ class GameResource < ApplicationResource
                  coverart seriesname seriesnumber genre forgiveness bafsid website downloadnotes created moddate
                  pagevsn)
 
+  has_many :author_profiles
+
   has_one :editor, class_name: 'Member', foreign_key: :editedby
 end

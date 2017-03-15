@@ -5,6 +5,10 @@ class MemberResourceTest < ActiveSupport::TestCase
 
   test_attributes %i(name gender location publicemail profile picture created)
 
+  test 'games relationship' do
+    assert_kind_of JSONAPI::Relationship::ToMany, MemberResource._relationship(:games)
+  end
+  
   test 'conforms to schema' do
     schema = MemberSchema.new
     assert_valid_json schema, serialize(members(:minimal))

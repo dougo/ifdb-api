@@ -7,7 +7,11 @@ class GameResourceTest < ActiveSupport::TestCase
                      desc coverart seriesname seriesnumber genre forgiveness bafsid website downloadnotes created
                      moddate pagevsn)
 
-  test 'relationships' do
+  test 'author_profiles relationship' do
+    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:author_profiles)
+  end
+
+  test 'editor relationship' do
     rel = GameResource._relationship(:editor)
     assert_kind_of JSONAPI::Relationship::ToOne, rel
     assert_equal 'Member', rel.class_name
