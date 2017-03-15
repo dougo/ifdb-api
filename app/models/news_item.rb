@@ -1,7 +1,7 @@
 class NewsItem < ApplicationRecord
   self.table_name = 'news'
 
-  attribute :source, SourceTypeName.new('C' => 'Competition', 'G' => 'Game', 'U' => 'Club')
+  attribute :source, :source_type_name, name_map: { 'C' => 'Competition', 'G' => 'Game', 'U' => 'Club' }
 
   belongs_to :newsworthy, polymorphic: true, foreign_key: :sourceid, foreign_type: :source
   belongs_to :reporter, class_name: 'Member', foreign_key: :userid

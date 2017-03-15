@@ -1,7 +1,8 @@
 class Comment < ApplicationRecord
   self.table_name = 'ucomments'
 
-  attribute :source, SourceTypeName.new('L' => 'RecommendedList', 'P' => 'Poll', 'R' => 'Review', 'U' => 'Member')
+  attribute :source, :source_type_name,
+            name_map: { 'L' => 'RecommendedList', 'P' => 'Poll', 'R' => 'Review', 'U' => 'Member' }
 
   belongs_to :parent_comment, class_name: 'Comment', foreign_key: :parent
   belongs_to :commentable, polymorphic: true, foreign_key: :sourceid, foreign_type: :source

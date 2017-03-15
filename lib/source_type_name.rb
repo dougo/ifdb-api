@@ -1,7 +1,7 @@
 class SourceTypeName < ActiveRecord::Type::String
   attr_accessor :name_map
 
-  def initialize(name_map)
+  def initialize(name_map:)
     @name_map = name_map.freeze
     @abbrevs = name_map.invert.freeze
   end

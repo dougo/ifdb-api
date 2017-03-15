@@ -1,11 +1,9 @@
 require 'test_helper'
 
 class SourceTypeNameTest < ActiveSupport::TestCase
-  test 'is a String' do
-    assert_operator self.class.described_type, :<, ActiveRecord::Type::String
-  end
+  test_extends ActiveRecord::Type::String
 
-  subject { self.class.described_type.new('Q' => 'Qanat') }
+  subject { self.class.described_type.new(name_map: { 'Q' => 'Qanat' } ) }
 
   test 'name_map' do
     assert_equal({ 'Q' => 'Qanat' }, subject.name_map)
