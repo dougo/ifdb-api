@@ -3,6 +3,11 @@ concern :ResourceTesting do
 
   included do
     test_extends ApplicationResource
+
+    subject do
+      resource_class = self.class.described_type
+      resource_class.new(resource_class._model_class.new, {})
+    end
   end
 
   class_methods do
