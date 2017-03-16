@@ -8,7 +8,8 @@ class RootController < ApplicationController
       links: {
         self: root_url,
         games: games_url,
-        members: members_url
+        members: members_url,
+        clubs: clubs_url
       }
     }
     render json: json, content_type: JSONAPI::MEDIA_TYPE

@@ -25,11 +25,10 @@ class RootControllerTest < ActionDispatch::IntegrationTest
     assert_includes json, :meta
     assert_includes json, :links
     links = json[:links]
-    assert_includes links, :self
-    assert_equal root_url, links[:self]
-    assert_includes links, :games
-    assert_equal games_url, links[:games]
-    assert_includes links, :members
-    assert_equal members_url, links[:members]
+    assert_equal({ self: root_url,
+                   games: games_url, 
+                   members: members_url,
+                   clubs: clubs_url
+                 }, links)
   end
 end

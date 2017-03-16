@@ -1,5 +1,6 @@
 class Club < ApplicationRecord
+  attribute :members_public, :yn_boolean
+
   has_many :news, as: :newsworthy, class_name: 'NewsItem', foreign_key: :sourceid, foreign_type: :source
-  has_many :club_memberships, foreign_key: :clubid
-  has_many :members, through: :club_memberships
+  has_many :memberships, class_name: 'ClubMembership', foreign_key: :clubid
 end
