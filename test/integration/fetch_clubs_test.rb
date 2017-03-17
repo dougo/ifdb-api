@@ -177,6 +177,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
             id: arthur_id,
             type: 'members',
             links: {
+              picture: 'http://i.imgur.com/SL9D5td.png',
               self: "http://www.example.com/members/#{arthur_id}"
             },
             attributes: {

@@ -16,6 +16,7 @@ arthur:
   name: Arthur Dent
   gender: M
   location: Cottington, England, Earth
+  picture: http://i.imgur.com/SL9D5td.png
   created: <%= Time.now %>
 
 trillian:
