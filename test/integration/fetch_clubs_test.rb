@@ -1,11 +1,12 @@
 require 'test_helper'
 
 class FetchClubsTest < ActionDispatch::IntegrationTest
+  make_my_diffs_pretty!
+
   test 'fetch all data needed by the clubs index page' do
     get root_url, as: :jsonapi
     get response.parsed_body[:links][:clubs], as: :jsonapi, params: {
-          include: :memberships,
-          fields: { :'club-memberships' => 'id' }
+          fields: { clubs: 'name,desc,created,members-count' }
         }
     assert_response :success, -> { response_backtrace }
     prif_id = clubs(:prif).id
@@ -24,32 +25,13 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
               name: 'PR-IF',
               desc: 'The Boston area IF meetup group.',
               created: '2010-04-10T02:05:19.000Z',
-              'members-public': true
-            },
-            relationships: {
-              memberships: {
-                links: {
-                  self: "http://www.example.com/clubs/#{prif_id}/relationships/memberships",
-                  related: "http://www.example.com/clubs/#{prif_id}/memberships"
-                },
-                # TODO: we only need this for its size; maybe include the size as an attribute on the club?
-                data: [ { type: 'club-memberships', id: "#{prif_id}-#{arthur_id}" } ]
-              }
-            }
-          }
-        ],
-        included: [
-          {
-            id: "#{prif_id}-#{arthur_id}",
-            type: 'club-memberships',
-            links: {
-              self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}"
+              'members-count': 1
             }
           }
         ],
         links: {
-          first: 'http://www.example.com/clubs?fields%5Bclub-memberships%5D=id&include=memberships&page%5Bnumber%5D=1&page%5Bsize%5D=20',
-          last:  'http://www.example.com/clubs?fields%5Bclub-memberships%5D=id&include=memberships&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+          first: 'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Cdesc%2Ccreated%2Cmembers-count&page%5Bnumber%5D=1&page%5Bsize%5D=20',
+          last:  'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Cdesc%2Ccreated%2Cmembers-count&page%5Bnumber%5D=1&page%5Bsize%5D=20'
         }
       },
       response.parsed_body)
@@ -75,7 +57,8 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
             name: 'PR-IF',
             desc: 'The Boston area IF meetup group.',
             created: '2010-04-10T02:05:19.000Z',
-            'members-public': true
+            'members-public': true,
+            'members-count': 1
           },
           relationships: {
             memberships: {

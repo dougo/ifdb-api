@@ -3,7 +3,11 @@ require 'test_helper'
 class ClubResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
-  test_attributes %i(name keywords desc contacts contacts_plain created members_public)
+  test_attributes %i(name keywords desc contacts contacts_plain created members_public members_count)
+
+  test 'memberships relationship' do
+    assert_kind_of JSONAPI::Relationship::ToMany, ClubResource._relationship(:memberships)
+  end
 
   test 'website link' do
     subject._model.url = 'http://example.com'
@@ -15,7 +19,19 @@ class ClubResourceTest < ActiveSupport::TestCase
     refute_includes subject.custom_links, :website
   end
 
-  test 'memberships relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, ClubResource._relationship(:memberships)
+  test 'members_count' do
+    subject._model.memberships.build([{}, {}])
+    assert_equal 2, subject.members_count
+  end
+
+  test 'members_count does not load records' do
+    model = clubs(:prif)
+    subject = ClubResource.new(model, {})
+    subject.members_count
+    refute_predicate model.memberships, :loaded?
+  end
+
+  test 'records includes memberships to avoid N+1 queries from members_count' do
+    assert_predicate ClubResource.records({}).first.memberships, :loaded?
   end
 end
