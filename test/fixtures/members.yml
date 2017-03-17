@@ -15,6 +15,7 @@ maximal:
 arthur:
   name: Arthur Dent
   gender: M
+  location: Cottington, England, Earth
   created: <%= Time.now %>
 
 trillian:
