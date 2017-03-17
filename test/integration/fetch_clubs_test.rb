@@ -17,8 +17,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
             id: prif_id,
             type: 'clubs',
             links: {
-              # TODO: should be :'web-site'
-              web_site: 'http://pr-if.org/',
+              website: 'http://pr-if.org/',
               self: "http://www.example.com/clubs/#{prif_id}"
             },
             attributes: {
@@ -69,7 +68,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           id: prif_id,
           type: 'clubs',
           links: {
-            web_site: 'http://pr-if.org/',
+            website: 'http://pr-if.org/',
             self: "http://www.example.com/clubs/#{prif_id}"
           },
           attributes: {
@@ -169,7 +168,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
             id: prif_id,
             type: 'clubs',
             links: {
-              web_site: 'http://pr-if.org/',
+              website: 'http://pr-if.org/',
               self: "http://www.example.com/clubs/#{prif_id}"
             },
             attributes: { name: 'PR-IF' }
