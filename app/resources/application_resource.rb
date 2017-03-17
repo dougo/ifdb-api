@@ -6,9 +6,7 @@ class ApplicationResource < JSONAPI::Resource
 
   def fetchable_fields
     super.select do |field|
-      rel = self.class._relationships[field]
-      field = rel.foreign_key if rel&.belongs_to?
-      public_send(field).present?
+      self.class._relationship(field) || public_send(field).present?
     end
   end
 

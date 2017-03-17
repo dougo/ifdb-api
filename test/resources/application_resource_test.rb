@@ -10,6 +10,7 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     def baz; '' end
     def garply_id; :plugh end
     def quux_id; '' end
+    def frobs; [] end
   end
 
   class TestResource < ApplicationResource
@@ -17,17 +18,16 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     attributes :foo, :bar, :baz
     has_one :garply, class_name: 'Test'
     has_one :quux, class_name: 'Test'
+    has_many :frobs, class_name: 'Test'
   end
 
   test 'immutable' do
     refute_predicate TestResource, :mutable?
   end
 
-  test 'omits blank attributes and belongs_to relationships with blank foreign key' do
+  test 'omits blank attributes but includes all relationships' do
     resource = TestResource.new(TestModel.new, {})
-    # Note that there is no #garply or #quux method on TestModel; it should just read the foreign key rather than
-    # loading the association.
-    assert_same_elements [:id, :bar, :garply], resource.fetchable_fields
+    assert_same_elements %i(id bar garply quux frobs), resource.fetchable_fields
   end
 
   test 'sort by creation time by default' do
