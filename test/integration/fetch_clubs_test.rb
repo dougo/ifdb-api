@@ -6,11 +6,10 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the clubs index page' do
     get root_url, as: :jsonapi
     get response.parsed_body[:links][:clubs], as: :jsonapi, params: {
-          fields: { clubs: 'name,desc,created,members-count' }
+          fields: { clubs: 'name,listed,members-count,desc' }
         }
     assert_response :success, -> { response_backtrace }
     prif_id = clubs(:prif).id
-    arthur_id = members(:arthur).id
     assert_equal(
       {
         data: [
@@ -24,14 +23,14 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
             attributes: {
               name: 'PR-IF',
               desc: 'The Boston area IF meetup group.',
-              created: '2010-04-10T02:05:19.000Z',
-              'members-count': 1
+              'members-count': 1,
+              listed: '2010-04-10T02:05:19.000Z'
             }
           }
         ],
         links: {
-          first: 'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Cdesc%2Ccreated%2Cmembers-count&page%5Bnumber%5D=1&page%5Bsize%5D=20',
-          last:  'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Cdesc%2Ccreated%2Cmembers-count&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+          first: 'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Clisted%2Cmembers-count%2Cdesc&page%5Bnumber%5D=1&page%5Bsize%5D=20',
+          last:  'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Clisted%2Cmembers-count%2Cdesc&page%5Bnumber%5D=1&page%5Bsize%5D=20'
         }
       },
       response.parsed_body)
@@ -40,7 +39,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the club details page' do
     get root_url, as: :jsonapi
     get response.parsed_body[:links][:clubs], as: :jsonapi
-    get response.parsed_body[:data].first[:links][:self], as: :jsonapi, params: { include: :memberships }
+    get response.parsed_body[:data].first[:links][:self], as: :jsonapi
     assert_response :success, -> { response_backtrace }
     prif_id = clubs(:prif).id
     arthur_id = members(:arthur).id
@@ -56,47 +55,20 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           attributes: {
             name: 'PR-IF',
             desc: 'The Boston area IF meetup group.',
-            created: '2010-04-10T02:05:19.000Z',
             'members-public': true,
-            'members-count': 1
+            'members-count': 1,
+            listed: '2010-04-10T02:05:19.000Z'
           },
           relationships: {
-            memberships: {
+            membership: {
               links: {
-                self: "http://www.example.com/clubs/#{prif_id}/relationships/memberships",
-                related: "http://www.example.com/clubs/#{prif_id}/memberships"
-              },
-              data: [ { type: 'club-memberships', id: "#{prif_id}-#{arthur_id}" } ]
-            }
-          }
-        },
-        included: [
-          {
-            id: "#{prif_id}-#{arthur_id}",
-            type: 'club-memberships',
-            links: {
-              self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}"
-            },
-            attributes: {
-              joindate: '2015-03-15T12:00:00.000Z',
-              admin: true
-            },
-            relationships: {
-              club: {
-                links: {
-                  self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/relationships/club",
-                  related: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/club"
-                }
-              },
-              member: {
-                links: {
-                  self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/relationships/member",
-                  related: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/member"
-                }
+                self: "http://www.example.com/clubs/#{prif_id}/relationships/membership",
+                related: "http://www.example.com/clubs/#{prif_id}/membership"
               }
             }
+            # TODO: contact-profiles
           }
-        ]
+        }
       },
       response.parsed_body)
   end
@@ -105,7 +77,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     get root_url, as: :jsonapi
     get response.parsed_body[:links][:clubs], as: :jsonapi
     get response.parsed_body[:data].first[:links][:self], as: :jsonapi
-    get response.parsed_body[:data][:relationships][:memberships][:links][:related], as: :jsonapi, params: {
+    get response.parsed_body[:data][:relationships][:membership][:links][:related], as: :jsonapi, params: {
           include: 'club,member',
           fields: {
             clubs: 'name',
@@ -171,8 +143,8 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           }
         ],
         links: {
-          first: "http://www.example.com/clubs/#{prif_id}/memberships?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20",
-          last:  "http://www.example.com/clubs/#{prif_id}/memberships?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20"
+          first: "http://www.example.com/clubs/#{prif_id}/membership?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20",
+          last:  "http://www.example.com/clubs/#{prif_id}/membership?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20"
         }
       },
       response.parsed_body)
@@ -180,11 +152,11 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
 
   test 'fetch a club member profile via the membership' do
     get root_url, as: :jsonapi
-    get response.parsed_body[:links][:clubs], as: :jsonapi, params: { include: 'memberships.member' }
+    get response.parsed_body[:links][:clubs], as: :jsonapi, params: { include: 'membership.member' }
     document = response.parsed_body
     club = document[:data].first
     included = document[:included]
-    linkage = club[:relationships][:memberships][:data].first
+    linkage = club[:relationships][:membership][:data].first
     membership = included.find { |resource| resource[:type] == linkage[:type] && resource[:id] == linkage[:id] }
     get membership[:relationships][:member][:links][:related], as: :jsonapi
     assert_response :success, -> { response_backtrace }

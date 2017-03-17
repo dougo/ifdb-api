@@ -15,7 +15,7 @@ class ClubTest < ActiveSupport::TestCase
 
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)
-  should have_many(:memberships).class_name('ClubMembership').with_foreign_key(:clubid)
+  should have_many(:membership).class_name('ClubMembership').with_foreign_key(:clubid)
   # TODO: wishlist and playlist
 
   test 'members_public is YNBoolean' do

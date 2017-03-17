@@ -1,7 +1,8 @@
 class ClubResource < ApplicationResource
-  attributes *%i(name keywords desc contacts contacts_plain created members_public members_count)
+  attributes *%i(name keywords desc contacts contacts_plain members_public members_count)
+  attribute :listed, delegate: :created
 
-  has_many :memberships
+  has_many :membership
 
   def custom_links(options = {})
     links = super
@@ -10,10 +11,10 @@ class ClubResource < ApplicationResource
   end
 
   def members_count
-    _model.memberships.size
+    _model.membership.size
   end
 
   def self.records(context = {})
-    super.includes(:memberships)
+    super.includes(:membership)
   end
 end
