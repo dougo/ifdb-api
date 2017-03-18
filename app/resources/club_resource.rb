@@ -3,6 +3,7 @@ class ClubResource < ApplicationResource
   attribute :listed, delegate: :created
 
   has_many :membership
+  has_many :contact_profiles, class_name: 'Member'
 
   def custom_links(options = {})
     links = super

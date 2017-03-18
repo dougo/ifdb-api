@@ -39,7 +39,9 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the club details page' do
     get root_url, as: :jsonapi
     get response.parsed_body[:links][:clubs], as: :jsonapi
-    get response.parsed_body[:data].first[:links][:self], as: :jsonapi
+    get response.parsed_body[:data].first[:links][:self], as: :jsonapi, params: {
+          include: 'contact-profiles', fields: { members: :id }
+        }
     assert_response :success, -> { response_backtrace }
     prif_id = clubs(:prif).id
     arthur_id = members(:arthur).id
@@ -55,6 +57,8 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           attributes: {
             name: 'PR-IF',
             desc: 'The Boston area IF meetup group.',
+            contacts: "Arthur Dent {#{arthur_id}}",
+            'contacts-plain': 'Arthur Dent',
             'members-public': true,
             'members-count': 1,
             listed: '2010-04-10T02:05:19.000Z'
@@ -65,10 +69,26 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
                 self: "http://www.example.com/clubs/#{prif_id}/relationships/membership",
                 related: "http://www.example.com/clubs/#{prif_id}/membership"
               }
+            },
+            'contact-profiles': {
+              links: {
+                self: "http://www.example.com/clubs/#{prif_id}/relationships/contact-profiles",
+                related: "http://www.example.com/clubs/#{prif_id}/contact-profiles"
+              },
+              data: [ { type: 'members', id: arthur_id } ]
             }
-            # TODO: contact-profiles
           }
-        }
+        },
+        included: [
+          {
+            id: arthur_id,
+            type: 'members',
+            links: {
+              picture: 'http://i.imgur.com/SL9D5td.png',
+              self: "http://www.example.com/members/#{arthur_id}"
+            }
+          }
+        ]
       },
       response.parsed_body)
   end
@@ -167,9 +187,16 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
 
   # TODO: move this to JSONAPI::Testing concern
   def response_backtrace
-    meta = response.parsed_body[:errors].first[:meta]
-    msg = meta[:exception]
-    bt = Minitest.backtrace_filter.filter(meta[:backtrace]).join "\n    "
-    "#{msg}\n    #{bt}"
+    # TODO: concat multiple errors
+    error = response.parsed_body[:errors].first
+    # TODO: format using error[:status], error[:code], error[:title], error[:detail]
+    meta = error[:meta]
+    if meta
+      msg = meta[:exception]
+      bt = Minitest.backtrace_filter.filter(meta[:backtrace]).join "\n    "
+      "#{msg}\n    #{bt}"
+    else
+      error
+    end
   end
 end

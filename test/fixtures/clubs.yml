@@ -2,5 +2,7 @@ prif:
   name: PR-IF
   desc: The Boston area IF meetup group.
   url: http://pr-if.org/
+  contacts: Arthur Dent {<%= ActiveRecord::FixtureSet.identify(:arthur) %>}
+  contacts_plain: Arthur Dent
   created: 2010-04-10T02:05:19.000Z
   members_public: Y
