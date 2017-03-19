@@ -7,11 +7,6 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_includes GamesController, JSONAPI::ActsAsResourceController
   end
 
-  test 'routes' do
-    assert_routing games_path, controller: 'games', action: 'index'
-    assert_routing game_path('xyzzy'), controller: 'games', action: 'show', id: 'xyzzy'
-  end
-
   test 'redirects when a game forward exists' do
     get game_path(:oldid), as: :jsonapi
     assert_response :moved_permanently

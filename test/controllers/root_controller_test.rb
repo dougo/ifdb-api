@@ -7,10 +7,6 @@ class RootControllerTest < ActionDispatch::IntegrationTest
     assert_includes RootController, JSONAPI::ActsAsResourceController
   end
 
-  test 'routes' do
-    assert_routing root_path, controller: 'root', action: 'index'
-  end
-
   test 'index verifies accept header' do
     get root_path, as: :json
     assert_response :not_acceptable

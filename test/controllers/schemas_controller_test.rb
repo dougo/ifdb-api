@@ -16,11 +16,6 @@ end
 class SchemasControllerTest < ActionDispatch::IntegrationTest
   test_extends ApplicationController
 
-  test 'routes' do
-    assert_routing schema_path('test_model'), controller: 'schemas', action: 'show', resource: 'test_model'
-    assert_routing schema_path('hal/test_model'), controller: 'schemas', action: 'show', resource: 'hal/test_model'
-  end
-
   test 'show schema' do
     assert_raises(NameError) { get schema_path(:xyzzy), as: :json }
 
