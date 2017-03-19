@@ -3,37 +3,34 @@ require 'test_helper'
 class FetchClubsTest < ActionDispatch::IntegrationTest
   make_my_diffs_pretty!
 
+  class FaradayAdapter < Faraday::Adapter::Rack
+    def initialize(app); super(app, FetchClubsTest.app) end
+    Faraday::Adapter.register_middleware fetch_clubs_test: self
+  end
+  Faraday.default_adapter = :fetch_clubs_test
+
   test 'fetch all data needed by the clubs index page' do
-    get root_url, as: :jsonapi
-    get response.parsed_body[:links][:clubs], as: :jsonapi, params: {
-          fields: { clubs: 'name,listed,members-count,desc' }
-        }
-    assert_response :success, -> { response_backtrace }
-    prif_id = clubs(:prif).id
-    assert_equal(
-      {
-        data: [
-          {
-            id: prif_id,
-            type: 'clubs',
-            links: {
-              website: 'http://pr-if.org/',
-              self: "http://www.example.com/clubs/#{prif_id}"
-            },
-            attributes: {
-              name: 'PR-IF',
-              desc: 'The Boston area IF meetup group.',
-              'members-count': 1,
-              listed: '2010-04-10T02:05:19.000Z'
-            }
-          }
-        ],
-        links: {
-          first: 'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Clisted%2Cmembers-count%2Cdesc&page%5Bnumber%5D=1&page%5Bsize%5D=20',
-          last:  'http://www.example.com/clubs?fields%5Bclubs%5D=name%2Clisted%2Cmembers-count%2Cdesc&page%5Bnumber%5D=1&page%5Bsize%5D=20'
-        }
-      },
-      response.parsed_body)
+    ifdb = HyperResource.new(root: 'http://www.example.com',
+                             adapter: HyperResource::Adapter::JSON_API,
+                             headers: { 'Accept' => 'application/vnd.api+json' })
+
+    club = ifdb.clubs.first # TODO: fields[clubs]=...
+    expected = {
+      website: 'http://pr-if.org/',
+      name: 'PR-IF',
+      listed: '2010-04-10T02:05:19.000Z',
+      members_count: 1,
+      desc: 'The Boston area IF meetup group.',
+    }
+    vals = {
+      website: club.website.href,
+      name: club.name,
+      listed: club.listed,
+      members_count: club.public_send('members-count'), # TODO: undasherize keys
+      desc: club.desc
+    }
+    assert_equal expected, vals
+    # TODO: pagination links
   end
 
   test 'fetch all data needed by the club details page' do

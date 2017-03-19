@@ -26,6 +26,9 @@ gem 'json-schema'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+
+  # Use HyperResource to consume the API.
+  gem 'hyperresource'
 end
 
 group :development do

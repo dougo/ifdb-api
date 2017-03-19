@@ -23,6 +23,7 @@ class RootControllerTest < ActionDispatch::IntegrationTest
     assert_valid_json JSON::Validator.schema_for_uri('http://jsonapi.org/schema#').schema, json
     refute_includes json, :data
     assert_includes json, :meta
+    assert_includes json[:meta], :message
     assert_includes json, :links
     links = json[:links]
     assert_equal({ self: root_url,

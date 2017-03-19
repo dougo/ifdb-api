@@ -4,7 +4,9 @@ class RootController < ApplicationController
   def index
     return unless verify_accept_header
     json = {
-      meta: {},
+      meta: {
+        message: 'Welcome to the IFDB API.'
+      },
       links: {
         self: root_url,
         games: games_url,
