@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'root#index'
+  root 'database#show'
   jsonapi_resources :games
   jsonapi_resources :members
   jsonapi_resources :club_memberships

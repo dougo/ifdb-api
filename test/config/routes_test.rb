@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RoutesConfigTest < ActionDispatch::IntegrationTest
   test 'root' do
-    assert_routing root_path, controller: 'root', action: 'index'
+    assert_routing root_path, controller: 'database', action: 'show'
   end
 
   test 'games' do
