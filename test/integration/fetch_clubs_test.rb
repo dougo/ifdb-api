@@ -9,19 +9,23 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   end
   Faraday.default_adapter = :fetch_clubs_test
 
-  test 'fetch all data needed by the clubs index page' do
-    ifdb = HyperResource.new(root: 'http://www.example.com',
-                             adapter: HyperResource::Adapter::JSON_API,
-                             headers: { 'Accept' => 'application/vnd.api+json' })
+  attr_reader :ifdb
+  setup do
+    @ifdb = HyperResource.new(root: 'http://www.example.com',
+                              adapter: HyperResource::Adapter::JSON_API,
+                              headers: { 'Accept' => 'application/vnd.api+json' })
+  end
 
+  test 'fetch all data needed by the clubs index page' do
+    clubs = ifdb.clubs
     # TODO: would this be more interesting with a second club?
-    club = ifdb.clubs.first # TODO: fields[clubs]=...
+    club = clubs.first # TODO: fields[clubs]=...
     vals = {
-      website: club.website.href,
+      website: club.website.url,
       name: club.name,
       listed: club.listed,
       members_count: club.members_count,
-      desc: club.desc
+      desc: club.desc,
     }
     expected = {
       website: 'http://pr-if.org/',
@@ -31,13 +35,11 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       desc: 'The Boston area IF meetup group.',
     }
     assert_equal expected, vals
-    # TODO: pagination links
+    assert_equal 'http://www.example.com/clubs?page%5Bnumber%5D=1&page%5Bsize%5D=20', clubs.last.url
+    assert_equal clubs.last.url, clubs.links[:first].url
   end
 
   test 'fetch all data needed by the club details page' do
-    ifdb = HyperResource.new(root: 'http://www.example.com',
-                             adapter: HyperResource::Adapter::JSON_API,
-                             headers: { 'Accept' => 'application/vnd.api+json' })
     arthur_id = members(:arthur).id
     club = ifdb.clubs.first.get
     # TODO:
@@ -46,11 +48,11 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       name: club.name,
       desc: club.desc,
       listed: club.listed,
-      website: club.website.href,
+      website: club.website.url,
       contacts: club.contacts,
-      contact_profiles: club.links.contact_profiles.first.href,
+      contact_profiles: club.links.contact_profiles.first.url,
       # TODO:
-      # contact_profiles: club.objects.contact_profiles.first.href,
+      # contact_profiles: club.objects.contact_profiles.first.url,
       members_count: club.members_count
     }
     expected = {
@@ -66,93 +68,53 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   end
   
   test 'fetch all data needed by the club members page' do
-    get root_url, as: :jsonapi
-    get response.parsed_body[:links][:clubs], as: :jsonapi
-    get response.parsed_body[:data].first[:links][:self], as: :jsonapi
-    get response.parsed_body[:data][:relationships][:membership][:links][:related], as: :jsonapi, params: {
-          include: 'club,member',
-          fields: {
-            clubs: 'name',
-            members: 'name,location,created'
-          }
-        }
-    assert_response :success, -> { response_backtrace }
-    prif_id = clubs(:prif).id
     arthur_id = members(:arthur).id
-    assert_equal(
-      {
-        data: [
-          {
-            id: "#{prif_id}-#{arthur_id}",
-            type: 'club-memberships',
-            links: {
-              self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}"
-            },
-            attributes: {
-              joindate: '2015-03-15T12:00:00.000Z',
-              admin: true
-            },
-            relationships: {
-              club: {
-                links: {
-                  self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/relationships/club",
-                  related: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/club"
-                },
-                data: { type: 'clubs', id: prif_id }
-              },
-              member: {
-                links: {
-                  self: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/relationships/member",
-                  related: "http://www.example.com/club-memberships/#{prif_id}-#{arthur_id}/member"
-                },
-                data: { type: 'members', id: arthur_id }
-              }
-            }
-          }
-        ],
-        included: [
-          {
-            id: prif_id,
-            type: 'clubs',
-            links: {
-              website: 'http://pr-if.org/',
-              self: "http://www.example.com/clubs/#{prif_id}"
-            },
-            attributes: { name: 'PR-IF' }
-          },
-          {
-            id: arthur_id,
-            type: 'members',
-            links: {
-              picture: 'http://i.imgur.com/SL9D5td.png',
-              self: "http://www.example.com/members/#{arthur_id}"
-            },
-            attributes: {
-              name: 'Arthur Dent',
-              location: 'Cottington, England, Earth',
-              created: members(:arthur).created.as_json
-            }
-          }
-        ],
-        links: {
-          first: "http://www.example.com/clubs/#{prif_id}/membership?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20",
-          last:  "http://www.example.com/clubs/#{prif_id}/membership?fields%5Bclubs%5D=name&fields%5Bmembers%5D=name%2Clocation%2Ccreated&include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20"
+    prif_id = clubs(:prif).id
+    # TODO: would this be more interesting with a second member?
+    # TODO: fields[clubs]=name&fields[members]=name,location
+    memberships = ifdb.clubs.first.membership
+    club = memberships.first.links.club.get
+    # TODO: include club
+    # club = memberships.first.objects.club
+    vals = {
+      club: { name: club.name, url: club.url },
+      # TODO: should memberships.map work even if it's a link? returns an Enumerator??
+      members: memberships.get.map do |membership|
+        member = membership.links.member.get
+        # TODO: include member
+        # member = membership.objects.member
+        {
+          picture: member.picture.url,
+          url: member.url,
+          name: member.name,
+          admin: membership.admin,
+          location: member.location,
+          joindate: membership.joindate
         }
-      },
-      response.parsed_body)
+      end
+      # TODO: pagination?
+    }
+    expected = {
+      club: { name: 'PR-IF', url: "http://www.example.com/clubs/#{prif_id}" },
+      members: [
+        {
+          picture: 'http://i.imgur.com/SL9D5td.png',
+          url: "http://www.example.com/members/#{arthur_id}",
+          name: 'Arthur Dent',
+          admin: true,
+          location: 'Cottington, England, Earth',
+          joindate: '2015-03-15T12:00:00.000Z'
+        }
+      ]
+    }
+    assert_equal expected, vals
   end
 
   test 'fetch a club member profile via the membership' do
-    get root_url, as: :jsonapi
-    get response.parsed_body[:links][:clubs], as: :jsonapi, params: { include: 'membership.member' }
-    document = response.parsed_body
-    club = document[:data].first
-    included = document[:included]
-    linkage = club[:relationships][:membership][:data].first
-    membership = included.find { |resource| resource[:type] == linkage[:type] && resource[:id] == linkage[:id] }
-    get membership[:relationships][:member][:links][:related], as: :jsonapi
-    assert_response :success, -> { response_backtrace }
-    assert_equal 'Arthur Dent', response.parsed_body[:data][:attributes][:name]
+    membership = ifdb.clubs.first.links.membership.first
+    # TODO: include member
+    # membership = ifdb.clubs(include: 'membership').first.objects.membership.first
+    assert_equal 'Arthur Dent', membership.links.member.get.name
   end
 
   private
