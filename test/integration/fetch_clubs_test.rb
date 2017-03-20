@@ -38,7 +38,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     ifdb = HyperResource.new(root: 'http://www.example.com',
                              adapter: HyperResource::Adapter::JSON_API,
                              headers: { 'Accept' => 'application/vnd.api+json' })
-
+    arthur_id = members(:arthur).id
     club = ifdb.clubs.first.get
     # TODO:
     # club = ifdb.clubs.first.self(include: 'contact-profiles').get
@@ -47,7 +47,10 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       desc: club.desc,
       listed: club.listed,
       website: club.website.href,
-      contacts_plain: club.public_send('contacts-plain'),
+      contacts: club.contacts,
+      contact_profiles: club.links.public_send('contact-profiles').first.href,
+      # TODO:
+      # contact_profiles: club.objects.public_send('contact-profiles').first.href,
       members_count: club.public_send('members-count')
     }
     expected = {
@@ -55,13 +58,11 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       desc: 'The Boston area IF meetup group.',
       listed: '2010-04-10T02:05:19.000Z',
       website: 'http://pr-if.org/',
-      contacts_plain: 'Arthur Dent',
+      contacts: "Arthur Dent {#{arthur_id}}",
+      contact_profiles: "http://www.example.com/members/#{arthur_id}",
       members_count: 1
     }
     assert_equal expected, vals
-    assert_match /Arthur Dent {(.*)}/, club.contacts
-    # TODO
-    # assert_equal "http://www.example.com/members/#{$1}", club.public_send('contact-profiles').first.href
   end
   
   test 'fetch all data needed by the club members page' do

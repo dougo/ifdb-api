@@ -31,21 +31,11 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     end
   end
 
-  def self.apply_links(links, hr)
-    if links
-      links.each do |rel, href|
-        hr.links[rel] = HyperResource::Link.new(hr, href: href) # TODO: should be hr.class::Link.new - TDD this
-        hr.href = href if rel == :self
-      end
-    end
-    hr
-  end
-
   def self.apply_resource(resource, hr)
     attrs = { id: resource[:id], type: resource[:type], **resource[:attributes] }.stringify_keys
     hr.attributes.replace(attrs)
+    apply_relationships(resource[:relationships], hr)
     apply_links(resource[:links], hr)
-    hr
   end
 
   # Convert the array of primary data to an array of embedded objects (under the :data key).
@@ -53,6 +43,30 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     hr.objects[:data] = resources.map do |resource|
       hr.new_from(resource: hr, body: resource)
     end
+    hr
+  end
+
+  def self.apply_relationships(relationships, hr)
+    if relationships
+      relationships.each do |rel, relationship|
+        apply_link(rel, relationship[:links][:related], hr)
+      end
+    end
+    hr
+  end
+
+  def self.apply_links(links, hr)
+    if links
+      links.each do |rel, href|
+        apply_link(rel, href, hr)
+      end
+    end
+    hr
+  end
+
+  def self.apply_link(rel, href, hr)
+    hr.links[rel] = HyperResource::Link.new(hr, href: href) # TODO: should be hr.class::Link.new - TDD this
+    hr.href = href if rel == :self
     hr
   end
 end

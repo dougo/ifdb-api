@@ -19,6 +19,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
         id: 23,
         type: 'widgets',
         attributes: { name: 'Encabulator' },
+        relationships: { parts: { links: { related: 'http://www.example.com/widgets/23/parts' } } },
         links: { self: 'http://www.example.com/widgets/23' }
       },
       links: {
@@ -31,6 +32,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
     assert_same resource, resource.links[:self].resource
     assert_equal 'http://www.example.com/widgets/23',        resource.links[:self].href
+    assert_equal 'http://www.example.com/widgets/23/parts',  resource.links[:parts].href
     assert_equal 'http://www.flobee.net/re_transcript.html', resource.links[:docs].href
   end
 
