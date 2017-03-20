@@ -14,14 +14,8 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
                              adapter: HyperResource::Adapter::JSON_API,
                              headers: { 'Accept' => 'application/vnd.api+json' })
 
+    # TODO: would this be more interesting with a second club?
     club = ifdb.clubs.first # TODO: fields[clubs]=...
-    expected = {
-      website: 'http://pr-if.org/',
-      name: 'PR-IF',
-      listed: '2010-04-10T02:05:19.000Z',
-      members_count: 1,
-      desc: 'The Boston area IF meetup group.',
-    }
     vals = {
       website: club.website.href,
       name: club.name,
@@ -29,65 +23,45 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       members_count: club.public_send('members-count'), # TODO: undasherize keys
       desc: club.desc
     }
+    expected = {
+      website: 'http://pr-if.org/',
+      name: 'PR-IF',
+      listed: '2010-04-10T02:05:19.000Z',
+      members_count: 1,
+      desc: 'The Boston area IF meetup group.',
+    }
     assert_equal expected, vals
     # TODO: pagination links
   end
 
   test 'fetch all data needed by the club details page' do
-    get root_url, as: :jsonapi
-    get response.parsed_body[:links][:clubs], as: :jsonapi
-    get response.parsed_body[:data].first[:links][:self], as: :jsonapi, params: {
-          include: 'contact-profiles', fields: { members: :id }
-        }
-    assert_response :success, -> { response_backtrace }
-    prif_id = clubs(:prif).id
-    arthur_id = members(:arthur).id
-    assert_equal(
-      {
-        data: {
-          id: prif_id,
-          type: 'clubs',
-          links: {
-            website: 'http://pr-if.org/',
-            self: "http://www.example.com/clubs/#{prif_id}"
-          },
-          attributes: {
-            name: 'PR-IF',
-            desc: 'The Boston area IF meetup group.',
-            contacts: "Arthur Dent {#{arthur_id}}",
-            'contacts-plain': 'Arthur Dent',
-            'members-public': true,
-            'members-count': 1,
-            listed: '2010-04-10T02:05:19.000Z'
-          },
-          relationships: {
-            membership: {
-              links: {
-                self: "http://www.example.com/clubs/#{prif_id}/relationships/membership",
-                related: "http://www.example.com/clubs/#{prif_id}/membership"
-              }
-            },
-            'contact-profiles': {
-              links: {
-                self: "http://www.example.com/clubs/#{prif_id}/relationships/contact-profiles",
-                related: "http://www.example.com/clubs/#{prif_id}/contact-profiles"
-              },
-              data: [ { type: 'members', id: arthur_id } ]
-            }
-          }
-        },
-        included: [
-          {
-            id: arthur_id,
-            type: 'members',
-            links: {
-              picture: 'http://i.imgur.com/SL9D5td.png',
-              self: "http://www.example.com/members/#{arthur_id}"
-            }
-          }
-        ]
-      },
-      response.parsed_body)
+    ifdb = HyperResource.new(root: 'http://www.example.com',
+                             adapter: HyperResource::Adapter::JSON_API,
+                             headers: { 'Accept' => 'application/vnd.api+json' })
+
+    club = ifdb.clubs.first.get
+    # TODO:
+    # club = ifdb.clubs.first.self(include: 'contact-profiles').get
+    vals = {
+      name: club.name,
+      desc: club.desc,
+      listed: club.listed,
+      website: club.website.href,
+      contacts_plain: club.public_send('contacts-plain'),
+      members_count: club.public_send('members-count')
+    }
+    expected = {
+      name: 'PR-IF',
+      desc: 'The Boston area IF meetup group.',
+      listed: '2010-04-10T02:05:19.000Z',
+      website: 'http://pr-if.org/',
+      contacts_plain: 'Arthur Dent',
+      members_count: 1
+    }
+    assert_equal expected, vals
+    assert_match /Arthur Dent {(.*)}/, club.contacts
+    # TODO
+    # assert_equal "http://www.example.com/members/#{$1}", club.public_send('contact-profiles').first.href
   end
   
   test 'fetch all data needed by the club members page' do

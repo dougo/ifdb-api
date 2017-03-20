@@ -27,20 +27,18 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     }
     resource = HyperResource.new
     assert_same resource, subject.apply(response, resource)
-    assert_predicate resource, :loaded
     assert_equal 'http://www.example.com/widgets/23', resource.href
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
     assert_same resource, resource.links[:self].resource
-    assert_equal 'http://www.example.com/widgets/23', resource.links[:self].href
+    assert_equal 'http://www.example.com/widgets/23',        resource.links[:self].href
     assert_equal 'http://www.flobee.net/re_transcript.html', resource.links[:docs].href
   end
 
   test 'apply when primary data is an array' do
     response = { data: [{ id: 23, type: 'widgets', attributes: { name: 'Encabulator' } }] }
-    resources = HyperResource.new
+    resources = HyperResource.new(root: 'http://www.example.com', adapter: subject)
     subject.apply(response, resources)
     resource = resources.objects[:data].first
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
-    assert_predicate resource, :loaded
   end
 end

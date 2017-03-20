@@ -7,42 +7,52 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     JSON.parse(string).deep_symbolize_keys
   end
 
-  def self.apply(doc, hr)
-    apply_links(doc[:links], hr)
-    data = doc[:data]
-    case data
-    when Hash
-      apply_single_resource(data, hr)
-    when Array
-      apply_array_of_resources(data, hr)
+  def self.apply(json, hr)
+    if json.key?(:data)
+      apply_document(json, hr)
+    else
+      apply_resource(json, hr)
     end
   end
 
   private
 
+  def self.apply_document(doc, hr)
+    apply_primary_data(doc[:data], hr)
+    apply_links(doc[:links], hr)
+  end
+
+  def self.apply_primary_data(data, hr)
+    case data
+    when Hash
+      apply_resource(data, hr)
+    when Array
+      apply_resources(data, hr)
+    end
+  end
+
   def self.apply_links(links, hr)
     if links
       links.each do |rel, href|
-        hr.links[rel] = HyperResource::Link.new(hr, href: href) # TODO: should be hr.class::Link.new
+        hr.links[rel] = HyperResource::Link.new(hr, href: href) # TODO: should be hr.class::Link.new - TDD this
+        hr.href = href if rel == :self
       end
-      hr.href = links[:self]
     end
     hr
   end
 
-  def self.apply_single_resource(resource, hr)
+  def self.apply_resource(resource, hr)
     attrs = { id: resource[:id], type: resource[:type], **resource[:attributes] }.stringify_keys
     hr.attributes.replace(attrs)
     apply_links(resource[:links], hr)
-    hr.loaded = true
     hr
   end
 
-  def self.apply_array_of_resources(resources, hr)
+  # Convert the array of primary data to an array of embedded objects (under the :data key).
+  def self.apply_resources(resources, hr)
     hr.objects[:data] = resources.map do |resource|
-      apply_single_resource(resource, HyperResource.new)
+      hr.new_from(resource: hr, body: resource)
     end
-    hr.loaded = true
     hr
   end
 end
