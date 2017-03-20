@@ -20,7 +20,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       website: club.website.href,
       name: club.name,
       listed: club.listed,
-      members_count: club.public_send('members-count'), # TODO: undasherize keys
+      members_count: club.members_count,
       desc: club.desc
     }
     expected = {
@@ -48,10 +48,10 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       listed: club.listed,
       website: club.website.href,
       contacts: club.contacts,
-      contact_profiles: club.links.public_send('contact-profiles').first.href,
+      contact_profiles: club.links.contact_profiles.first.href,
       # TODO:
-      # contact_profiles: club.objects.public_send('contact-profiles').first.href,
-      members_count: club.public_send('members-count')
+      # contact_profiles: club.objects.contact_profiles.first.href,
+      members_count: club.members_count
     }
     expected = {
       name: 'PR-IF',

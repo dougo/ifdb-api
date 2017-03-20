@@ -32,7 +32,9 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
   end
 
   def self.apply_resource(resource, hr)
-    attrs = { id: resource[:id], type: resource[:type], **resource[:attributes] }.stringify_keys
+    attrs = { id: resource[:id], type: resource[:type], **resource[:attributes] }.stringify_keys.map do |key, value|
+      [key.gsub('-', '_'), value]
+    end.to_h
     hr.attributes.replace(attrs)
     apply_relationships(resource[:relationships], hr)
     apply_links(resource[:links], hr)

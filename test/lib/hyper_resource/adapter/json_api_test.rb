@@ -18,7 +18,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
       data: {
         id: 23,
         type: 'widgets',
-        attributes: { name: 'Encabulator' },
+        attributes: { 'full-name': 'Encabulator' },
         relationships: { parts: { links: { related: 'http://www.example.com/widgets/23/parts' } } },
         links: { self: 'http://www.example.com/widgets/23' }
       },
@@ -29,7 +29,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     resource = HyperResource.new
     assert_same resource, subject.apply(response, resource)
     assert_equal 'http://www.example.com/widgets/23', resource.href
-    assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
+    assert_equal({ 'id' => 23, 'type' => 'widgets', 'full_name' => 'Encabulator' }, resource.attributes)
     assert_same resource, resource.links[:self].resource
     assert_equal 'http://www.example.com/widgets/23',        resource.links[:self].href
     assert_equal 'http://www.example.com/widgets/23/parts',  resource.links[:parts].href
