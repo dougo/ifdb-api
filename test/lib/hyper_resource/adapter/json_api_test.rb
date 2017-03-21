@@ -19,21 +19,41 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
         id: 23,
         type: 'widgets',
         attributes: { 'full-name': 'Encabulator' },
-        relationships: { parts: { links: { related: 'http://www.example.com/widgets/23/parts' } } },
+        relationships: {
+          'hydrocoptic-marzelvanes': {
+            links: { related: 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes' },
+            data: [ { id: 42, type: 'parts' } ]
+          }
+        },
         links: { self: 'http://www.example.com/widgets/23' }
       },
+      included: [
+        { id: 42, type: 'parts', attributes: { name: 'ambifacient lunar waneshaft' } }
+      ],
       links: {
         docs: 'http://www.flobee.net/re_transcript.html'
       }
     }
-    resource = HyperResource.new
+    resource = HyperResource.new(root: 'http://www.example.com', adapter: subject)
     assert_same resource, subject.apply(response, resource)
     assert_equal 'http://www.example.com/widgets/23', resource.href
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'full_name' => 'Encabulator' }, resource.attributes)
-    assert_same resource, resource.links[:self].resource
-    assert_equal 'http://www.example.com/widgets/23',        resource.links[:self].href
-    assert_equal 'http://www.example.com/widgets/23/parts',  resource.links[:parts].href
-    assert_equal 'http://www.flobee.net/re_transcript.html', resource.links[:docs].href
+
+    self_link = resource.links[:self]
+    assert_same resource, self_link.resource
+    assert_equal true, self_link.templated
+    assert_equal 'http://www.example.com/widgets/23{?include}', self_link.base_href
+
+    hcmv_link = resource.links[:hydrocoptic_marzelvanes]
+    assert_equal true, hcmv_link.templated
+    assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes{?include}', hcmv_link.base_href
+
+    docs_link = resource.links[:docs]
+    assert_equal false, docs_link.templated
+    assert_equal 'http://www.flobee.net/re_transcript.html', docs_link.base_href
+
+    hcmv_part = resource.objects[:hydrocoptic_marzelvanes].first
+    assert_equal({ 'id' => 42, 'type' => 'parts', 'name' => 'ambifacient lunar waneshaft' }, hcmv_part.attributes)
   end
 
   test 'apply when primary data is an array' do

@@ -41,18 +41,14 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
 
   test 'fetch all data needed by the club details page' do
     arthur_id = members(:arthur).id
-    club = ifdb.clubs.first.get
-    # TODO:
-    # club = ifdb.clubs.first.self(include: 'contact-profiles').get
+    club = ifdb.clubs.first.self(include: 'contact-profiles').get
     vals = {
       name: club.name,
       desc: club.desc,
       listed: club.listed,
       website: club.website.url,
       contacts: club.contacts,
-      contact_profiles: club.links.contact_profiles.first.url,
-      # TODO:
-      # contact_profiles: club.objects.contact_profiles.first.url,
+      contact_profiles: club.objects.contact_profiles.first.url,
       members_count: club.members_count
     }
     expected = {
@@ -72,17 +68,12 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     prif_id = clubs(:prif).id
     # TODO: would this be more interesting with a second member?
     # TODO: fields[clubs]=name&fields[members]=name,location
-    memberships = ifdb.clubs.first.membership
-    club = memberships.first.links.club.get
-    # TODO: include club
-    # club = memberships.first.objects.club
+    memberships = ifdb.clubs.first.membership(include: %i(club member)).get
+    club = memberships.first.objects.club
     vals = {
       club: { name: club.name, url: club.url },
-      # TODO: should memberships.map work even if it's a link? returns an Enumerator??
-      members: memberships.get.map do |membership|
-        member = membership.links.member.get
-        # TODO: include member
-        # member = membership.objects.member
+      members: memberships.map do |membership|
+        member = membership.objects.member
         {
           picture: member.picture.url,
           url: member.url,
@@ -112,7 +103,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
 
   test 'fetch a club member profile via the membership' do
     membership = ifdb.clubs.first.links.membership.first
-    # TODO: include member
+    # TODO: include membership
     # membership = ifdb.clubs(include: 'membership').first.objects.membership.first
     assert_equal 'Arthur Dent', membership.links.member.get.name
   end
