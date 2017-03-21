@@ -102,26 +102,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch a club member profile via the membership' do
-    membership = ifdb.clubs.first.links.membership.first
-    # TODO: include membership
-    # membership = ifdb.clubs(include: 'membership').first.objects.membership.first
+    membership = ifdb.clubs(include: 'membership').first.objects.membership.first
     assert_equal 'Arthur Dent', membership.links.member.get.name
-  end
-
-  private
-
-  # TODO: move this to JSONAPI::Testing concern
-  def response_backtrace
-    # TODO: concat multiple errors
-    error = response.parsed_body[:errors].first
-    # TODO: format using error[:status], error[:code], error[:title], error[:detail]
-    meta = error[:meta]
-    if meta
-      msg = meta[:exception]
-      bt = Minitest.backtrace_filter.filter(meta[:backtrace]).join "\n    "
-      "#{msg}\n    #{bt}"
-    else
-      error
-    end
   end
 end

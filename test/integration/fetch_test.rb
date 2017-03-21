@@ -25,7 +25,7 @@ class FetchTest < ActionDispatch::IntegrationTest
   test 'fetch games by page' do
     get root_path, as: :jsonapi
     assert_response :success
-    games_link = response.parsed_body[:links][:games]
+    games_link = response.parsed_body[:data][:relationships][:games][:links][:related]
 
     get games_link, as: :jsonapi
     assert_response :success, response.parsed_body[:errors]
@@ -66,7 +66,7 @@ class FetchTest < ActionDispatch::IntegrationTest
   test 'fetch members by page' do
     get root_path, as: :jsonapi
     assert_response :success
-    members_link = response.parsed_body[:links][:members]
+    members_link = response.parsed_body[:data][:relationships][:members][:links][:related]
 
     get members_link, as: :jsonapi
     assert_response :success

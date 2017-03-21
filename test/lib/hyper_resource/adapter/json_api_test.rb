@@ -63,4 +63,10 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     resource = resources.objects[:data].first
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
   end
+
+  test 'apply when the response has no attributes' do
+    response = { data: { id: '', type: '' } }
+    resource = subject.apply(response, HyperResource.new)
+    assert_equal({ 'id' => '', 'type' => '' }, resource.attributes)
+  end
 end

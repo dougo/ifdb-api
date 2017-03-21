@@ -7,13 +7,8 @@ class DatabaseControllerTest < ActionDispatch::IntegrationTest
     assert_includes DatabaseController, JSONAPI::ActsAsResourceController
   end
 
-  test 'response document has top-level links' do
-    get root_path, as: :jsonapi
-    doc = response.parsed_body
-    assert_equal({ self: root_url,
-                   games: games_url, 
-                   members: members_url,
-                   clubs: clubs_url
-                 }, doc[:links])
+  test 'resource_serializer_klass' do
+    get root_path
+    assert_equal 'http://www.example.com', response.parsed_body[:data][:links][:self]
   end
 end

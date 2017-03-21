@@ -27,10 +27,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
   def self.apply_resource(resource, included, hr)
     # TODO: get from included if present
     # TODO: make an integration test for fetching a relationship, which has linkage as primary data
-    attrs = { id: resource[:id], type: resource[:type], **resource[:attributes] }.map do |key, value|
-      [to_hr_key(key), value]
-    end.to_h
-    hr.attributes.replace(attrs)
+    apply_attributes(resource, hr)
     apply_relationships(resource[:relationships], included, hr)
     apply_resource_links(resource[:links], hr)
   end
@@ -40,6 +37,14 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     hr.objects[:data] = resources.map do |resource|
       hr.new_from(resource: hr, body: { data: resource, included: included })
     end
+  end
+
+  def self.apply_attributes(resource, hr)
+    attrs = resource[:attributes] || {}
+    attrs[:id] = resource[:id]
+    attrs[:type] = resource[:type]
+    attrs = attrs.map { |k,v| [ to_hr_key(k), v ] }.to_h
+    hr.attributes.replace(attrs)
   end
 
   def self.apply_relationships(relationships, included, hr)

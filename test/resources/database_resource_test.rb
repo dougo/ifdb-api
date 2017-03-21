@@ -3,8 +3,45 @@ require 'test_helper'
 class DatabaseResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
+  subject { self.class.described_type.new }
+
+  test '_model_class' do
+    assert_nil self.class.described_type._model_class
+  end
+
+  test 'relationships' do
+    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:games)
+    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:members)
+    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:clubs)
+  end
+
+  test 'id' do
+    assert_equal 'ifdb', subject.id
+  end
+
   test 'find_by_key' do
-    resource = self.class.described_type.find_by_key(nil, {})
-    assert_nil resource
+    assert_kind_of self.class.described_type, self.class.described_type.find_by_key(nil, {})
+  end
+
+  class ::DatabaseResource::SerializerTest < ActiveSupport::TestCase
+    test_extends JSONAPI::ResourceSerializer
+
+    subject { self.class.described_type.new(DatabaseResource) }
+
+    test 'link_builder' do
+      assert_kind_of DatabaseResource::LinkBuilder, subject.link_builder
+    end
+  end
+
+  class ::DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase
+    test_extends JSONAPI::LinkBuilder
+
+    subject do
+      self.class.described_type.new(base_url: 'http://www.example.com', primary_resource_klass: DatabaseResource)
+    end
+
+    test 'self_link' do
+      assert_equal 'http://www.example.com', subject.self_link(DatabaseResource)
+    end
   end
 end
