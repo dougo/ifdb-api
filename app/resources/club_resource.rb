@@ -16,6 +16,6 @@ class ClubResource < ApplicationResource
   end
 
   def self.records(context = {})
-    super.includes(:membership)
+    Club.all.includes(:membership)
   end
 end

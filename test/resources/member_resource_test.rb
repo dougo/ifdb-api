@@ -24,10 +24,4 @@ class MemberResourceTest < ActiveSupport::TestCase
     assert_valid_json schema, serialize(members(:minimal))
     assert_valid_json schema, serialize(members(:maximal))
   end
-
-  private
-  
-  def serialize(model)
-    JSONAPI::ResourceSerializer.new(MemberResource).serialize_to_hash(MemberResource.new(model, {}))[:data]
-  end
 end

@@ -14,4 +14,8 @@ class ClubMembershipResource < ApplicationResource
     clubids, userids = id.split '-'
     records.where(clubid: clubids, userid: userids)
   end
+
+  def self.created_field
+    :joindate
+  end
 end

@@ -34,4 +34,8 @@ class ClubMembershipResourceTest < ActiveSupport::TestCase
     filter.call(mock_relation, 'club-member', {})
     mock_relation.verify
   end
+
+  test 'created_field' do
+    assert_equal :joindate, ClubMembershipResource.created_field
+  end
 end

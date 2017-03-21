@@ -17,4 +17,9 @@ concern :ResourceTesting do
       end
     end
   end
+
+  def serialize(model)
+    serializer = JSONAPI::ResourceSerializer.new(self.class.described_type)
+    serializer.serialize_to_hash(self.class.described_type.new(model, {})).with_indifferent_access[:data]
+  end
 end

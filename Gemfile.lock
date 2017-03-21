@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/cerebris/jsonapi-resources.git
+  revision: 6a25bee204b6a50defcfd52e910b0ac5b9a02ce0
+  specs:
+    jsonapi-resources (0.9.0.pre)
+      activerecord (>= 4.1)
+      concurrent-ruby
+      railties (>= 4.1)
+
+GIT
   remote: https://github.com/thoughtbot/shoulda.git
   revision: 0e1d08d1df610e221fa757a6b2d9551035cc8184
   specs:
@@ -84,10 +93,6 @@ GEM
     json (2.0.3)
     json-schema (2.7.0)
       addressable (>= 2.4)
-    jsonapi-resources (0.9.0)
-      activerecord (>= 4.1)
-      concurrent-ruby
-      railties (>= 4.1)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -182,7 +187,7 @@ DEPENDENCIES
   byebug
   hyperresource
   json-schema
-  jsonapi-resources (~> 0.9.0)
+  jsonapi-resources!
   listen (~> 3.0.5)
   mysql2 (>= 0.3.18, < 0.5)
   puma (~> 3.0)

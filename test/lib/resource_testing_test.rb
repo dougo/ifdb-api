@@ -3,7 +3,7 @@ require 'test_helper'
 class ResourceTestingTest < ActiveSupport::TestCase
   test_extends ActiveSupport::Concern
 
-  class TestModel; end
+  class TestModel < OpenStruct; end
   class TestResource < JSONAPI::Resource
     model_name TestModel.name
     attributes *%i(foo bar)
@@ -38,5 +38,12 @@ class ResourceTestingTest < ActiveSupport::TestCase
 
   test 'subject model should be an instance of the model' do
     assert_kind_of TestModel, test.subject._model
+  end
+
+  test 'serialize' do
+    model = TestModel.new(id: 'xyzzy', foo: 42, bar: 23)
+    expected = { id: 'xyzzy', type: 'tests', links: { self: '/resource-testing-test/tests/xyzzy' },
+                 attributes: { foo: 42, bar: 23 } }
+    assert_equal expected.with_indifferent_access, test.serialize(model)
   end
 end

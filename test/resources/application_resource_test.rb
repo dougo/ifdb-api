@@ -23,6 +23,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     has_one :garply, class_name: 'Test'
     has_one :quux, class_name: 'Test'
     has_many :frobs, class_name: 'Test'
+
+    def self.created_field
+      :born_on
+    end
   end
 
   test 'immutable' do
@@ -34,7 +38,11 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     assert_same_elements %i(id bar garply quux frobs), resource.fetchable_fields
   end
 
+  test 'created_field' do
+    assert_equal :created, ApplicationResource.created_field
+  end
+
   test 'sort by creation time by default' do
-    assert_equal [{ field: 'created', direction: :desc }], TestResource.default_sort
+    assert_equal [{ field: :born_on, direction: :desc }], TestResource.default_sort
   end
 end

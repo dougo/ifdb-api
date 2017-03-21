@@ -16,6 +16,19 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
                               headers: { 'Accept' => 'application/vnd.api+json' })
   end
 
+  def self.test(msg, &block)
+    super(msg) do
+      begin
+        instance_eval(&block)
+      rescue HyperResource::ServerError => e
+        err = e.body[:errors][0]
+        ex = e.class.new(err[:meta][:exception], body: e.body, response: e.response, cause: e.cause)
+        ex.set_backtrace(err[:meta][:backtrace])
+        raise ex
+      end
+    end
+  end
+
   test 'fetch all data needed by the clubs index page' do
     clubs = ifdb.clubs
     # TODO: would this be more interesting with a second club?

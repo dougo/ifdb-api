@@ -12,7 +12,11 @@ class ApplicationResource < JSONAPI::Resource
     end
   end
 
+  def self.created_field
+    :created
+  end
+
   def self.default_sort
-    [{ field: 'created', direction: :desc }]
+    [{ field: created_field, direction: :desc }]
   end
 end

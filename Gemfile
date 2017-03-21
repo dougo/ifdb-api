@@ -18,7 +18,7 @@ gem 'puma', '~> 3.0'
 gem 'yaks'
 
 # Use JR to conform to the JSON API spec.
-gem 'jsonapi-resources', '~> 0.9.0'
+gem 'jsonapi-resources', github: 'cerebris/jsonapi-resources'
 
 # Use JSON Schema for JSON validation.
 gem 'json-schema'

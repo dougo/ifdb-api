@@ -23,10 +23,4 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_valid_json schema, serialize(games(:minimal))
     assert_valid_json schema, serialize(games(:maximal))
   end
-
-  private
-  
-  def serialize(model)
-    JSONAPI::ResourceSerializer.new(GameResource).serialize_to_hash(GameResource.new(model, {}))[:data]
-  end
 end

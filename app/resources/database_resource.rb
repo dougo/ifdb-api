@@ -4,9 +4,7 @@ class DatabaseResource < ApplicationResource
     nil
   end
 
-  has_many :games
-  has_many :members
-  has_many :clubs
+  has_many *%i(games members clubs)
 
   def initialize(*args)
     super(nil, {})
