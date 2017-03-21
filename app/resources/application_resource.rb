@@ -1,4 +1,6 @@
 class ApplicationResource < JSONAPI::Resource
+  abstract
+
   def self.inherited(resource_class)
     super
     resource_class.immutable

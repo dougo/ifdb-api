@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 
-gem 'rails', '~> 5.1.0.beta1'
+gem 'rails', '~> 5.1.0.rc1'
 
 # Use mysql as the database for ActiveRecord.
 gem 'mysql2', '>= 0.3.18', '< 0.5'
@@ -18,7 +18,7 @@ gem 'puma', '~> 3.0'
 gem 'yaks'
 
 # Use JR to conform to the JSON API spec.
-gem 'jsonapi-resources', '~> 0.9.0.beta1'
+gem 'jsonapi-resources', '~> 0.9.0'
 
 # Use JSON Schema for JSON validation.
 gem 'json-schema'

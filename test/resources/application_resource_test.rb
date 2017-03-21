@@ -3,6 +3,10 @@ require 'test_helper'
 class ApplicationResourceTest < ActiveSupport::TestCase
   test_extends JSONAPI::Resource
 
+  test 'abstract' do
+    assert_predicate self.class.described_type, :_abstract
+  end
+
   class TestModel
     def id; :xyzzy end
     def foo; nil end
