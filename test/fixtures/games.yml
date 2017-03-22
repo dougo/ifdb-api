@@ -7,6 +7,7 @@ adventure:
   author: Will Crowther
   sort_author: CROWTHER, WILL
   authorExt: Will Crowther {willc}
+  coverart: http://ifdb.tads.org/viewgame?coverart&id=fft6pu91j85y4acv
   created: <%= Time.now %>
   moddate: <%= Time.now %>
 

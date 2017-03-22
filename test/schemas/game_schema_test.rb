@@ -16,8 +16,8 @@ class GameSchemaTest < ActiveSupport::TestCase
     assert_predicate attrs_prop, :required?
     attrs_schema = attrs_prop.schema
 
-    %i(title sort-title author sort-author author-ext tags published version license system language desc coverart
-       seriesname seriesnumber genre forgiveness website downloadnotes created moddate).each do |attr|
+    %i(title sort-title author sort-author author-ext tags published version license system language desc
+       seriesname seriesnumber genre forgiveness downloadnotes created moddate).each do |attr|
       assert_equal :string, attrs_schema.property(attr).type
     end
 
@@ -31,10 +31,6 @@ class GameSchemaTest < ActiveSupport::TestCase
 
     %i(published created moddate).each do |attr|
       assert_equal 'date-time', attrs_schema.property(attr).format
-    end
-
-    %i(coverart website).each do |attr|
-      assert_equal :uri, attrs_schema.property(attr).format
     end
   end
 

@@ -9,13 +9,11 @@ class GameSchema < ApplicationSchema
     string :system
     string :language
     string :desc
-    string :coverart, format: :uri
     string :seriesname
     string :seriesnumber
     string :genre
     string :forgiveness
     integer :bafsid
-    string :website, format: :uri
     string :downloadnotes
     string *%i(created moddate), format: 'date-time', required: true
     integer :pagevsn, required: true
