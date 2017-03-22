@@ -85,11 +85,17 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           location: member.location,
           joindate: membership.joindate
         }
-      end
-      # TODO: pagination?
+      end,
+      pages: {
+        first: memberships.links[:first].url,
+        prev: memberships.links[:prev]&.url,
+        next: memberships.links[:next]&.url,
+        last: memberships.links[:last].url
+      }
     }
+    base_url = "http://www.example.com/clubs/#{prif_id}"
     expected = {
-      club: { name: 'PR-IF', url: "http://www.example.com/clubs/#{prif_id}" },
+      club: { name: 'PR-IF', url: base_url },
       members: [
         {
           picture: 'http://i.imgur.com/SL9D5td.png',
@@ -99,7 +105,13 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           location: 'Cottington, England, Earth',
           joindate: '2015-03-15T12:00:00.000Z'
         }
-      ]
+      ],
+      pages: {
+        first: base_url + '/membership?include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20',
+        prev: nil,
+        next: nil,
+        last:  base_url + '/membership?include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+      }
     }
     assert_equal expected, vals
   end
