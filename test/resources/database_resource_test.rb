@@ -31,6 +31,11 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     test 'link_builder' do
       assert_kind_of DatabaseResource::LinkBuilder, subject.link_builder
     end
+
+    test 'omit relationship self links' do
+      hash = subject.object_hash(DatabaseResource.new).deep_symbolize_keys
+      refute_includes hash[:relationships][:games][:links], :self
+    end
   end
 
   class ::DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase

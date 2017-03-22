@@ -27,6 +27,12 @@ class DatabaseResource < ApplicationResource
         primary_resource_klass: primary_resource_klass,
       )
     end
+
+    def link_object(source, relationship, include_linkage = false)
+      hash = super
+      hash['links'].delete('self')
+      hash
+    end
   end
 
   class LinkBuilder < JSONAPI::LinkBuilder

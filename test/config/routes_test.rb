@@ -5,9 +5,19 @@ class RoutesConfigTest < ActionDispatch::IntegrationTest
     assert_routing root_path, controller: 'database', action: 'show'
   end
 
+  # TODO: make a test_jsonapi_resource_routing helper
+
   test 'games' do
     assert_routing games_path, controller: 'games', action: 'index'
     assert_routing game_path('xyzzy'), controller: 'games', action: 'show', id: 'xyzzy'
+    assert_routing game_relationships_author_profiles_path('xyzzy'), relationship: 'author_profiles',
+                   controller: 'games', action: 'show_relationship', game_id: 'xyzzy'
+    assert_routing game_author_profiles_path('xyzzy'),               relationship: 'author_profiles',
+                   source: 'games', controller: 'members', action: 'get_related_resources', game_id: 'xyzzy'
+    assert_routing game_relationships_editor_path('xyzzy'),          relationship: 'editor',
+                   controller: 'games', action: 'show_relationship', game_id: 'xyzzy'
+    assert_routing game_editor_path('xyzzy'),                        relationship: 'editor',
+                   source: 'games', controller: 'members', action: 'get_related_resource', game_id: 'xyzzy'
   end
 
   test 'members' do
