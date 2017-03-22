@@ -1,21 +1,11 @@
 require 'test_helper'
 
 class FetchClubsTest < ActionDispatch::IntegrationTest
+  include IntegrationTesting
+
   make_my_diffs_pretty!
 
-  class FaradayAdapter < Faraday::Adapter::Rack
-    def initialize(app); super(app, FetchClubsTest.app) end
-    Faraday::Adapter.register_middleware fetch_clubs_test: self
-  end
-  Faraday.default_adapter = :fetch_clubs_test
-
-  attr_reader :ifdb
-  setup do
-    @ifdb = HyperResource.new(root: 'http://www.example.com',
-                              adapter: HyperResource::Adapter::JSON_API,
-                              headers: { 'Accept' => 'application/vnd.api+json' })
-  end
-
+  # TODO: move this to HyperResource::Testing
   def self.test(msg, &block)
     super(msg) do
       begin
