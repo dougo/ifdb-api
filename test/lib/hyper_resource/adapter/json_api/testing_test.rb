@@ -25,4 +25,14 @@ class HyperResource::Adapter::JSON_API::TestingTest < ActiveSupport::TestCase
     assert_equal HyperResource::Adapter::JSON_API, resource.adapter
     assert_equal 'application/vnd.api+json', resource.headers['Accept']
   end
+
+  test 'server exceptions set the backtrace' do
+    subject.test 'foo' do
+      body = { errors: [ meta: { exception: 'oops from server', backtrace: ['line 1', 'line 2'] } ] }
+      raise HyperResource::ServerError.new('oops from client', body: body)
+    end
+    e = assert_raises(HyperResource::ServerError) { test.test_foo }
+    assert_equal 'oops from server', e.message
+    assert_equal ['line 1', 'line 2'], e.backtrace
+  end
 end
