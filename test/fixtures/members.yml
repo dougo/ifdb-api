@@ -1,6 +1,6 @@
 minimal:
   name: Minny Malle
-  created: <%= Time.now %>
+  created: 2017-03-23
         
 maximal:
   name: Peter Molydeux
@@ -10,23 +10,23 @@ maximal:
            reset your save progress or not
   location: Twitter
   picture: http://ifdb.tads.org/showimage?id=4%3A701
-  created: <%= Time.now %>
+  created: 2017-03-22
 
 arthur:
   name: Arthur Dent
   gender: M
   location: Cottington, England, Earth
   picture: http://i.imgur.com/SL9D5td.png
-  created: <%= Time.now %>
+  created: 1978-03-08
 
 trillian:
   name: Tricia McMillan
   gender: F
-  created: <%= Time.now %>
+  created: 1978-03-08
 
 <% 100.times do |n| %>
 member_<%= n %>:
   name: <%= "member#{n}" %>
   publicemail: <%= "member#{n}@example.com" %>
-  created: <%= Time.now %>
+  created: <%= 1978-n %>-01-01
 <% end %>

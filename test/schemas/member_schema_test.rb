@@ -16,17 +16,16 @@ class MemberSchemaTest < ActiveSupport::TestCase
     assert_predicate attrs_prop, :required?
     attrs = attrs_prop.schema.properties.index_by(&:name)
 
-    %i(name gender publicemail location profile picture created).each do |attr|
+    %i(name gender publicemail location profile since).each do |attr|
       assert_equal :string, attrs[attr].type, attr
     end
 
-    %i(name created).each do |attr|
+    %i(name since).each do |attr|
       assert_predicate attrs[attr], :required?
     end
 
     assert_equal 1, attrs[:gender].max_length
     assert_equal :email, attrs[:publicemail].format
-    assert_equal :uri, attrs[:picture].format
-    assert_equal 'date-time', attrs[:created].format
+    assert_equal 'date-time', attrs[:since].format
   end
 end

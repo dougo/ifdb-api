@@ -5,7 +5,6 @@ class MemberSchema < ApplicationSchema
     string :publicemail, format: :email
     string :location
     string :profile
-    string :picture, format: :uri
-    string :created, format: 'date-time', required: true
+    string :since, format: 'date-time', required: true
   end
 end
