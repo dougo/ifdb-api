@@ -9,17 +9,19 @@ class GameResource < ApplicationResource
   def custom_links(options = {})
     links = super
     if _model.coverart.present?
-      uri = URI(_model.coverart)
-      if uri.query
-        uri.query += '&'
-      else
-        uri.query = ''
-      end
-      links[:coverart] = uri.to_s + 'ldesc'
-      links[:thumbnail] = uri.to_s + 'thumbnail=80x80'
-      links[:large_thumbnail] = uri.to_s + 'thumbnail=175x175'
+      links[:coverart] = add_param(_model.coverart, :ldesc)
+      links[:thumbnail] = add_param(_model.coverart, :thumbnail, '80x80')
+      links[:large_thumbnail] = add_param(_model.coverart, :thumbnail, '175x175')
     end
     links[:website] = _model.website if _model.website.present?
     links
+  end
+
+  private
+
+  def add_param(uri, key, value = nil)
+    uri = URI(uri)
+    uri.query = Rack::Utils.parse_query(uri.query).merge(key.to_s => value).to_query
+    uri.to_s
   end
 end
