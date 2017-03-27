@@ -21,8 +21,9 @@ class GameResourceTest < ActiveSupport::TestCase
   test 'custom links' do
     subject._model.coverart = 'http://example.com?coverart'
     subject._model.website = 'http://example.com'
-    assert_equal 'http://example.com?coverart', subject.custom_links[:coverart]
+    assert_equal 'http://example.com?coverart&ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?coverart&thumbnail=80x80', subject.custom_links[:thumbnail]
+    assert_equal 'http://example.com?coverart&thumbnail=175x175', subject.custom_links[:large_thumbnail]
     assert_equal 'http://example.com', subject.custom_links[:website]
   end
 
@@ -31,12 +32,15 @@ class GameResourceTest < ActiveSupport::TestCase
     subject._model.website = nil
     refute_includes subject.custom_links, :coverart
     refute_includes subject.custom_links, :thumbnail
+    refute_includes subject.custom_links, :large_thumbnail
     refute_includes subject.custom_links, :website
   end
 
-  test 'thumbnail when coverart has no query' do
+  test 'links when coverart has no query' do
     subject._model.coverart = 'http://example.com'
+    assert_equal 'http://example.com?ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links[:thumbnail]
+    assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
   end
 
   test 'conforms to schema' do

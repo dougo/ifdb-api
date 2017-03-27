@@ -9,14 +9,15 @@ class GameResource < ApplicationResource
   def custom_links(options = {})
     links = super
     if _model.coverart.present?
-      links[:coverart] = _model.coverart
-      thumbnail = URI(_model.coverart)
-      if thumbnail.query
-        thumbnail.query += '&thumbnail=80x80'
+      uri = URI(_model.coverart)
+      if uri.query
+        uri.query += '&'
       else
-        thumbnail.query = 'thumbnail=80x80'
+        uri.query = ''
       end
-      links[:thumbnail] = thumbnail.to_s
+      links[:coverart] = uri.to_s + 'ldesc'
+      links[:thumbnail] = uri.to_s + 'thumbnail=80x80'
+      links[:large_thumbnail] = uri.to_s + 'thumbnail=175x175'
     end
     links[:website] = _model.website if _model.website.present?
     links

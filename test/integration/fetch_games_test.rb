@@ -50,4 +50,54 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     }
     assert_equal expected, vals
   end
+
+  test 'fetch all data needed by the game details page' do
+    game = ifdb.games.links[:last].get.data.last
+    vals = {
+      coverart: game.coverart.url,
+      thumbnail: game.large_thumbnail.url,
+      title: game.title,
+      # TODO: author_profiles: game.author_profiles,
+      author: game.author,
+      genre: game.genre,
+      published_year: game.published.to_date.year,
+      website: game.website.url,
+      # TODO: ratings & reviews
+      desc: game.desc,
+      # TODO: language
+      published: game.published,
+      version: game.version,
+      license: game.license,
+      system: game.system,
+      forgiveness: game.forgiveness,
+      # TODO: ifids
+      tuid: game.id
+      # TODO: tags
+      # TODO: awards
+      # TODO: external reviews
+      # TODO: member reviews
+      # TODO: links
+      # TODO: editor url/name
+      # TODO: version/history links
+      # TODO: download links
+    }
+    expected = {
+      coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
+      thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
+      title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
+      author: 'Dan Shiovitz and Emily Short',
+      genre: 'Superhero/Espionage/Humor/Science Fiction',
+      published_year: 2003,
+      website: 'http://example.com/max',
+      desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
+            "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
+      published: '2003-01-01T00:00:00.000Z',
+      version: '1.0',
+      license: 'Freeware',
+      system: 'TADS 3',
+      forgiveness: 'Polite',
+      tuid: games(:maximal).id
+    }
+    assert_equal expected, vals
+  end
 end
