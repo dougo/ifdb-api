@@ -6,7 +6,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   make_my_diffs_pretty!
 
   test 'fetch all data needed by the games index page' do
-    games = ifdb.games
+    games = ifdb.games.get
     vals = {
       games: games.first(2).map do |game|
         {
@@ -52,12 +52,12 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.links[:last].get.data.last
+    game = ifdb.games.links[:last].data.last
     vals = {
       coverart: game.coverart.url,
-      thumbnail: game.large_thumbnail.url,
+      large_thumbnail: game.large_thumbnail.url,
       title: game.title,
-      # TODO: author_profiles: game.author_profiles,
+      author_profiles: game.author_profiles.to_a.map(&:url), # TODO: include author-profiles
       author: game.author,
       genre: game.genre,
       published_year: game.published.to_date.year,
@@ -83,8 +83,10 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     }
     expected = {
       coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
-      thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
+      large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
       title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
+      author_profiles: ["http://www.example.com/members/#{members(:arthur).id}",
+                        "http://www.example.com/members/#{members(:trillian).id}"],
       author: 'Dan Shiovitz and Emily Short',
       genre: 'Superhero/Espionage/Humor/Science Fiction',
       published_year: 2003,
