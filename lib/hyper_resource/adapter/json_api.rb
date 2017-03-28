@@ -9,7 +9,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
 
   def self.apply(doc, hr)
     apply_primary_data(doc[:data], doc[:included], hr)
-    apply_top_level_links(doc[:links], hr)
+    apply_links(doc[:links], hr)
     hr
   end
 
@@ -29,7 +29,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     # TODO: make an integration test for fetching a relationship, which has linkage as primary data
     apply_attributes(resource, hr)
     apply_relationships(resource[:relationships], included, hr)
-    apply_resource_links(resource[:links], hr)
+    apply_links(resource[:links], hr)
   end
 
   # Convert the array of primary data to an array of embedded objects (under the :data key).
@@ -50,7 +50,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
   def self.apply_relationships(relationships, included, hr)
     if relationships
       relationships.each do |rel, relationship|
-        apply_resource_link(rel, relationship[:links][:related], hr)
+        apply_link(rel, relationship[:links][:related], hr)
         if relationship.key?(:data)
           apply_resource_linkage(rel, relationship[:data], included, hr)
         end
@@ -79,31 +79,17 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     hr.new_from(resource: hr, body: { data: resource, included: included })
   end
 
-  def self.apply_top_level_links(links, hr)
+  def self.apply_links(links, hr)
     if links
       links.each do |rel, href|
-        apply_top_level_link(rel, href, hr)
+        apply_link(rel, href, hr)
       end
     end
   end
 
-  def self.apply_resource_links(links, hr)
-    if links
-      links.each do |rel, href|
-        apply_resource_link(rel, href, hr)
-      end
-    end
-  end
-
-  def self.apply_top_level_link(rel, href, hr)
-    apply_link(rel, hr, href: href)
-  end
-
-  def self.apply_resource_link(rel, href, hr)
-    apply_link(rel, hr, href: "#{href}{?include}", templated: true)
-  end
-
-  def self.apply_link(rel, hr, **opts)
+  def self.apply_link(rel, href, hr, **opts)
+    template = URI(href).query ? '{&include}' : '{?include}'
+    opts = opts.reverse_merge(href: href + template, templated: true)
     link = HyperResource::Link.new(hr, **opts) # TODO: should be hr.class::Link.new - TDD this
     hr.links[to_hr_key(rel)] = link
     hr.href = link.href if rel == :self

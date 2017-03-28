@@ -52,12 +52,12 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.links[:last].data.last
+    game = ifdb.games.links[:last].where(include: 'author-profiles').data.last
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
       title: game.title,
-      author_profiles: game.author_profiles.to_a.map(&:url), # TODO: include author-profiles
+      author_profiles: game.objects.author_profiles.map(&:url),
       author: game.author,
       genre: game.genre,
       published_year: game.published.to_date.year,

@@ -31,7 +31,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
         { id: 42, type: 'parts', attributes: { name: 'ambifacient lunar waneshaft' } }
       ],
       links: {
-        docs: 'http://www.flobee.net/re_transcript.html'
+        docs: 'http://www.flobee.net/re_transcript.html?foo=bar'
       }
     }
     resource = HyperResource.new(root: 'http://www.example.com', adapter: subject)
@@ -49,8 +49,8 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes{?include}', hcmv_link.base_href
 
     docs_link = resource.links[:docs]
-    assert_equal false, docs_link.templated
-    assert_equal 'http://www.flobee.net/re_transcript.html', docs_link.base_href
+    assert_equal true, docs_link.templated
+    assert_equal 'http://www.flobee.net/re_transcript.html?foo=bar{&include}', docs_link.base_href
 
     hcmv_part = resource.objects[:hydrocoptic_marzelvanes].first
     assert_equal({ 'id' => 42, 'type' => 'parts', 'name' => 'ambifacient lunar waneshaft' }, hcmv_part.attributes)
