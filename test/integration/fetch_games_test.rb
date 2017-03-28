@@ -69,9 +69,11 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       version: game.version,
       license: game.license,
       system: game.system,
+      bafsid: game.bafsid,
       forgiveness: game.forgiveness,
       # TODO: ifids
-      tuid: game.id
+      tuid: game.id,
+      # TODO: cross references
       # TODO: tags
       # TODO: awards
       # TODO: external reviews
@@ -80,6 +82,10 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       # TODO: editor url/name
       # TODO: version/history links
       # TODO: download links
+      players: game.players.url,
+      players_count: game.players_count,
+      wishlists: game.wishlists.url,
+      wishlists_count: game.wishlists_count
     }
     expected = {
       coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
@@ -97,9 +103,16 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       version: '1.0',
       license: 'Freeware',
       system: 'TADS 3',
+      bafsid: 2096,
       forgiveness: 'Polite',
-      tuid: games(:maximal).id
+      tuid: games(:maximal).id,
+      players: "http://www.example.com/games/#{games(:maximal).id}/players",
+      players_count: 2,
+      wishlists: "http://www.example.com/games/#{games(:maximal).id}/wishlists",
+      wishlists_count: 1
     }
     assert_equal expected, vals
   end
+
+  # TODO: 'whoselist' page
 end

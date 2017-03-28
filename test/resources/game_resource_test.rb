@@ -5,7 +5,7 @@ class GameResourceTest < ActiveSupport::TestCase
 
   test_attributes %i(title sort_title author sort_author authorExt tags published version license system language
                      desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created
-                     moddate pagevsn)
+                     moddate pagevsn players_count wishlists_count)
 
   test 'author_profiles relationship' do
     assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:author_profiles)
@@ -16,6 +16,14 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_kind_of JSONAPI::Relationship::ToOne, rel
     assert_equal 'Member', rel.class_name
     assert_equal :editedby, rel.foreign_key
+  end
+
+  test 'players relationship' do
+    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:players)
+  end
+
+  test 'wishlists relationship' do
+    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:wishlists)
   end
 
   test 'custom links' do
@@ -41,6 +49,21 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links[:thumbnail]
     assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
+  end
+
+  test 'players_count' do
+    subject._model.players.build([{}, {}])
+    assert_equal 2, subject.players_count
+  end
+
+  test 'wishlists_count' do
+    subject._model.wishlists.build([{}, {}])
+    assert_equal 2, subject.wishlists_count
+  end
+
+  test 'records includes players and wishlists to avoid 2N+1 queries' do
+    assert_predicate GameResource.records({}).first.players, :loaded?
+    assert_predicate GameResource.records({}).first.wishlists, :loaded?
   end
 
   test 'conforms to schema' do

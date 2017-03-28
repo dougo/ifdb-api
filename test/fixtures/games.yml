@@ -41,7 +41,7 @@ maximal:
     puzzle,female protagonist,collaboration,multiple protagonists,nonhuman protagonist,Spring
     Thing Winner
   published: 2003-01-01
-  version: '1.0'
+  version: 1.0
   license: Freeware
   system: TADS 3
   language: en-US
@@ -60,6 +60,8 @@ maximal:
   editor: maximal
   moddate: 2013-06-16 03:27:34Z
   pagevsn: 4
+  players: maximal, arthur
+  wishlists: trillian
 
  <% 100.times do |n| %>
 game_<%= n %>:
