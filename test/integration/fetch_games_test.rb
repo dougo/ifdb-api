@@ -64,7 +64,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       website: game.website.url,
       # TODO: ratings & reviews
       desc: game.desc,
-      # TODO: seriesname, seriesnumber
+      series: game.seriesname,
+      episode: game.seriesnumber,
       language: game.language,
       language_names: game.language_names,
       published: game.published,
@@ -83,7 +84,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       # TODO: links
       # TODO: editor url/name
       # TODO: version/history links
-      # TODO: download notes, links
+      download_notes: game.downloadnotes,
+      # TODO: download links
       players: game.players.url,
       players_count: game.players_count,
       wishlists: game.wishlists.url,
@@ -101,6 +103,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       website: 'http://example.com/max',
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
+      series: 'Max Blaster',
+      episode: '1',
       language: 'en-US, de, pt-BR',
       language_names: { 'en-US': 'English', 'de': 'German', 'pt-BR': 'Portuguese' },
       published: '2003-01-01T00:00:00.000Z',
@@ -111,6 +115,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       forgiveness: 'Polite',
       ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
       tuid: games(:maximal).id,
+      download_notes: "To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.",
       players: "http://www.example.com/games/#{games(:maximal).id}/players",
       players_count: 2,
       wishlists: "http://www.example.com/games/#{games(:maximal).id}/wishlists",
