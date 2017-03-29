@@ -4,8 +4,8 @@ class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
   test_attributes %i(title sort_title author sort_author authorExt tags published version license system language
-                     language_names desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created
-                     moddate pagevsn players_count wishlists_count)
+                     language_names desc seriesname seriesnumber genre forgiveness ifids bafsid downloadnotes
+                     created moddate pagevsn players_count wishlists_count)
 
   test_has_many *%i(author_profiles players wishlists)
 
@@ -39,6 +39,11 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links[:thumbnail]
     assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
+  end
+
+  test 'ifids' do
+    subject._model.ifids.build([{ ifid: 'foo' }, { ifid: 'bar' }])
+    assert_equal %w(foo bar), subject.ifids
   end
 
   test 'players_count' do

@@ -64,6 +64,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       website: game.website.url,
       # TODO: ratings & reviews
       desc: game.desc,
+      # TODO: seriesname, seriesnumber
       language: game.language,
       language_names: game.language_names,
       published: game.published,
@@ -72,7 +73,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       system: game.system,
       bafsid: game.bafsid,
       forgiveness: game.forgiveness,
-      # TODO: ifids
+      ifids: game.ifids,
       tuid: game.id,
       # TODO: cross references
       # TODO: tags
@@ -82,7 +83,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       # TODO: links
       # TODO: editor url/name
       # TODO: version/history links
-      # TODO: download links
+      # TODO: download notes, links
       players: game.players.url,
       players_count: game.players_count,
       wishlists: game.wishlists.url,
@@ -108,6 +109,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       system: 'TADS 3',
       bafsid: 2096,
       forgiveness: 'Polite',
+      ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
       tuid: games(:maximal).id,
       players: "http://www.example.com/games/#{games(:maximal).id}/players",
       players_count: 2,
