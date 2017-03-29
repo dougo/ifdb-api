@@ -7,23 +7,13 @@ class GameResourceTest < ActiveSupport::TestCase
                      language_names desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created
                      moddate pagevsn players_count wishlists_count)
 
-  test 'author_profiles relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:author_profiles)
-  end
+  test_has_many *%i(author_profiles players wishlists)
 
   test 'editor relationship' do
     rel = GameResource._relationship(:editor)
     assert_kind_of JSONAPI::Relationship::ToOne, rel
     assert_equal 'Member', rel.class_name
     assert_equal :editedby, rel.foreign_key
-  end
-
-  test 'players relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:players)
-  end
-
-  test 'wishlists relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, GameResource._relationship(:wishlists)
   end
 
   test 'custom links' do

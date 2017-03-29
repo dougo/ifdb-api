@@ -9,13 +9,7 @@ class ClubResourceTest < ActiveSupport::TestCase
     assert_equal :created, ClubResource._attribute_options(:listed)[:delegate]
   end
 
-  test 'membership relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, ClubResource._relationship(:membership)
-  end
-
-  test 'contact_profiles relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, ClubResource._relationship(:contact_profiles)
-  end
+  test_has_many *%i(membership contact_profiles)
 
   test 'website link' do
     subject._model.url = 'http://example.com'

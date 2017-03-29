@@ -16,6 +16,14 @@ concern :ResourceTesting do
         assert_same_elements attrs, self.class.described_type._attributes.keys - [:id]
       end
     end
+
+    def test_has_many(*rels)
+      rels.each do |rel|
+        define_method("test_has_many_#{rel}") do
+          assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(rel)
+        end
+      end
+    end
   end
 
   def serialize(model)

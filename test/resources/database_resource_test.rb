@@ -9,11 +9,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_nil self.class.described_type._model_class
   end
 
-  test 'relationships' do
-    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:games)
-    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:members)
-    assert_kind_of JSONAPI::Relationship::ToMany, self.class.described_type._relationship(:clubs)
-  end
+  test_has_many *%i(games members clubs)
 
   test 'id' do
     assert_equal 'ifdb', subject.id

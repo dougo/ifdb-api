@@ -10,9 +10,7 @@ class MemberResourceTest < ActiveSupport::TestCase
     assert_equal :created, MemberResource._attribute_options(:since)[:delegate]
   end
 
-  test 'games relationship' do
-    assert_kind_of JSONAPI::Relationship::ToMany, MemberResource._relationship(:games)
-  end
+  test_has_many *%i(games)
   
   test 'picture and thumbnail links' do
     subject._model.picture = 'http://example.com/showuser?pic'
