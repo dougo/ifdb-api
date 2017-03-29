@@ -64,7 +64,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       website: game.website.url,
       # TODO: ratings & reviews
       desc: game.desc,
-      # TODO: language
+      language: game.language,
+      language_names: game.language_names,
       published: game.published,
       version: game.version,
       license: game.license,
@@ -99,6 +100,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       website: 'http://example.com/max',
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
+      language: 'en-US, de, pt-BR',
+      language_names: { 'en-US': 'English', 'de': 'German', 'pt-BR': 'Portuguese' },
       published: '2003-01-01T00:00:00.000Z',
       version: '1.0',
       license: 'Freeware',

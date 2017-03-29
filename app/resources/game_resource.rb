@@ -1,7 +1,7 @@
 class GameResource < ApplicationResource
-  attributes *%i(title sort_title author sort_author authorExt tags published version license system language desc
-                 seriesname seriesnumber genre forgiveness bafsid downloadnotes created moddate pagevsn
-                 players_count wishlists_count)
+  attributes *%i(title sort_title author sort_author authorExt tags published version license system language
+                 language_names desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created moddate
+                 pagevsn players_count wishlists_count)
 
   has_many :author_profiles
   has_one :editor, class_name: 'Member', foreign_key: :editedby

@@ -25,4 +25,13 @@ class Game < ApplicationRecord
                           foreign_key: :gameid, association_foreign_key: :userid
   has_and_belongs_to_many :wishlists, class_name: 'Member', join_table: :wishlists,
                           foreign_key: :gameid, association_foreign_key: :userid
+
+  def language_names
+    if language.present?
+      language.split(',').map do |id|
+        id.strip!
+        [id.to_sym, Language.find_by(id: id)&.name]
+      end.to_h
+    end
+  end
 end

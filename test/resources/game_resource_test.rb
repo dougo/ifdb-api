@@ -4,7 +4,7 @@ class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
   test_attributes %i(title sort_title author sort_author authorExt tags published version license system language
-                     desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created
+                     language_names desc seriesname seriesnumber genre forgiveness bafsid downloadnotes created
                      moddate pagevsn players_count wishlists_count)
 
   test 'author_profiles relationship' do

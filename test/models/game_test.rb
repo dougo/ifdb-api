@@ -48,4 +48,19 @@ class GameTest < ActiveSupport::TestCase
     rel = reflector.association_relation
     assert_kind_of Arel::Nodes::Distinct, rel.ast.cores.last.set_quantifier
   end
+
+  test 'language_names' do
+    subject.language = 'eng-US, de'
+    assert_equal({ 'eng-US': 'English', de: 'German' }, subject.language_names)
+  end
+
+  test 'language_names when blank' do
+    subject.language = ''
+    assert_nil subject.language_names
+  end
+
+  test 'language_names when not found' do
+    subject.language = 'english'
+    assert_equal({ 'english': nil }, subject.language_names)
+  end
 end

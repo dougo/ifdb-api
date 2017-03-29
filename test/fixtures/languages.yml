@@ -1,0 +1,13 @@
+english:
+  id2: en
+  id3: eng
+  name: English
+
+german:
+  id2: de
+  name: German
+
+portuguese:
+  id2: pt
+  name: Portuguese
+  

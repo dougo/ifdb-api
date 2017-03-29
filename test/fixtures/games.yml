@@ -44,7 +44,7 @@ maximal:
   version: 1.0
   license: Freeware
   system: TADS 3
-  language: en-US
+  language: en-US, de, pt-BR
   desc: Someplace on Venus a secret weapon is being built that threatens Earth with
     total destruction. You and your comrade must penetrate the Xavian base and save
     the world -- before it's too late!
