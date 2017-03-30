@@ -10,18 +10,18 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     vals = {
       games: games.first(2).map do |game|
         {
-          thumbnail: game.links[:thumbnail]&.url,
+          thumbnail: game.try(:thumbnail)&.url,
           url: game.url,
           title: game.title,
           author: game.author,
-          published: game.attributes[:published], # TODO: should be game[:published]?
+          published: game.try(:published)
         }
       end,
       pages: {
         first: games.links[:first].url,
-        prev: games.links[:prev]&.url,
-        next: games.links[:next]&.url,
-        last: games.links[:last].url
+        prev: games.try(:prev)&.url,
+        next: games.try(:next)&.url,
+        last: games.last.url
       }
     }
     expected = {
@@ -52,7 +52,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.links[:last].where(include: 'author-profiles').data.last
+    game = ifdb.games.last.data.last.self(include: 'author-profiles').get
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,

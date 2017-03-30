@@ -6,23 +6,23 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
   make_my_diffs_pretty!
 
   test 'fetch all data needed by the members index page' do
-    members = ifdb.members
+    members = ifdb.members.get
     vals = {
       members: members.first(2).map do |member|
         {
-          thumbnail: member.links[:thumbnail]&.url,
+          thumbnail: member.try(:thumbnail)&.url,
           url: member.url,
           name: member.name,
-          location: member.attributes[:location],
+          location: member.try(:location),
           since: member.since,
-          profile_summary: member.attributes[:profile_summary]
+          profile_summary: member.try(:profile_summary)
         }
       end,
       pages: {
         first: members.links[:first].url,
-        prev: members.links[:prev]&.url,
-        next: members.links[:next]&.url,
-        last: members.links[:last].url
+        prev: members.try(:prev)&.url,
+        next: members.try(:next)&.url,
+        last: members.last.url
       }
     }
     expected = {

@@ -37,7 +37,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       listed: club.listed,
       website: club.website.url,
       contacts: club.contacts,
-      contact_profiles: club.objects.contact_profiles.first.url,
+      contact_profiles: club.objects.contact_profiles.map(&:url),
       members_count: club.members_count
     }
     expected = {
@@ -46,7 +46,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       listed: '2010-04-10T02:05:19.000Z',
       website: 'http://pr-if.org/',
       contacts: "Arthur Dent {#{arthur_id}}",
-      contact_profiles: "http://www.example.com/members/#{arthur_id}",
+      contact_profiles: ["http://www.example.com/members/#{arthur_id}"],
       members_count: 1
     }
     assert_equal expected, vals
@@ -74,9 +74,9 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       end,
       pages: {
         first: memberships.links[:first].url,
-        prev: memberships.links[:prev]&.url,
-        next: memberships.links[:next]&.url,
-        last: memberships.links[:last].url
+        prev: memberships.try(:prev)&.url,
+        next: memberships.try(:next)&.url,
+        last: memberships.last.url
       }
     }
     base_url = "http://www.example.com/clubs/#{prif_id}"
