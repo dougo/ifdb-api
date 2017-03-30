@@ -23,3 +23,18 @@ editorial:
   rating: 4
   review: Xyzzylicious!
   createdate: <%= Time.now %>
+
+maximal1:
+  game: maximal
+  rating: 3
+  createdate: <%= Time.now %>
+
+maximal2:
+  game: maximal
+  rating: 3
+  createdate: <%= Time.now %>
+
+maximal3:
+  game: maximal
+  rating: 4
+  createdate: <%= Time.now %>

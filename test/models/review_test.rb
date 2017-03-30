@@ -12,10 +12,10 @@ class ReviewTest < ActiveSupport::TestCase
   should have_one(:editorial).class_name('EditorialReview').with_foreign_key(:reviewid)
 
   test 'ratings scope omits review-only' do
-    assert_same_elements reviews(:of_zork, :rating_only, :editorial), Review.ratings
+    assert_same_elements reviews(:of_zork, :rating_only, :editorial), Review.ratings.where(game: games(:zork))
   end
 
   test 'member_reviews scope omits ratings-only and editorial' do
-    assert_same_elements reviews(:of_zork, :review_only), Review.member_reviews
+    assert_same_elements reviews(:of_zork, :review_only), Review.member_reviews.where(game: games(:zork))
   end
 end

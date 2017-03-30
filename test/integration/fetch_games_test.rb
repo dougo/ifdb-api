@@ -14,7 +14,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           url: game.url,
           title: game.title,
           author: game.author,
-          published: game.try(:published)
+          published_year: game.try(:published)&.to_date&.year,
+          ratings_average: game.try(:ratings_average)
         }
       end,
       pages: {
@@ -31,14 +32,16 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           url: 'http://www.example.com/games/xyzzy',
           title: 'Adventure',
           author: 'Will Crowther',
-          published: nil
+          published_year: nil,
+          ratings_average: nil
         },
         {
           thumbnail: nil,
           url: "http://www.example.com/games/#{games(:zork).id}",
           title: 'Zork',
           author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling',
-          published: '1979-01-01T00:00:00.000Z'
+          published_year: 1979,
+          ratings_average: 3.6667
         }
       ],
       pages: {
@@ -59,13 +62,15 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       title: game.title,
       author_profiles: game.objects.author_profiles.map(&:url),
       author: game.author,
+      episode: game.seriesnumber,
+      series: game.seriesname,
       genre: game.genre,
       published_year: game.published.to_date.year,
       website: game.website.url,
-      # TODO: ratings & reviews
+      ratings_average: game.ratings_average,
+      ratings: game.try(:ratings)&.url,
+      ratings_count: game.ratings_count,
       desc: game.desc,
-      series: game.seriesname,
-      episode: game.seriesnumber,
       language: game.language,
       language_names: game.language_names,
       published: game.published,
@@ -91,6 +96,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       wishlists: game.wishlists.url,
       wishlists_count: game.wishlists_count
     }
+    max_id = games(:maximal).id
     expected = {
       coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
       large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
@@ -98,13 +104,16 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       author_profiles: ["http://www.example.com/members/#{members(:arthur).id}",
                         "http://www.example.com/members/#{members(:trillian).id}"],
       author: 'Dan Shiovitz and Emily Short',
+      episode: '1',
+      series: 'Max Blaster',
       genre: 'Superhero/Espionage/Humor/Science Fiction',
       published_year: 2003,
       website: 'http://example.com/max',
+      ratings_average: 3.3333,
+      ratings: "http://www.example.com/games/#{max_id}/ratings",
+      ratings_count: 3,
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
-      series: 'Max Blaster',
-      episode: '1',
       language: 'en-US, de, pt-BR',
       language_names: { 'en-US': 'English', 'de': 'German', 'pt-BR': 'Portuguese' },
       published: '2003-01-01T00:00:00.000Z',
@@ -114,15 +123,16 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       bafsid: 2096,
       forgiveness: 'Polite',
       ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
-      tuid: games(:maximal).id,
+      tuid: max_id,
       download_notes: "To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.",
-      players: "http://www.example.com/games/#{games(:maximal).id}/players",
+      players: "http://www.example.com/games/#{max_id}/players",
       players_count: 2,
-      wishlists: "http://www.example.com/games/#{games(:maximal).id}/wishlists",
+      wishlists: "http://www.example.com/games/#{max_id}/wishlists",
       wishlists_count: 1
     }
     assert_equal expected, vals
   end
 
-  # TODO: 'whoselist' page
+  # TODO: whoselist page
+  # TODO: ratings page
 end

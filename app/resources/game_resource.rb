@@ -1,9 +1,10 @@
 class GameResource < ApplicationResource
-  attributes *%i(title sort_title author sort_author authorExt tags published version license system language
-                 language_names desc seriesname seriesnumber genre forgiveness ifids bafsid downloadnotes created
+  attributes *%i(title sort_title author sort_author authorExt seriesnumber seriesname genre
+                 ratings_average ratings_count tags published version license system language
+                 language_names desc forgiveness ifids bafsid downloadnotes created
                  moddate pagevsn players_count wishlists_count)
 
-  has_many :author_profiles
+  has_many :author_profiles, :ratings
   has_one :editor, class_name: 'Member', foreign_key: :editedby
   has_many :players, :wishlists
 
@@ -16,6 +17,14 @@ class GameResource < ApplicationResource
     end
     links[:website] = _model.website if _model.website.present?
     links
+  end
+
+  def ratings_average
+    _model.ratings.average(:rating)&.to_f
+  end
+
+  def ratings_count
+    _model.ratings.size
   end
 
   def ifids

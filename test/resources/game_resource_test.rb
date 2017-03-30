@@ -3,11 +3,12 @@ require 'test_helper'
 class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
-  test_attributes %i(title sort_title author sort_author authorExt tags published version license system language
-                     language_names desc seriesname seriesnumber genre forgiveness ifids bafsid downloadnotes
-                     created moddate pagevsn players_count wishlists_count)
+  test_attributes %i(title sort_title author sort_author authorExt seriesnumber seriesname genre
+                     ratings_average ratings_count tags published version license system language
+                     language_names desc forgiveness ifids bafsid downloadnotes created
+                     moddate pagevsn players_count wishlists_count)
 
-  test_has_many *%i(author_profiles players wishlists)
+  test_has_many *%i(author_profiles ratings players wishlists)
 
   test 'editor relationship' do
     rel = GameResource._relationship(:editor)
@@ -39,6 +40,16 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links[:thumbnail]
     assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
+  end
+
+  test 'ratings_average and ratings_count' do
+    subject = GameResource.new(games(:maximal), {})
+    assert_equal 3.3333, subject.ratings_average.as_json
+    assert_equal 3, subject.ratings_count
+  end
+
+  test 'ratings_average is nil if no ratings' do
+    assert_nil subject.ratings_average
   end
 
   test 'ifids' do
