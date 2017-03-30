@@ -56,9 +56,10 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 2, subject.wishlists_count
   end
 
-  test 'records includes players and wishlists to avoid 2N+1 queries' do
+  test 'records includes relationships to avoid N+1 queries' do
     assert_predicate GameResource.records({}).first.players, :loaded?
     assert_predicate GameResource.records({}).first.wishlists, :loaded?
+    assert_predicate GameResource.records({}).first.ifids, :loaded?
   end
 
   test 'conforms to schema' do

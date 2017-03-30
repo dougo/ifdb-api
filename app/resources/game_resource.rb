@@ -31,7 +31,7 @@ class GameResource < ApplicationResource
   end
 
   def self.records(options)
-    Game.includes(:players, :wishlists)
+    Game.includes *%i(ifids players wishlists)
   end
 
   private
