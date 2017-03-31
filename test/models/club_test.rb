@@ -47,8 +47,4 @@ class ClubTest < ActiveSupport::TestCase
     subject.contacts = "Arthur Dent {#{arthur.id}}, Zaphod Beeblebrox {zaphod_id}"
     assert_equal [arthur], subject.contact_profiles
   end
-
-  test 'relation.includes omits contact_profiles' do
-    assert_empty Club.all.includes(:contact_profiles, [:contact_profiles]).includes_values
-  end
 end

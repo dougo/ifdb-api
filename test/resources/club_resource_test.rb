@@ -11,6 +11,10 @@ class ClubResourceTest < ActiveSupport::TestCase
 
   test_has_many *%i(membership contact_profiles)
 
+  test 'contact_profiles does not eager load on include' do
+    refute ClubResource._relationship(:contact_profiles).eager_load_on_include
+  end
+
   test 'website link' do
     subject._model.url = 'http://example.com'
     assert_equal 'http://example.com', subject.custom_links[:website]
