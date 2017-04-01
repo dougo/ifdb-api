@@ -9,4 +9,10 @@ class GamesController < ApplicationController
       super
     end
   end
+
+  private
+
+  def resource_serializer_klass
+    GameResource::Serializer
+  end
 end

@@ -21,7 +21,12 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
         attributes: { 'full-name': 'Encabulator' },
         relationships: {
           'hydrocoptic-marzelvanes': {
-            links: { related: 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes' },
+            links: {
+              related: {
+                href: 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes',
+                meta: { count: 23 }
+              }
+            },
             data: [ { id: 42, type: 'parts' } ]
           }
         },
@@ -47,6 +52,7 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     hcmv_link = resource.links[:hydrocoptic_marzelvanes]
     assert_equal true, hcmv_link.templated
     assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes{?include}', hcmv_link.base_href
+    assert_equal(23, hcmv_link.meta[:count])
 
     docs_link = resource.links[:docs]
     assert_equal true, docs_link.templated

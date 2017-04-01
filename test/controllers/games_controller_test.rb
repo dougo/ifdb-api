@@ -17,4 +17,9 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     get game_path(:nosuchgame), as: :jsonapi
     assert_response :not_found
   end
+
+  test 'resource_serializer_klass' do
+    get game_path(games(:maximal))
+    assert_equal({ count: 3 }, response.parsed_body[:data][:relationships][:ratings][:links][:related][:meta])
+  end
 end

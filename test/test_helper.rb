@@ -1,6 +1,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'webmock/minitest'
 
 # Don't try to get schemas from the network when validating.
 JSON::Validator.schema_reader = JSON::Schema::Reader.new(accept_uri: false)

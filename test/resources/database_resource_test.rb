@@ -19,7 +19,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_kind_of self.class.described_type, self.class.described_type.find_by_key(nil, {})
   end
 
-  class ::DatabaseResource::SerializerTest < ActiveSupport::TestCase
+  class DatabaseResource::SerializerTest < ActiveSupport::TestCase
     test_extends JSONAPI::ResourceSerializer
 
     subject { self.class.described_type.new(DatabaseResource) }
@@ -34,7 +34,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     end
   end
 
-  class ::DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase
+  class DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase
     test_extends JSONAPI::LinkBuilder
 
     subject do
@@ -42,7 +42,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     end
 
     test 'self_link' do
-      assert_equal 'http://www.example.com', subject.self_link(DatabaseResource)
+      assert_equal 'http://www.example.com', subject.self_link(DatabaseResource.new)
     end
   end
 end
