@@ -20,13 +20,9 @@ class DatabaseResourceTest < ActiveSupport::TestCase
   end
 
   class DatabaseResource::SerializerTest < ActiveSupport::TestCase
-    test_extends JSONAPI::ResourceSerializer
+    test_extends ApplicationResource::Serializer
 
     subject { self.class.described_type.new(DatabaseResource) }
-
-    test 'link_builder' do
-      assert_kind_of DatabaseResource::LinkBuilder, subject.link_builder
-    end
 
     test 'omit relationship self links' do
       hash = subject.object_hash(DatabaseResource.new).deep_symbolize_keys
@@ -35,7 +31,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
   end
 
   class DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase
-    test_extends JSONAPI::LinkBuilder
+    test_extends ApplicationResource::LinkBuilder
 
     subject do
       self.class.described_type.new(base_url: 'http://www.example.com', primary_resource_klass: DatabaseResource)

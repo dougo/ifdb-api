@@ -22,8 +22,8 @@ class ApplicationResource < JSONAPI::Resource
 
   class Serializer < JSONAPI::ResourceSerializer
     def generate_link_builder(primary_resource_klass, options)
-      # Copied from parent class.
-      LinkBuilder.new(
+      primary_resource_klass::LinkBuilder.new(
+        # Copied from parent class.
         base_url: options.fetch(:base_url, ''),
         route_formatter: options.fetch(:route_formatter, JSONAPI.configuration.route_formatter),
         primary_resource_klass: primary_resource_klass,

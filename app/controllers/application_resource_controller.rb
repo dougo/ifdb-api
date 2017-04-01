@@ -4,6 +4,6 @@ class ApplicationResourceController < ApplicationController
   private
 
   def resource_serializer_klass
-    ApplicationResource::Serializer
+    resource_klass::Serializer
   end
 end

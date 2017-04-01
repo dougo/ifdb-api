@@ -18,16 +18,7 @@ class DatabaseResource < ApplicationResource
     new(nil, {})
   end
 
-  class Serializer < JSONAPI::ResourceSerializer
-    def generate_link_builder(primary_resource_klass, options)
-      # Copied from parent class.
-      LinkBuilder.new(
-        base_url: options.fetch(:base_url, ''),
-        route_formatter: options.fetch(:route_formatter, JSONAPI.configuration.route_formatter),
-        primary_resource_klass: primary_resource_klass,
-      )
-    end
-
+  class Serializer < superclass::Serializer
     def link_object(source, relationship, include_linkage = false)
       hash = super
       hash['links'].delete('self')
@@ -35,7 +26,7 @@ class DatabaseResource < ApplicationResource
     end
   end
 
-  class LinkBuilder < JSONAPI::LinkBuilder
+  class LinkBuilder < superclass::LinkBuilder
     def self_link(source)
       base_url
     end

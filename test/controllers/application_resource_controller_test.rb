@@ -11,6 +11,9 @@ class ApplicationResourceControllerTest < ActionDispatch::IntegrationTest
   class TestResource < ApplicationResource
     def self.find_by_key(key, options = {})
     end
+
+    class Serializer < superclass::Serializer
+    end
   end
 
   class TestController < ApplicationResourceController
@@ -18,7 +21,7 @@ class ApplicationResourceControllerTest < ActionDispatch::IntegrationTest
 
   test 'resource_serializer_klass' do
     mock = Minitest::Mock.new
-    ApplicationResource::Serializer.stub(:new, mock) do
+    TestResource::Serializer.stub(:new, mock) do
       mock.expect(:serialize_to_hash, {}, [nil])
 
       begin

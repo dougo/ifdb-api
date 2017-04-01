@@ -27,6 +27,9 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     def self.created_field
       :born_on
     end
+
+    class LinkBuilder < superclass::LinkBuilder
+    end
   end
 
   test 'immutable' do
@@ -52,7 +55,7 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     subject { self.class.described_type.new(TestResource) }
 
     test 'link_builder' do
-      assert_kind_of ApplicationResource::LinkBuilder, subject.link_builder
+      assert_kind_of TestResource::LinkBuilder, subject.link_builder
     end
   end
 
