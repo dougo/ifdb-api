@@ -1,6 +1,4 @@
-class DatabaseController < ApplicationController
-  include JSONAPI::ActsAsResourceController
-
+class DatabaseController < ApplicationResourceController
   private
 
   def resource_serializer_klass

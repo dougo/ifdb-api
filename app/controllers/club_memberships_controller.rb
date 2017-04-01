@@ -1,3 +1,2 @@
-class ClubMembershipsController < ApplicationController
-  include JSONAPI::ActsAsResourceController
+class ClubMembershipsController < ApplicationResourceController
 end

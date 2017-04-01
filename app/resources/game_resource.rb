@@ -47,31 +47,6 @@ class GameResource < ApplicationResource
     Game.includes *%i(ratings ifids players wishlists)
   end
 
-  # TODO: move this to ApplicationResource
-  class Serializer < JSONAPI::ResourceSerializer
-    def generate_link_builder(primary_resource_klass, options)
-      # Copied from parent class.
-      LinkBuilder.new(
-        base_url: options.fetch(:base_url, ''),
-        route_formatter: options.fetch(:route_formatter, JSONAPI.configuration.route_formatter),
-        primary_resource_klass: primary_resource_klass,
-      )
-    end
-  end
-
-  # TODO: move this to ApplicationResource
-  class LinkBuilder < JSONAPI::LinkBuilder
-    def relationships_related_link(source, relationship)
-      href = super
-      meta = relationship.options[:meta]
-      if meta
-        { href: href, meta: source.instance_eval(&meta) }
-      else
-        href
-      end
-    end
-  end
-
   private
 
   def add_param(uri, key, value = nil)

@@ -86,41 +86,4 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_valid_json schema, serialize(games(:minimal))
     assert_valid_json schema, serialize(games(:maximal))
   end
-
-  class GameResource::SerializerTest < ActiveSupport::TestCase
-    test_extends JSONAPI::ResourceSerializer
-
-    subject { self.class.described_type.new(GameResource) }
-
-    test 'link_builder' do
-      assert_kind_of GameResource::LinkBuilder, subject.link_builder
-    end
-  end
-
-  class GameResource::LinkBuilderTest < ActiveSupport::TestCase
-    test_extends JSONAPI::LinkBuilder
-
-    subject do
-      self.class.described_type.new(base_url: 'http://www.example.com',
-                                    route_formatter: JSONAPI.configuration.route_formatter,
-                                    primary_resource_klass: GameResource)
-    end
-
-    test 'relationships_related_link includes meta if relationship has meta' do
-      resource = GameResource.new(games(:maximal), {})
-      relationship = JSONAPI::Relationship::ToMany.new(:ratings, meta: proc { { count: ratings_count } })
-      expected = {
-        href: "http://www.example.com/games/#{games(:maximal).id}/ratings",
-        meta: { count: 3 }
-      }
-      assert_equal expected, subject.relationships_related_link(resource, relationship)
-    end
-
-    test 'relationships_related_link is string if relationship has no meta' do
-      resource = GameResource.new(Game.new(id: 'xyzzy'), {})
-      relationship = JSONAPI::Relationship::ToMany.new(:ratings)
-      expected = 'http://www.example.com/games/xyzzy/ratings'
-      assert_equal expected, subject.relationships_related_link(resource, relationship)
-    end
-  end
 end

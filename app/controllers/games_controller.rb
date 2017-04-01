@@ -1,6 +1,4 @@
-class GamesController < ApplicationController
-  include JSONAPI::ActsAsResourceController
-
+class GamesController < ApplicationResourceController
   def show
     fwd = GameForward.find_by(gameid: params[:id])
     if fwd
@@ -8,11 +6,5 @@ class GamesController < ApplicationController
     else
       super
     end
-  end
-
-  private
-
-  def resource_serializer_klass
-    GameResource::Serializer
   end
 end

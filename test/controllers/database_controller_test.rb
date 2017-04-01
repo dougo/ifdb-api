@@ -1,11 +1,7 @@
 require 'test_helper'
 
 class DatabaseControllerTest < ActionDispatch::IntegrationTest
-  test_extends ApplicationController
-
-  test 'JSONAPI' do
-    assert_includes DatabaseController, JSONAPI::ActsAsResourceController
-  end
+  test_extends ApplicationResourceController
 
   test 'resource_serializer_klass' do
     get root_path
