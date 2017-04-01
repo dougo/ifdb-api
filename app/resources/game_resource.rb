@@ -20,7 +20,10 @@ class GameResource < ApplicationResource
   end
 
   def ratings_average
-    _model.ratings.average(:rating)&.to_f
+    # TODO: this is more efficient but causes N+1 queries.
+    # _model.ratings.average(:rating)&.to_f
+    ratings = _model.ratings.map(&:rating)
+    ratings.sum / ratings.count.to_f if ratings.any?
   end
 
   def ratings_count
@@ -40,7 +43,7 @@ class GameResource < ApplicationResource
   end
 
   def self.records(options)
-    Game.includes *%i(ifids players wishlists)
+    Game.includes *%i(ratings ifids players wishlists)
   end
 
   private

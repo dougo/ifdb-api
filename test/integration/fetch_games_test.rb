@@ -41,7 +41,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           title: 'Zork',
           author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling',
           published_year: 1979,
-          ratings_average: 3.6667
+          ratings_average: 3.6666666666666665
         }
       ],
       pages: {
@@ -109,7 +109,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       genre: 'Superhero/Espionage/Humor/Science Fiction',
       published_year: 2003,
       website: 'http://example.com/max',
-      ratings_average: 3.3333,
+      ratings_average: 3.3333333333333335,
       ratings: "http://www.example.com/games/#{max_id}/ratings",
       ratings_count: 3,
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \

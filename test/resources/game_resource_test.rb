@@ -44,7 +44,7 @@ class GameResourceTest < ActiveSupport::TestCase
 
   test 'ratings_average and ratings_count' do
     subject = GameResource.new(games(:maximal), {})
-    assert_equal 3.3333, subject.ratings_average.as_json
+    assert_equal 3.3333333333333333, subject.ratings_average.as_json
     assert_equal 3, subject.ratings_count
   end
 
@@ -68,9 +68,11 @@ class GameResourceTest < ActiveSupport::TestCase
   end
 
   test 'records includes relationships to avoid N+1 queries' do
-    assert_predicate GameResource.records({}).first.players, :loaded?
-    assert_predicate GameResource.records({}).first.wishlists, :loaded?
-    assert_predicate GameResource.records({}).first.ifids, :loaded?
+    subject = GameResource.records({}).first
+    assert_predicate subject.ratings, :loaded?
+    assert_predicate subject.ifids, :loaded?
+    assert_predicate subject.players, :loaded?
+    assert_predicate subject.wishlists, :loaded?
   end
 
   test 'conforms to schema' do
