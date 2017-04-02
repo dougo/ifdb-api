@@ -1,6 +1,4 @@
-module Serializable
-  extend ActiveSupport::Concern
-
+concern :Serializable do
   def to_hal
     yaks = Yaks.new do
       map_to_primitive Date, Time, DateTime, ActiveSupport::TimeWithZone, &:iso8601

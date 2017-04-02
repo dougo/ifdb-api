@@ -1,6 +1,8 @@
 class ApplicationResource < JSONAPI::Resource
   abstract
 
+  include CompoundID
+
   def self.inherited(resource_class)
     super
     resource_class.immutable

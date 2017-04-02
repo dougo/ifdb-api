@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class SerializableTest < ActiveSupport::TestCase
+  test_extends ActiveSupport::Concern
+
   class TestModel
     include Serializable
     def foo; :foo; end

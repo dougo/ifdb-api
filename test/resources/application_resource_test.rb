@@ -7,6 +7,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     assert_predicate self.class.described_type, :_abstract
   end
 
+  test 'includes CompoundID' do
+    assert_includes self.class.described_type, CompoundID
+  end
+
   class TestModel
     def id; :xyzzy end
     def foo; nil end
