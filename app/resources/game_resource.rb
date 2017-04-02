@@ -4,7 +4,7 @@ class GameResource < ApplicationResource
                  language_names desc forgiveness ifids bafsid downloadnotes created
                  moddate pagevsn)
 
-  has_many :author_profiles, :ratings
+  has_many :author_profiles, :ratings, :member_reviews # TODO: three_most_helpful_member_reviews?
   has_one :editor, class_name: 'Member', foreign_key: :editedby
   has_many :players, :wishlists
 
@@ -27,6 +27,10 @@ class GameResource < ApplicationResource
     _model.ifids.map &:to_s
   end
 
+  def member_reviews_meta(options)
+    { count: _model.member_reviews.size }
+  end
+
   def players_meta(options)
     { count: _model.players.size }
   end
@@ -36,7 +40,7 @@ class GameResource < ApplicationResource
   end
 
   def self.records(options)
-    Game.includes *%i(ratings ifids players wishlists)
+    Game.includes *%i(ratings ifids member_reviews players wishlists)
   end
 
   private

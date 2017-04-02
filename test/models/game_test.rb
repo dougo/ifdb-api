@@ -30,11 +30,13 @@ class GameTest < ActiveSupport::TestCase
 
   # TODO: use mock, expect call to :ratings scope?
   test 'ratings collection omits review-only' do
-    assert_same_elements reviews(:of_zork, :rating_only, :editorial), games(:zork).ratings
+    assert_same_elements reviews(:of_zork, :rating_only, :external), games(:zork).ratings
   end
 
+  # TODO: is this actually used anywhere?
   test 'reviews_and_ratings collection includes all' do
-    assert_same_elements reviews(:of_zork, :rating_only, :review_only, :editorial), games(:zork).reviews_and_ratings
+    assert_same_elements reviews(:of_zork, :rating_only, :review_only, :external, :bafs_guide),
+                         games(:zork).reviews_and_ratings
   end
 
   # TODO: use mock, expect call to :member_reviews scope?

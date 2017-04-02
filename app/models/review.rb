@@ -8,5 +8,5 @@ class Review < ApplicationRecord
   has_one :editorial, class_name: 'EditorialReview', foreign_key: :reviewid
 
   scope :ratings, -> { where.not(rating: nil) }
-  scope :member_reviews, -> { where.not(review: nil, userid: '$system') }
+  scope :member_reviews, -> { where.not(review: nil).where(special: nil) }
 end

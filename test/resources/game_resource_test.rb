@@ -8,7 +8,7 @@ class GameResourceTest < ActiveSupport::TestCase
                      language_names desc forgiveness ifids bafsid downloadnotes created
                      moddate pagevsn)
 
-  test_has_many *%i(author_profiles ratings players wishlists)
+  test_has_many *%i(author_profiles ratings member_reviews players wishlists)
 
   test 'editor relationship' do
     rel = GameResource._relationship(:editor)
@@ -56,6 +56,11 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal %w(foo bar), subject.ifids
   end
 
+  test 'member_reviews_meta' do
+    subject._model.member_reviews.build([{}, {}])
+    assert_equal({ count: 2 }, subject.member_reviews_meta({}))
+  end
+
   test 'players_meta' do
     subject._model.players.build([{}, {}])
     assert_equal({ count: 2 }, subject.players_meta({}))
@@ -70,6 +75,7 @@ class GameResourceTest < ActiveSupport::TestCase
     subject = GameResource.records({}).first
     assert_predicate subject.ratings, :loaded?
     assert_predicate subject.ifids, :loaded?
+    assert_predicate subject.member_reviews, :loaded?
     assert_predicate subject.players, :loaded?
     assert_predicate subject.wishlists, :loaded?
   end

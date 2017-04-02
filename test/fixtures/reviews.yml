@@ -17,17 +17,29 @@ review_only:
   review: Don't panic!
   createdate: <%= Time.now %>
 
-editorial:
+external:
   game: zork
   userid: $system
   rating: 4
   review: Xyzzylicious!
+  special: 4
+  createdate: <%= Time.now %>
+
+bafs_guide:
+  game: zork
+  userid: ''
+  review: Distim the doshes.
+  special: 2
   createdate: <%= Time.now %>
 
 maximal1:
   game: maximal
+  summary: Not bad
+  reviewer: arthur
+  review: This is a decent game.
   rating: 3
-  createdate: <%= Time.now %>
+  createdate: 2016-02-03
+  moddate: 2016-02-23
 
 maximal2:
   game: maximal
@@ -38,3 +50,11 @@ maximal3:
   game: maximal
   rating: 4
   createdate: <%= Time.now %>
+
+maximal4:
+  game: maximal
+  summary: Difficult
+  reviewer: trillian
+  review: I got stuck and never finished.
+  createdate: 2016-03-04
+  moddate: 2016-03-04

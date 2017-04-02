@@ -55,7 +55,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.last.data.last.self(include: 'author-profiles').get
+    game = ifdb.games.last.data.last.self(include: %w(author-profiles member-reviews.reviewer)).get
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
@@ -82,10 +82,26 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       ifids: game.ifids,
       tuid: game.id,
       # TODO: cross references
-      # TODO: tags
       # TODO: awards
       # TODO: external reviews
-      # TODO: member reviews
+      # TODO: tags
+      # TODO: rating_histogram
+      member_reviews_count: game.links.member_reviews.meta[:count],
+      member_reviews: game.objects.member_reviews.map do |review|
+        {
+          # TODO: votes
+          rating: review.try(:rating),
+          summary: review.summary,
+          moddate: review.moddate.to_date.to_s,
+          reviewer: {
+            name: review.objects.reviewer.name,
+            location: review.objects.reviewer.try(:location)
+          },
+          # TODO: tags
+          review: review.review
+          # TODO: comments_count
+        }
+      end,
       # TODO: links
       # TODO: editor url/name
       # TODO: version/history links
@@ -124,6 +140,29 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       forgiveness: 'Polite',
       ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
       tuid: max_id,
+      member_reviews_count: 2,
+      member_reviews: [
+        {
+          rating: 3,
+          summary: 'Not bad',
+          moddate: '2016-02-23',
+          reviewer: {
+            name: 'Arthur Dent',
+            location: 'Cottington, England, Earth'
+          },
+          review: 'This is a decent game.'
+        },
+        {
+          rating: nil,
+          summary: 'Difficult',
+          moddate: '2016-03-04',
+          reviewer: {
+            name: 'Tricia McMillan',
+            location: nil
+          },
+          review: 'I got stuck and never finished.'
+        }
+      ],
       download_notes: "To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.",
       players: "http://www.example.com/games/#{max_id}/players",
       players_count: 2,
