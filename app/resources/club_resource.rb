@@ -1,5 +1,5 @@
 class ClubResource < ApplicationResource
-  attributes *%i(name keywords desc contacts contacts_plain members_public members_count)
+  attributes *%i(name keywords desc contacts contacts_plain members_public)
   attribute :listed, delegate: :created
 
   has_many :membership
@@ -11,8 +11,8 @@ class ClubResource < ApplicationResource
     links
   end
 
-  def members_count
-    _model.membership.size
+  def membership_meta(options)
+    { count: _model.membership.size }
   end
 
   def self.records(context = {})

@@ -13,7 +13,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       website: club.website.url,
       name: club.name,
       listed: club.listed,
-      members_count: club.members_count,
+      members_count: club.membership.meta[:count],
       desc: club.desc,
     }
     expected = {
@@ -38,7 +38,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       website: club.website.url,
       contacts: club.contacts,
       contact_profiles: club.objects.contact_profiles.map(&:url),
-      members_count: club.members_count
+      members_count: club.membership.meta[:count]
     }
     expected = {
       name: 'PR-IF',

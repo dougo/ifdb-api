@@ -15,7 +15,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           title: game.title,
           author: game.author,
           published_year: game.try(:published)&.to_date&.year,
-          ratings_average: game.try(:ratings_average)
+          ratings_average: game.ratings.meta.average
         }
       end,
       pages: {
@@ -67,7 +67,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       genre: game.genre,
       published_year: game.published.to_date.year,
       website: game.website.url,
-      ratings_average: game.ratings_average,
+      ratings_average: game.ratings.meta.average,
       ratings: game.ratings.url,
       ratings_count: game.ratings.meta[:count],
       desc: game.desc,
@@ -92,9 +92,9 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       download_notes: game.downloadnotes,
       # TODO: download links
       players: game.players.url,
-      players_count: game.players_count,
+      players_count: game.players.meta[:count],
       wishlists: game.wishlists.url,
-      wishlists_count: game.wishlists_count
+      wishlists_count: game.wishlists.meta[:count]
     }
     max_id = games(:maximal).id
     expected = {

@@ -3,7 +3,7 @@ require 'test_helper'
 class ClubResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
-  test_attributes %i(name keywords desc contacts contacts_plain listed members_public members_count)
+  test_attributes %i(name keywords desc contacts contacts_plain listed members_public)
 
   test 'listed delegates to created' do
     assert_equal :created, ClubResource._attribute_options(:listed)[:delegate]
@@ -25,19 +25,19 @@ class ClubResourceTest < ActiveSupport::TestCase
     refute_includes subject.custom_links, :website
   end
 
-  test 'members_count' do
+  test 'membership_meta' do
     subject._model.membership.build([{}, {}])
-    assert_equal 2, subject.members_count
+    assert_equal({ count: 2 }, subject.membership_meta({}))
   end
 
-  test 'members_count does not load records' do
+  test 'membership_meta does not load records' do
     model = clubs(:prif)
     subject = ClubResource.new(model, {})
-    subject.members_count
+    subject.membership_meta({})
     refute_predicate model.membership, :loaded?
   end
 
-  test 'records includes membership to avoid N+1 queries from members_count' do
+  test 'records includes membership to avoid N+1 queries from membership_meta' do
     assert_predicate ClubResource.records({}).first.membership, :loaded?
   end
 end

@@ -1,8 +1,8 @@
 class GameResource < ApplicationResource
   attributes *%i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                 ratings_average tags published version license system language
+                 tags published version license system language
                  language_names desc forgiveness ifids bafsid downloadnotes created
-                 moddate pagevsn players_count wishlists_count)
+                 moddate pagevsn)
 
   has_many :author_profiles, :ratings
   has_one :editor, class_name: 'Member', foreign_key: :editedby
@@ -19,27 +19,20 @@ class GameResource < ApplicationResource
     links
   end
 
-  def ratings_average
-    # TODO: this is more efficient but causes N+1 queries.
-    # _model.ratings.average(:rating)&.to_f
-    ratings = _model.ratings.map(&:rating)
-    ratings.sum / ratings.count.to_f if ratings.any?
-  end
-
   def ratings_meta(options)
-    { count: _model.ratings.size }
+    { average: ratings_average, count: _model.ratings.size }
   end
 
   def ifids
     _model.ifids.map &:to_s
   end
 
-  def players_count
-    _model.players.size
+  def players_meta(options)
+    { count: _model.players.size }
   end
 
-  def wishlists_count
-    _model.wishlists.size
+  def wishlists_meta(options)
+    { count: _model.wishlists.size }
   end
 
   def self.records(options)
@@ -52,5 +45,12 @@ class GameResource < ApplicationResource
     uri = URI(uri)
     uri.query = Rack::Utils.parse_query(uri.query).merge(key.to_s => value).to_query
     uri.to_s
+  end
+
+  def ratings_average
+    # TODO: this is more efficient but causes N+1 queries.
+    # _model.ratings.average(:rating)&.to_f
+    ratings = _model.ratings.map(&:rating)
+    ratings.sum / ratings.size.to_f if ratings.any?
   end
 end

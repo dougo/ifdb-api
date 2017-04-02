@@ -4,9 +4,9 @@ class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
   test_attributes %i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                     ratings_average tags published version license system language
+                     tags published version license system language
                      language_names desc forgiveness ifids bafsid downloadnotes created
-                     moddate pagevsn players_count wishlists_count)
+                     moddate pagevsn)
 
   test_has_many *%i(author_profiles ratings players wishlists)
 
@@ -42,18 +42,13 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
   end
 
-  test 'ratings_average' do
-    subject = GameResource.new(games(:maximal), {})
-    assert_equal 3.3333333333333333, subject.ratings_average.as_json
-  end
-
-  test 'ratings_average is nil if no ratings' do
-    assert_nil subject.ratings_average
-  end
-
   test 'ratings_meta' do
     subject = GameResource.new(games(:maximal), {})
-    assert_equal({ count: 3 }, subject.ratings_meta({}))
+    assert_equal({ average: 3.3333333333333333, count: 3 }, subject.ratings_meta({}))
+  end
+
+  test 'ratings average is nil if no ratings' do
+    assert_equal({ average: nil, count: 0 }, subject.ratings_meta({}))
   end
 
   test 'ifids' do
@@ -61,14 +56,14 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal %w(foo bar), subject.ifids
   end
 
-  test 'players_count' do
+  test 'players_meta' do
     subject._model.players.build([{}, {}])
-    assert_equal 2, subject.players_count
+    assert_equal({ count: 2 }, subject.players_meta({}))
   end
 
   test 'wishlists_count' do
     subject._model.wishlists.build([{}, {}])
-    assert_equal 2, subject.wishlists_count
+    assert_equal({ count: 2 }, subject.wishlists_meta({}))
   end
 
   test 'records includes relationships to avoid N+1 queries' do
