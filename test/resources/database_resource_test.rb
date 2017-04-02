@@ -24,6 +24,10 @@ class DatabaseResourceTest < ActiveSupport::TestCase
 
     subject { self.class.described_type.new(DatabaseResource) }
 
+    test 'link_builder' do
+      assert_kind_of DatabaseResource::LinkBuilder, subject.link_builder
+    end
+
     test 'omit relationship self links' do
       hash = subject.object_hash(DatabaseResource.new).deep_symbolize_keys
       refute_includes hash[:relationships][:games][:links], :self
@@ -31,7 +35,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
   end
 
   class DatabaseResource::LinkBuilderTest < ActiveSupport::TestCase
-    test_extends ApplicationResource::LinkBuilder
+    test_extends JSONAPI::LinkBuilder
 
     subject do
       self.class.described_type.new(base_url: 'http://www.example.com', primary_resource_klass: DatabaseResource)

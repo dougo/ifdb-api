@@ -21,22 +21,13 @@ class ApplicationResource < JSONAPI::Resource
   end
 
   class Serializer < JSONAPI::ResourceSerializer
-    def generate_link_builder(primary_resource_klass, options)
-      primary_resource_klass::LinkBuilder.new(
-        # Copied from parent class.
-        base_url: options.fetch(:base_url, ''),
-        route_formatter: options.fetch(:route_formatter, JSONAPI.configuration.route_formatter),
-        primary_resource_klass: primary_resource_klass,
-      )
-    end
-  end
+    private
 
-  class LinkBuilder < JSONAPI::LinkBuilder
-    def relationships_related_link(source, relationship, query_params={})
+    def related_link(source, relationship)
       href = super
-      meta = relationship.options[:meta]
+      meta = source.try("#{relationship.name}_meta", custom_generation_options)
       if meta
-        { href: href, meta: source.instance_eval(&meta) }
+        { href: href, meta: meta }
       else
         href
       end

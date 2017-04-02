@@ -4,7 +4,7 @@ class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
   test_attributes %i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                     ratings_average ratings_count tags published version license system language
+                     ratings_average tags published version license system language
                      language_names desc forgiveness ifids bafsid downloadnotes created
                      moddate pagevsn players_count wishlists_count)
 
@@ -15,12 +15,6 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_kind_of JSONAPI::Relationship::ToOne, rel
     assert_equal 'Member', rel.class_name
     assert_equal :editedby, rel.foreign_key
-  end
-
-  test 'ratings relationship includes count' do
-    subject = GameResource.new(games(:maximal), {})
-    meta = GameResource._relationship(:ratings).options[:meta]
-    assert_equal({ count: 3 }, subject.instance_eval(&meta))
   end
 
   test 'custom links' do
@@ -48,14 +42,18 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
   end
 
-  test 'ratings_average and ratings_count' do
+  test 'ratings_average' do
     subject = GameResource.new(games(:maximal), {})
     assert_equal 3.3333333333333333, subject.ratings_average.as_json
-    assert_equal 3, subject.ratings_count
   end
 
   test 'ratings_average is nil if no ratings' do
     assert_nil subject.ratings_average
+  end
+
+  test 'ratings_meta' do
+    subject = GameResource.new(games(:maximal), {})
+    assert_equal({ count: 3 }, subject.ratings_meta({}))
   end
 
   test 'ifids' do

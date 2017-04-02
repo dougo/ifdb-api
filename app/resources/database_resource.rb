@@ -24,9 +24,17 @@ class DatabaseResource < ApplicationResource
       hash['links'].delete('self')
       hash
     end
+
+    private
+  
+    def generate_link_builder(primary_resource_klass, options)
+      builder = super
+      LinkBuilder.new(base_url: builder.base_url, route_formatter: builder.route_formatter,
+                      primary_resource_klass: builder.primary_resource_klass)
+    end
   end
 
-  class LinkBuilder < superclass::LinkBuilder
+  class LinkBuilder < JSONAPI::LinkBuilder
     def self_link(source)
       base_url
     end

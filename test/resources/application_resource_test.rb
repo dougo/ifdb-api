@@ -28,7 +28,11 @@ class ApplicationResourceTest < ActiveSupport::TestCase
       :born_on
     end
 
-    class LinkBuilder < superclass::LinkBuilder
+    attr_reader :frobs_meta_options
+
+    def frobs_meta(options)
+      @frobs_meta_options = options
+      { count: frobs.size }
     end
   end
 
@@ -52,37 +56,22 @@ class ApplicationResourceTest < ActiveSupport::TestCase
   class ApplicationResource::SerializerTest < ActiveSupport::TestCase
     test_extends JSONAPI::ResourceSerializer
 
-    subject { self.class.described_type.new(TestResource) }
+    subject { self.class.described_type.new(TestResource, serialization_options: { foo: 42 }) }
 
-    test 'link_builder' do
-      assert_kind_of TestResource::LinkBuilder, subject.link_builder
-    end
-  end
-
-  class ApplicationResource::LinkBuilderTest < ActiveSupport::TestCase
-    test_extends JSONAPI::LinkBuilder
-
-    subject do
-      self.class.described_type.new(base_url: 'http://www.example.com',
-                                    route_formatter: JSONAPI.configuration.route_formatter,
-                                    primary_resource_klass: TestResource)
-    end
-
-    test 'relationships_related_link includes meta if relationship has meta' do
+    test 'foo related link includes meta if foo_meta is defined' do
       resource = TestResource.new(TestModel.new, {})
-      relationship = JSONAPI::Relationship::ToMany.new(:frobs, meta: proc { { count: frobs.size } })
       expected = {
-        href: 'http://www.example.com/application-resource-test/tests/xyzzy/frobs',
+        href: '/application-resource-test/tests/xyzzy/frobs',
         meta: { count: 3 }
       }
-      assert_equal expected, subject.relationships_related_link(resource, relationship, {})
+      assert_equal expected, subject.object_hash(resource)['relationships']['frobs']['links']['related']
+      assert_equal({ serializer: subject, serialization_options: { foo: 42 } }, resource.frobs_meta_options)
     end
 
-    test 'relationships_related_link is string if relationship has no meta' do
+    test 'foo related link is string if foo_meta is not defined' do
       resource = TestResource.new(TestModel.new, {})
-      relationship = JSONAPI::Relationship::ToMany.new(:frobs)
-      expected = 'http://www.example.com/application-resource-test/tests/xyzzy/frobs'
-      assert_equal expected, subject.relationships_related_link(resource, relationship)
+      expected = '/application-resource-test/tests/xyzzy/quux'
+      assert_equal expected, subject.object_hash(resource)['relationships']['quux']['links']['related']
     end
   end
 end

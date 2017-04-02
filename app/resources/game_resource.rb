@@ -1,11 +1,10 @@
 class GameResource < ApplicationResource
   attributes *%i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                 ratings_average ratings_count tags published version license system language
+                 ratings_average tags published version license system language
                  language_names desc forgiveness ifids bafsid downloadnotes created
                  moddate pagevsn players_count wishlists_count)
 
-  has_many :author_profiles
-  has_many :ratings, meta: proc { { count: ratings_count } }
+  has_many :author_profiles, :ratings
   has_one :editor, class_name: 'Member', foreign_key: :editedby
   has_many :players, :wishlists
 
@@ -27,8 +26,8 @@ class GameResource < ApplicationResource
     ratings.sum / ratings.count.to_f if ratings.any?
   end
 
-  def ratings_count
-    _model.ratings.size
+  def ratings_meta(options)
+    { count: _model.ratings.size }
   end
 
   def ifids
