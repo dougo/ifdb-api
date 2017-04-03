@@ -33,6 +33,10 @@ class GameTest < ActiveSupport::TestCase
     assert_same_elements reviews(:of_zork, :rating_only, :external), games(:zork).ratings
   end
 
+  test 'ratings are sorted by moddate' do
+    assert_equal({ moddate: :desc }, relation_order(association_relation(:ratings)))
+  end
+
   # TODO: is this actually used anywhere?
   test 'reviews_and_ratings collection includes all' do
     assert_same_elements reviews(:of_zork, :rating_only, :review_only, :external, :bafs_guide),
@@ -46,18 +50,12 @@ class GameTest < ActiveSupport::TestCase
 
   test 'polls collection is distinct' do
     # TODO: add this to shoulda-matchers?
-    reflector = Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, :polls)
-    rel = reflector.association_relation
+    rel = association_relation(:polls)
     assert_kind_of Arel::Nodes::Distinct, rel.ast.cores.last.set_quantifier
   end
 
   test 'download_links are sorted by displayorder' do
-    reflector = Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, :download_links)
-    rel = reflector.association_relation
-    assert_equal 1, rel.order_values.length
-    order = rel.order_values.first
-    assert_kind_of Arel::Nodes::Ascending, order
-    assert_equal :displayorder, order.expr.name
+    assert_equal({ displayorder: :asc }, relation_order(association_relation(:download_links)))
   end
 
   test 'language_names' do
@@ -73,5 +71,26 @@ class GameTest < ActiveSupport::TestCase
   test 'language_names when not found' do
     subject.language = 'english'
     assert_equal({ 'english': nil }, subject.language_names)
+  end
+
+  private
+
+  def association_relation(name)
+    Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, name).association_relation
+  end
+
+  def relation_order(rel)
+    rel.order_values.map do |order|
+      [order.expr.name, order_type(order)]
+    end.to_h
+  end
+
+  def order_type(order)
+    case order
+    when Arel::Nodes::Ascending
+      :asc
+    when Arel::Nodes::Descending
+      :desc
+    end
   end
 end

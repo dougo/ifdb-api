@@ -11,4 +11,7 @@ class ReviewResourceTest < ActiveSupport::TestCase
     assert_equal :userid, rel.foreign_key
   end
 
+  test 'created_field' do
+    assert_equal :moddate, ReviewResource.created_field
+  end
 end

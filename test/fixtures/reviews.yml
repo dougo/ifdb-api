@@ -44,12 +44,16 @@ maximal1:
 maximal2:
   game: maximal
   rating: 3
-  createdate: <%= Time.now %>
+  reviewer: maximal
+  createdate: 2017-01-01
+  moddate: 2017-01-04
 
 maximal3:
   game: maximal
   rating: 4
-  createdate: <%= Time.now %>
+  reviewer: minimal
+  createdate: 2017-01-02
+  moddate: 2017-01-03
 
 maximal4:
   game: maximal

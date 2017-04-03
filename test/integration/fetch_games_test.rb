@@ -197,8 +197,79 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   # TODO: whoselist page
-  # TODO: ratings page
+
+  test 'fetch all data for the ratings page' do
+    game = ifdb.games.last.data.last.self(include: 'ratings.reviewer').get
+    vals = {
+      # TODO: sort links?
+      # TODO: pagination?
+      reviews_and_ratings: game.objects.ratings.map do |review|
+        {
+          # TODO: review votes
+          rating: review.rating,
+          summary: review.try(:summary),
+          date: review.moddate,
+          reviewer: {
+            link: review.reviewer.url,
+            name: review.objects.reviewer.name,
+            location: review.objects.reviewer.try(:location),
+          },
+          # TODO: review tags
+          review: review.try(:review)
+          # TODO: review comments
+        }
+      end
+    }
+    expected = {
+      reviews_and_ratings: [
+        {
+          rating: 3,
+          summary: nil,
+          date: '2017-01-04T00:00:00.000Z',
+          reviewer: {
+            link: "http://www.example.com/members/#{members(:maximal).id}",
+            name: 'Peter Molydeux',
+            location: 'Twitter'
+          },
+          review: nil
+        },
+        {
+          rating: 4,
+          summary: nil,
+          date: '2017-01-03T00:00:00.000Z',
+          reviewer: {
+            link: "http://www.example.com/members/#{members(:minimal).id}",
+            name: 'Minny Malle',
+            location: nil
+          },
+          review: nil
+        },
+        {
+          rating: 3,
+          summary: 'Not bad',
+          date: '2016-02-23T00:00:00.000Z',
+          reviewer: {
+            link: "http://www.example.com/members/#{members(:arthur).id}",
+            name: 'Arthur Dent',
+            location: 'Cottington, England, Earth'
+          },
+          review: 'This is a decent game.'
+        }
+        # TODO: external review
+      ]
+    }
+    assert_equal expected, vals
+  end
+
+  test 'follow the ratings link' do
+    ratings = ifdb.games.last.data.last.ratings.get
+    assert_equal [3, 4, 3], ratings.map(&:rating)
+  end
+
   # TODO: member-reviews page
+
+  # TODO: fetch a review
+  # TODO: fetch a reviewer
 
   test 'follow the download-links link' do
     game_links = ifdb.games.last.data.last.download_links.get

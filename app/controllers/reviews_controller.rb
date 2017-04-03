@@ -1,0 +1,2 @@
+class ReviewsController < ApplicationResourceController
+end
