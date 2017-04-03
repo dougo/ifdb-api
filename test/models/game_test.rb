@@ -24,7 +24,7 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:polls).through(:poll_votes)
   should belong_to(:editor).class_name('Member').with_foreign_key(:editedby)
   should have_many(:history).class_name('GameVersion').with_foreign_key(:id)
-  should have_many(:links).class_name('GameLink').with_foreign_key(:gameid)
+  should have_many(:download_links).class_name('GameLink').with_foreign_key(:gameid)
   should have_and_belong_to_many(:players).class_name('Member').join_table('playedgames')
   should have_and_belong_to_many(:wishlists).class_name('Member').join_table('wishlists')
 
@@ -49,6 +49,15 @@ class GameTest < ActiveSupport::TestCase
     reflector = Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, :polls)
     rel = reflector.association_relation
     assert_kind_of Arel::Nodes::Distinct, rel.ast.cores.last.set_quantifier
+  end
+
+  test 'download_links are sorted by displayorder' do
+    reflector = Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, :download_links)
+    rel = reflector.association_relation
+    assert_equal 1, rel.order_values.length
+    order = rel.order_values.first
+    assert_kind_of Arel::Nodes::Ascending, order
+    assert_equal :displayorder, order.expr.name
   end
 
   test 'language_names' do

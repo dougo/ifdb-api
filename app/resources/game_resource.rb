@@ -1,12 +1,11 @@
 class GameResource < ApplicationResource
   attributes *%i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                 tags published version license system language
-                 language_names desc forgiveness ifids bafsid downloadnotes created
-                 moddate pagevsn)
+                 tags published version license system language language_names desc forgiveness ifids bafsid
+                 downloadnotes created moddate pagevsn)
 
-  has_many :author_profiles, :ratings, :member_reviews # TODO: three_most_helpful_member_reviews?
+  has_many *%i(author_profiles ratings member_reviews) # TODO: three_most_helpful_member_reviews?
   has_one :editor, class_name: 'Member', foreign_key: :editedby
-  has_many :players, :wishlists
+  has_many *%i(players wishlists download_links)
 
   def custom_links(options = {})
     links = super

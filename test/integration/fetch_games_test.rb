@@ -55,7 +55,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.last.data.last.self(include: %w(author-profiles member-reviews.reviewer)).get
+    game = ifdb.games.last.data.last.self(include: %w(author-profiles member-reviews.reviewer download-links)).get
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
@@ -106,7 +106,17 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       # TODO: editor url/name
       # TODO: version/history links
       download_notes: game.downloadnotes,
-      # TODO: download links
+      download_links: game.objects.download_links.map do |link|
+        {
+          display_order: link.displayorder,
+          file: link.file.url,
+          title: link.title,
+          desc: link.try(:desc),
+          # TODO: format, os, os_version
+          # TODO: compression, compressed_primary
+          # TODO: attrs
+        }
+      end,
       players: game.players.url,
       players_count: game.players.meta[:count],
       wishlists: game.wishlists.url,
@@ -164,6 +174,20 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
         }
       ],
       download_notes: "To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.",
+      download_links: [
+        {
+          display_order: 1,
+          file: 'http://www.ifarchive.org/if-archive/games/springthing/2003/parrots/parrots.t3',
+          title: 'parrots.t3',
+          desc: nil
+        },
+        {
+          display_order: 2,
+          file: 'http://www.ifarchive.org/if-archive/games/springthing/2003/parrots/README.txt',
+          title: 'README.txt',
+          desc: 'some setup help'
+        }
+      ],
       players: "http://www.example.com/games/#{max_id}/players",
       players_count: 2,
       wishlists: "http://www.example.com/games/#{max_id}/wishlists",
@@ -174,4 +198,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
 
   # TODO: whoselist page
   # TODO: ratings page
+  # TODO: member-reviews page
+  # TODO: download-links page - even though there is no such page on the website.
 end

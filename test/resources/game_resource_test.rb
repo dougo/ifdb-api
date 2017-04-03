@@ -4,11 +4,10 @@ class GameResourceTest < ActiveSupport::TestCase
   include ResourceTesting
 
   test_attributes %i(title sort_title author sort_author authorExt seriesnumber seriesname genre
-                     tags published version license system language
-                     language_names desc forgiveness ifids bafsid downloadnotes created
-                     moddate pagevsn)
+                     tags published version license system language language_names desc forgiveness ifids bafsid
+                     downloadnotes created moddate pagevsn)
 
-  test_has_many *%i(author_profiles ratings member_reviews players wishlists)
+  test_has_many *%i(author_profiles ratings member_reviews players wishlists download_links)
 
   test 'editor relationship' do
     rel = GameResource._relationship(:editor)
@@ -66,11 +65,13 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal({ count: 2 }, subject.players_meta({}))
   end
 
-  test 'wishlists_count' do
+  test 'wishlists_meta' do
     subject._model.wishlists.build([{}, {}])
     assert_equal({ count: 2 }, subject.wishlists_meta({}))
   end
 
+  # TODO: only when relationships are not omitted from sparse fieldset
+  # TODO: only include relationships needed for count/average if we're loading multiple records at once?
   test 'records includes relationships to avoid N+1 queries' do
     subject = GameResource.records({}).first
     assert_predicate subject.ratings, :loaded?

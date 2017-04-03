@@ -1,0 +1,12 @@
+maximal2:
+  game: maximal
+  displayorder: 2
+  title: README.txt
+  url: http://www.ifarchive.org/if-archive/games/springthing/2003/parrots/README.txt
+  desc: some setup help
+
+maximal1:
+  game: maximal
+  displayorder: 1
+  title: parrots.t3
+  url: http://www.ifarchive.org/if-archive/games/springthing/2003/parrots/parrots.t3

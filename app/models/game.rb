@@ -20,7 +20,7 @@ class Game < ApplicationRecord
   has_many :polls, -> { distinct }, through: :poll_votes
   belongs_to :editor, class_name: 'Member', foreign_key: :editedby
   has_many :history, class_name: 'GameVersion', foreign_key: :id
-  has_many :links, class_name: 'GameLink', foreign_key: :gameid
+  has_many :download_links, -> { order(:displayorder) }, class_name: 'GameLink', foreign_key: :gameid
   has_and_belongs_to_many :players, class_name: 'Member', join_table: :playedgames,
                           foreign_key: :gameid, association_foreign_key: :userid
   has_and_belongs_to_many :wishlists, class_name: 'Member', join_table: :wishlists,
