@@ -14,19 +14,26 @@ class MemberResourceTest < ActiveSupport::TestCase
   
   test 'picture and thumbnail links' do
     subject._model.picture = 'http://example.com/showuser?pic'
-    assert_equal 'http://example.com/showuser?pic', subject.custom_links({})[:picture]
-    assert_equal 'http://example.com/showuser?pic&thumbnail=80x80', subject.custom_links({})[:thumbnail]
+    links = subject.custom_links({})
+    assert_equal 'http://example.com/showuser?ldesc&pic', links[:picture]
+    assert_equal 'http://example.com/showuser?pic&thumbnail=80x80', links[:thumbnail]
+    assert_equal 'http://example.com/showuser?pic&thumbnail=250x250', links[:large_thumbnail]
   end
 
-  test 'no picture or thumbnail link if blank' do
+  test 'no picture or thumbnail links if blank' do
     subject._model.picture = ''
-    refute_includes subject.custom_links({}), :picture
-    refute_includes subject.custom_links({}), :thumbnail
+    links = subject.custom_links({})
+    refute_includes links, :picture
+    refute_includes links, :thumbnail
+    refute_includes links, :large_thumbnail
   end
 
-  test 'thumbnail when picture has no query' do
+  test 'links when picture has no query' do
     subject._model.picture = 'http://example.com'
-    assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links({})[:thumbnail]
+    links = subject.custom_links({})
+    assert_equal 'http://example.com?ldesc', links[:picture]
+    assert_equal 'http://example.com?thumbnail=80x80', links[:thumbnail]
+    assert_equal 'http://example.com?thumbnail=250x250', links[:large_thumbnail]
   end
 
   test 'profile_summary' do

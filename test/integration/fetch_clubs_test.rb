@@ -84,7 +84,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       club: { name: 'PR-IF', url: base_url },
       members: [
         {
-          picture: 'http://i.imgur.com/SL9D5td.png',
+          picture: 'http://i.imgur.com/SL9D5td.png?ldesc',
           url: "http://www.example.com/members/#{arthur_id}",
           name: 'Arthur Dent',
           admin: true,

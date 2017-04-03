@@ -7,14 +7,9 @@ class MemberResource < ApplicationResource
   def custom_links(options)
     links = super
     if _model.picture.present?
-      links[:picture] = _model.picture
-      thumbnail = URI(_model.picture)
-      if thumbnail.query
-        thumbnail.query += '&thumbnail=80x80'
-      else
-        thumbnail.query = 'thumbnail=80x80'
-      end
-      links[:thumbnail] = thumbnail.to_s
+      links[:picture] = add_param(_model.picture, :ldesc)
+      links[:thumbnail] = add_param(_model.picture, :thumbnail, '80x80')
+      links[:large_thumbnail] = add_param(_model.picture, :thumbnail, '250x250')
     end
     links
   end
@@ -25,5 +20,13 @@ class MemberResource < ApplicationResource
     else
       profile
     end
+  end
+
+  private
+
+  def add_param(uri, key, value = nil)
+    uri = URI(uri)
+    uri.query = Rack::Utils.parse_query(uri.query).merge(key.to_s => value).to_query
+    uri.to_s
   end
 end

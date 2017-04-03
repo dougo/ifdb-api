@@ -36,7 +36,7 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
           profile_summary: nil
         },
         {
-          thumbnail: 'http://ifdb.tads.org/showimage?id=4%3A701&thumbnail=80x80',
+          thumbnail: 'http://ifdb.tads.org/showuser?id=lh77sr5f9w0ezc5z&pic&thumbnail=80x80',
           url: "http://www.example.com/members/#{members(:maximal).id}",
           name: 'Peter Molydeux',
           location: 'Twitter',
@@ -51,6 +51,38 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
         next: 'http://www.example.com/members?page%5Bnumber%5D=2&page%5Bsize%5D=20',
         last: 'http://www.example.com/members?page%5Bnumber%5D=6&page%5Bsize%5D=20'
       }
+    }
+    assert_equal expected, vals
+  end
+
+  test 'fetch all data needed by the member profile page' do
+    member = ifdb.members[1].get
+    vals = {
+      picture: member.picture.url,
+      large_thumbnail: member.large_thumbnail.url,
+      name: member.name,
+      location: member.location,
+      # TODO: top-50 reviewer?
+      since: member.since,
+      # TODO: last visited?
+      tuid: member.id,
+      public_email: member.publicemail,
+      # TODO: comments
+      # TODO: games
+      # TODO: lists
+      # TODO: polls
+      # TODO: reviews
+      # TODO: play lists
+      # TODO: club memberships
+    }
+    expected = {
+      picture: 'http://ifdb.tads.org/showuser?id=lh77sr5f9w0ezc5z&ldesc&pic',
+      large_thumbnail: 'http://ifdb.tads.org/showuser?id=lh77sr5f9w0ezc5z&pic&thumbnail=250x250',
+      name: 'Peter Molydeux',
+      location: 'Twitter',
+      since: '2017-03-22T00:00:00.000Z',
+      tuid: members(:maximal).id,
+      public_email: 'petermolydeux@twitter.com'
     }
     assert_equal expected, vals
   end
