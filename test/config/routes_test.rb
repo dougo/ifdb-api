@@ -20,13 +20,16 @@ class RoutesConfigTest < ActionDispatch::IntegrationTest
                    source: 'games', controller: 'members', action: 'get_related_resource', game_id: 'xyzzy'
   end
 
+  test 'game_links' do
+    assert_routing game_link_path('xyzzy-0'), controller: 'game_links', action: 'show', id: 'xyzzy-0'
+  end
+
   test 'members' do
     assert_routing members_path, controller: 'members', action: 'index'
     assert_routing member_path('xyzzy'), controller: 'members', action: 'show', id: 'xyzzy'
   end
 
   test 'club_memberships' do
-    assert_routing club_memberships_path, controller: 'club_memberships', action: 'index'
     assert_routing club_membership_path('xyz-zy'), controller: 'club_memberships', action: 'show', id: 'xyz-zy'
   end
 

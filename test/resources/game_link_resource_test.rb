@@ -13,4 +13,8 @@ class GameLinkResourceTest < ActiveSupport::TestCase
     subject._model.url = 'http://www.example.com'
     assert_equal({ file: 'http://www.example.com' }, subject.custom_links({}))
   end
+
+  test 'default_sort' do
+    assert_nil GameLinkResource.default_sort
+  end
 end

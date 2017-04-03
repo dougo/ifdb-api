@@ -1,0 +1,2 @@
+class GameLinksController < ApplicationResourceController
+end

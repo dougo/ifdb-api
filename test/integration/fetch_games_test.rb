@@ -199,5 +199,14 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   # TODO: whoselist page
   # TODO: ratings page
   # TODO: member-reviews page
-  # TODO: download-links page - even though there is no such page on the website.
+
+  test 'follow the download-links link' do
+    game_links = ifdb.games.last.data.last.download_links.get
+    assert_equal ['parrots.t3', 'README.txt'], game_links.map(&:title)
+  end
+
+  test 'fetch a game-link resource' do
+    game_link = ifdb.games.last.data.last.download_links.first.self.get
+    assert_equal 'parrots.t3', game_link.title
+  end
 end
