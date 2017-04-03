@@ -7,6 +7,7 @@ class Review < ApplicationRecord
   has_many :comments, as: :commentable, foreign_key: :sourceid, foreign_type: :source
   has_one :editorial, class_name: 'EditorialReview', foreign_key: :reviewid
 
+  default_scope { order(moddate: :desc) }
   scope :ratings, -> { where.not(rating: nil) }
   scope :member_reviews, -> { where.not(review: nil).where(special: nil) }
 end

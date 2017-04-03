@@ -153,16 +153,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       member_reviews_count: 2,
       member_reviews: [
         {
-          rating: 3,
-          summary: 'Not bad',
-          moddate: '2016-02-23',
-          reviewer: {
-            name: 'Arthur Dent',
-            location: 'Cottington, England, Earth'
-          },
-          review: 'This is a decent game.'
-        },
-        {
           rating: nil,
           summary: 'Difficult',
           moddate: '2016-03-04',
@@ -171,6 +161,16 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             location: nil
           },
           review: 'I got stuck and never finished.'
+        },
+        {
+          rating: 3,
+          summary: 'Not bad',
+          moddate: '2016-02-23',
+          reviewer: {
+            name: 'Arthur Dent',
+            location: 'Cottington, England, Earth'
+          },
+          review: 'This is a decent game.'
         }
       ],
       download_notes: "To play, you'll need a TADS 3 Interpreter - visit tads.org for interpreter downloads.",
@@ -216,7 +216,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           },
           # TODO: review tags
           review: review.try(:review)
-          # TODO: review comments
+          # TODO: review comments count & link
         }
       end
     }
@@ -266,10 +266,74 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     assert_equal [3, 4, 3], ratings.map(&:rating)
   end
 
-  # TODO: member-reviews page
+  test 'fetch all data for the member-reviews page' do
+    game = ifdb.games.last.data.last.self(include: 'member-reviews.reviewer').get
+    vals = {
+      # TODO: sort links?
+      # TODO: pagination?
+      member_reviews: game.objects.member_reviews.map do |review|
+        {
+          # TODO: review votes
+          rating: review.try(:rating),
+          summary: review.summary,
+          date: review.moddate,
+          reviewer: {
+            link: review.reviewer.url,
+            name: review.objects.reviewer.name,
+            location: review.objects.reviewer.try(:location),
+          },
+          # TODO: review tags
+          review: review.review
+          # TODO: review comments count & link
+        }
+      end
+    }
+    expected = {
+      member_reviews: [
+        {
+          rating: nil,
+          summary: 'Difficult',
+          date: '2016-03-04T00:00:00.000Z',
+          reviewer: {
+            link: "http://www.example.com/members/#{members(:trillian).id}",
+            name: 'Tricia McMillan',
+            location: nil
+          },
+          review: 'I got stuck and never finished.'
+        },
+        {
+          rating: 3,
+          summary: 'Not bad',
+          date: '2016-02-23T00:00:00.000Z',
+          reviewer: {
+            link: "http://www.example.com/members/#{members(:arthur).id}",
+            name: 'Arthur Dent',
+            location: 'Cottington, England, Earth'
+          },
+          review: 'This is a decent game.'
+        }
+      ]
+    }
+    assert_equal expected, vals
+  end
 
-  # TODO: fetch a review
-  # TODO: fetch a reviewer
+  test 'follow the member-reviews link' do
+    reviews = ifdb.games.last.data.last.member_reviews.get
+    assert_equal ['Difficult', 'Not bad'], reviews.map(&:summary)
+  end
+
+  # TODO: fetch review comments page
+  # TODO: follow review comments link
+
+  test 'fetch a review resource' do
+    review = ifdb.games.last.data.last.ratings.first.self.get
+    assert_equal 3, review.rating
+  end
+
+  test 'fetch a reviewer' do
+    reviewer = ifdb.games.last.data.last.ratings.first.reviewer.get
+    assert_equal 'Peter Molydeux', reviewer.name
+  end
 
   test 'follow the download-links link' do
     game_links = ifdb.games.last.data.last.download_links.get

@@ -20,6 +20,10 @@ class RoutesConfigTest < ActionDispatch::IntegrationTest
                    source: 'games', controller: 'members', action: 'get_related_resource', game_id: 'xyzzy'
   end
 
+  test 'reviews' do
+    assert_routing review_path('xyzzy'), controller: 'reviews', action: 'show', id: 'xyzzy'
+  end
+
   test 'game_links' do
     assert_routing game_link_path('xyzzy-0'), controller: 'game_links', action: 'show', id: 'xyzzy-0'
   end

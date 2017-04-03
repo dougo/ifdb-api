@@ -24,17 +24,13 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:polls).through(:poll_votes)
   should belong_to(:editor).class_name('Member').with_foreign_key(:editedby)
   should have_many(:history).class_name('GameVersion').with_foreign_key(:id)
-  should have_many(:download_links).class_name('GameLink').with_foreign_key(:gameid)
+  should have_many(:download_links).order(displayorder: :asc).class_name('GameLink').with_foreign_key(:gameid)
   should have_and_belong_to_many(:players).class_name('Member').join_table('playedgames')
   should have_and_belong_to_many(:wishlists).class_name('Member').join_table('wishlists')
 
   # TODO: use mock, expect call to :ratings scope?
   test 'ratings collection omits review-only' do
     assert_same_elements reviews(:of_zork, :rating_only, :external), games(:zork).ratings
-  end
-
-  test 'ratings are sorted by moddate' do
-    assert_equal({ moddate: :desc }, relation_order(association_relation(:ratings)))
   end
 
   # TODO: is this actually used anywhere?
@@ -52,10 +48,6 @@ class GameTest < ActiveSupport::TestCase
     # TODO: add this to shoulda-matchers?
     rel = association_relation(:polls)
     assert_kind_of Arel::Nodes::Distinct, rel.ast.cores.last.set_quantifier
-  end
-
-  test 'download_links are sorted by displayorder' do
-    assert_equal({ displayorder: :asc }, relation_order(association_relation(:download_links)))
   end
 
   test 'language_names' do
@@ -77,20 +69,5 @@ class GameTest < ActiveSupport::TestCase
 
   def association_relation(name)
     Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector.new(subject, name).association_relation
-  end
-
-  def relation_order(rel)
-    rel.order_values.map do |order|
-      [order.expr.name, order_type(order)]
-    end.to_h
-  end
-
-  def order_type(order)
-    case order
-    when Arel::Nodes::Ascending
-      :asc
-    when Arel::Nodes::Descending
-      :desc
-    end
   end
 end
