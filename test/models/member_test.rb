@@ -10,7 +10,7 @@ class MemberTest < ActiveSupport::TestCase
   should have_many(:reviews).with_foreign_key(:userid)
   should have_and_belong_to_many(:played_games).class_name('Game').join_table('playedgames')
   should have_and_belong_to_many(:wishlist).class_name('Game').join_table('wishlists')
-  should have_and_belong_to_many(:unwishlist).class_name('Game').join_table('unwishlists')
+  should have_and_belong_to_many(:not_interested).class_name('Game').join_table('unwishlists')
   should have_many(:club_memberships).with_foreign_key(:userid)
 
   # TODO: discussion updates

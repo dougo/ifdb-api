@@ -10,7 +10,7 @@ class MemberResourceTest < ActiveSupport::TestCase
     assert_equal :created, MemberResource._attribute_options(:since)[:delegate]
   end
 
-  test_has_many *%i(games wishlist)
+  test_has_many *%i(games played_games wishlist not_interested)
   
   test 'picture and thumbnail links' do
     subject._model.picture = 'http://example.com/showuser?pic'

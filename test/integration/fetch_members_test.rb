@@ -56,7 +56,7 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the member profile page' do
-    member = ifdb.members[1].self(include: 'wishlist').get
+    member = ifdb.members[1].self(include: 'played-games,wishlist,not-interested').get
     vals = {
       picture: member.picture.url,
       large_thumbnail: member.large_thumbnail.url,
@@ -72,9 +72,10 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       # TODO: lists
       # TODO: polls
       # TODO: reviews
-      # TODO: played games
-      wishlist: member.objects.wishlist.map { |game| { link: game.url, title: game.title, author: game.author } },
-      # TODO: "not interested" list
+      # TODO: page[size]=5 for these three play lists:
+      played_games: member.objects.played_games.map     { |g| { link: g.url, title: g.title, author: g.author } },
+      wishlist: member.objects.wishlist.map             { |g| { link: g.url, title: g.title, author: g.author } },
+      not_interested: member.objects.not_interested.map { |g| { link: g.url, title: g.title, author: g.author } },
       # TODO: club memberships
     }
     expected = {
@@ -85,6 +86,13 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       since: '2017-03-22T00:00:00.000Z',
       tuid: members(:maximal).id,
       public_email: 'petermolydeux@twitter.com',
+      played_games: [
+        {
+          link: "http://www.example.com/games/#{games(:maximal).id}",
+          title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
+          author: 'Dan Shiovitz and Emily Short'
+        }
+      ],
       wishlist: [
         {
           link: "http://www.example.com/games/#{games(:zork).id}",
@@ -97,7 +105,18 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
           author: 'Mark Cook'
         }
       ],
+      not_interested: [
+        {
+          link: 'http://www.example.com/games/xyzzy',
+          title: 'Adventure',
+          author: 'Will Crowther'
+        }
+      ],
     }
     assert_equal expected, vals
   end
+
+  # TODO: playlist page
+  # TODO: wishlist page
+  # TODO: unwishlist page
 end

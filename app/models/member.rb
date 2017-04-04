@@ -11,7 +11,7 @@ class Member < ApplicationRecord
                           foreign_key: :userid, association_foreign_key: :gameid
   has_and_belongs_to_many :wishlist, class_name: 'Game', join_table: 'wishlists',
                           foreign_key: :userid, association_foreign_key: :gameid
-  has_and_belongs_to_many :unwishlist, class_name: 'Game', join_table: 'unwishlists',
+  has_and_belongs_to_many :not_interested, class_name: 'Game', join_table: 'unwishlists',
                           foreign_key: :userid, association_foreign_key: :gameid
   has_many :club_memberships, foreign_key: :userid
 

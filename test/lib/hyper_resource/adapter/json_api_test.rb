@@ -53,6 +53,9 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     assert_equal true, hcmv_link.templated
     assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes{?include}', hcmv_link.base_href
     assert_equal(23, hcmv_link.meta[:count])
+    assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes',
+                 response[:data][:relationships][:'hydrocoptic-marzelvanes'][:links][:related][:href],
+                 'response body href should not be modified'
 
     docs_link = resource.links[:docs]
     assert_equal true, docs_link.templated

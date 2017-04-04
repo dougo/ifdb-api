@@ -1,0 +1,6 @@
+# This fixture is needed because the unwishlists table, unlike playedgames and wishlists, requires date_added.
+
+maximal_adventure:
+  userid: <%= ActiveRecord::FixtureSet.identify(:maximal) %>
+  gameid: xyzzy
+  date_added: <%= Time.now %>
