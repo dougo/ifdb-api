@@ -56,7 +56,7 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the member profile page' do
-    member = ifdb.members[1].get
+    member = ifdb.members[1].self(include: 'wishlist').get
     vals = {
       picture: member.picture.url,
       large_thumbnail: member.large_thumbnail.url,
@@ -72,7 +72,9 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       # TODO: lists
       # TODO: polls
       # TODO: reviews
-      # TODO: play lists
+      # TODO: played games
+      wishlist: member.objects.wishlist.map { |game| { link: game.url, title: game.title, author: game.author } },
+      # TODO: "not interested" list
       # TODO: club memberships
     }
     expected = {
@@ -82,7 +84,19 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       location: 'Twitter',
       since: '2017-03-22T00:00:00.000Z',
       tuid: members(:maximal).id,
-      public_email: 'petermolydeux@twitter.com'
+      public_email: 'petermolydeux@twitter.com',
+      wishlist: [
+        {
+          link: "http://www.example.com/games/#{games(:zork).id}",
+          title: 'Zork',
+          author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling'
+        },
+        {
+          link: "http://www.example.com/games/#{games(:minimal).id}",
+          title: 'The Minimalist',
+          author: 'Mark Cook'
+        }
+      ],
     }
     assert_equal expected, vals
   end

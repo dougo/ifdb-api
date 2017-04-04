@@ -2,7 +2,7 @@ class MemberResource < ApplicationResource
   attributes *%i(name gender location publicemail profile profile_summary)
   attribute :since, delegate: :created
 
-  has_many :games
+  has_many *%i(games wishlist)
 
   def custom_links(options)
     links = super
