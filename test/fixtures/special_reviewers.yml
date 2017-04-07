@@ -1,0 +1,14 @@
+author:
+  code: author
+  name: From the Author
+  displayrank: 100
+
+bafs:
+  code: bafs
+  name: Baf's Guide
+  displayrank: 10
+
+external:
+  code: external
+  name: External
+  displayrank: 50

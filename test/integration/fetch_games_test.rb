@@ -55,7 +55,10 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.last.data.last.self(include: %w(author-profiles member-reviews.reviewer download-links)).get
+    # TODO: put these in the self URL on the server side?
+    includes = %w(author-profiles editorial-reviews.special-reviewer editorial-reviews.offsite-review
+                  member-reviews.reviewer download-links)
+    game = ifdb.games.last.data.last.self(include: includes).get
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
@@ -83,7 +86,21 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       tuid: game.id,
       # TODO: cross references
       # TODO: awards
-      # TODO: external reviews
+      editorial_reviews: game.objects.editorial_reviews.map do |review|
+        special = review.objects.special_reviewer
+        offsite = review.objects[:offsite_review] # TODO: should be .try(:offsite_review)
+        {
+          display_rank: special.displayrank,
+          code: special.code,
+          display_order: offsite&.displayorder,
+          source: offsite.try(:source)&.url,
+          source_name: offsite&.sourcename,
+          rating: review.try(:rating),
+          summary: review.try(:summary),
+          review: review.review,
+          full_review: offsite&.full_review&.url
+        }
+      end,
       # TODO: tags
       # TODO: rating_histogram
       member_reviews_count: game.links.member_reviews.meta[:count],
@@ -135,9 +152,9 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       genre: 'Superhero/Espionage/Humor/Science Fiction',
       published_year: 2003,
       website: 'http://example.com/max',
-      ratings_average: 3.3333333333333335,
+      ratings_average: 3.25,
       ratings: "http://www.example.com/games/#{max_id}/ratings",
-      ratings_count: 3,
+      ratings_count: 4,
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
       language: 'en-US, de, pt-BR',
@@ -150,6 +167,21 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       forgiveness: 'Polite',
       ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
       tuid: max_id,
+      editorial_reviews: [
+        {
+          display_rank: 50,
+          code: 'external',
+          display_order: 0,
+          source: 'http://www.spagmag.org',
+          source_name: 'SPAG',
+          rating: 3,
+          summary: 'This is space opera, in sexy pants.',
+          review: 'In the end the bugs wore me down and I come away from the game somewhat dissatisfied...',
+          full_review: 'http://www.spagmag.org/archives/m.html#max'
+        }
+        # TODO: another external review, sort by display_order
+        # TODO: Baf's Guide, From the Author, sort by display_rank
+      ],
       member_reviews_count: 2,
       member_reviews: [
         {
@@ -209,11 +241,11 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           rating: review.rating,
           summary: review.try(:summary),
           date: review.moddate,
-          reviewer: {
+          reviewer: ({
             link: review.reviewer.url,
             name: review.objects.reviewer.name,
             location: review.objects.reviewer.try(:location),
-          },
+          } if review.objects[:reviewer]), # TODO: should be review.objects.reviewer
           # TODO: review tags
           review: review.try(:review)
           # TODO: review comments count & link
@@ -254,8 +286,15 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             location: 'Cottington, England, Earth'
           },
           review: 'This is a decent game.'
+        },
+        {
+          rating: 3,
+          summary: 'This is space opera, in sexy pants.',
+          date: '2004-09-28T00:00:00.000Z',
+          reviewer: nil,
+          # TODO: special_reviewer/offsite_review
+          review: 'In the end the bugs wore me down and I come away from the game somewhat dissatisfied...',
         }
-        # TODO: external review
       ]
     }
     assert_equal expected, vals
@@ -263,7 +302,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
 
   test 'follow the ratings link' do
     ratings = ifdb.games.last.data.last.ratings.get
-    assert_equal [3, 4, 3], ratings.map(&:rating)
+    assert_equal [3, 4, 3, 3], ratings.map(&:rating)
   end
 
   test 'fetch all data for the member-reviews page' do

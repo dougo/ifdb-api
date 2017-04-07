@@ -3,7 +3,7 @@ class GameResource < ApplicationResource
                  tags published version license system language language_names desc forgiveness ifids bafsid
                  downloadnotes created moddate pagevsn)
 
-  has_many *%i(author_profiles ratings member_reviews) # TODO: three_most_helpful_member_reviews?
+  has_many *%i(author_profiles editorial_reviews ratings member_reviews) # TODO: three_most_helpful_member_reviews?
   has_one :editor, class_name: 'Member', foreign_key: :editedby
   has_many *%i(players wishlists download_links)
 

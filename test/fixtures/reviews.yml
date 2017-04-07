@@ -22,15 +22,17 @@ external:
   userid: $system
   rating: 4
   review: Xyzzylicious!
-  special: 4
+  special_reviewer: external
   createdate: <%= Time.now %>
 
 bafs_guide:
   game: zork
   userid: ''
   review: Distim the doshes.
-  special: 2
+  special_reviewer: bafs
   createdate: <%= Time.now %>
+
+# TODO: from_the_author
 
 maximal1:
   game: maximal
@@ -62,3 +64,12 @@ maximal4:
   review: I got stuck and never finished.
   createdate: 2016-03-04
   moddate: 2016-03-04
+
+maximal_spag:
+  game: maximal
+  rating: 3
+  special_reviewer: external
+  summary: This is space opera, in sexy pants.
+  review: In the end the bugs wore me down and I come away from the game somewhat dissatisfied...
+  createdate: 2004-09-28
+  moddate: 2004-09-28

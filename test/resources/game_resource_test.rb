@@ -7,7 +7,7 @@ class GameResourceTest < ActiveSupport::TestCase
                      tags published version license system language language_names desc forgiveness ifids bafsid
                      downloadnotes created moddate pagevsn)
 
-  test_has_many *%i(author_profiles ratings member_reviews players wishlists download_links)
+  test_has_many *%i(author_profiles ratings editorial_reviews member_reviews players wishlists download_links)
 
   test 'editor relationship' do
     rel = GameResource._relationship(:editor)
@@ -43,7 +43,7 @@ class GameResourceTest < ActiveSupport::TestCase
 
   test 'ratings_meta' do
     subject = GameResource.new(games(:maximal), {})
-    assert_equal({ average: 3.3333333333333333, count: 3 }, subject.ratings_meta({}))
+    assert_equal({ average: 3.25, count: 4 }, subject.ratings_meta({}))
   end
 
   test 'ratings average is nil if no ratings' do

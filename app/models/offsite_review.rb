@@ -1,4 +1,4 @@
-class EditorialReview < ApplicationRecord
+class OffsiteReview < ApplicationRecord
   self.table_name = 'extreviews'
 
   belongs_to :game, foreign_key: :gameid

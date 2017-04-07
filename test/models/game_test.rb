@@ -12,7 +12,7 @@ class GameTest < ActiveSupport::TestCase
   should have_many(:competitions).through(:awards)
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)
-  should have_many(:editorial_reviews).with_foreign_key(:gameid)
+  should have_many(:editorial_reviews).class_name(:Review).with_foreign_key(:gameid)
   should have_many(:game_tags).with_foreign_key(:gameid)
   should have_many(:tag_stats).through(:game_tags).source(:stats)
   should have_many(:member_reviews).class_name('Review').with_foreign_key(:gameid)
@@ -37,6 +37,10 @@ class GameTest < ActiveSupport::TestCase
   test 'reviews_and_ratings collection includes all' do
     assert_same_elements reviews(:of_zork, :rating_only, :review_only, :external, :bafs_guide),
                          games(:zork).reviews_and_ratings
+  end
+
+  test 'editorial_reviews collection includes editorial only' do
+    assert_same_elements reviews(:external, :bafs_guide), games(:zork).editorial_reviews
   end
 
   # TODO: use mock, expect call to :member_reviews scope?

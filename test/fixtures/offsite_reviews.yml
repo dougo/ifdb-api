@@ -1,0 +1,7 @@
+maximal_spag:
+  game: maximal
+  displayorder: 0
+  sourcename: SPAG
+  sourceurl: http://www.spagmag.org
+  url: http://www.spagmag.org/archives/m.html#max
+  review: maximal_spag
