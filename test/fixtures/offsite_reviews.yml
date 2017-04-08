@@ -1,3 +1,17 @@
+zork:
+  game: zork
+  displayorder: 0
+  sourcename: New Zork Times
+  url: https://archive.org/details/newzorktimes
+  review: external
+
+maximal_hotu:
+  game: maximal
+  displayorder: 1
+  sourcename: Home of the Underdogs
+  url: http://homeoftheunderdogs.net/game.php?id=4473
+  review: maximal_hotu
+
 maximal_spag:
   game: maximal
   displayorder: 0

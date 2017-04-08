@@ -178,8 +178,18 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'This is space opera, in sexy pants.',
           review: 'In the end the bugs wore me down and I come away from the game somewhat dissatisfied...',
           full_review: 'http://www.spagmag.org/archives/m.html#max'
+        },
+        {
+          display_rank: 50,
+          code: 'external',
+          display_order: 1,
+          source: nil,
+          source_name: 'Home of the Underdogs',
+          rating: nil,
+          summary: nil,
+          review: 'Two thumbs up!',
+          full_review: 'http://homeoftheunderdogs.net/game.php?id=4473'
         }
-        # TODO: another external review, sort by display_order
         # TODO: Baf's Guide, From the Author, sort by display_rank
       ],
       member_reviews_count: 2,

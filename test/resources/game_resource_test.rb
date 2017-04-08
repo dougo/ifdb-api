@@ -50,6 +50,15 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal({ average: nil, count: 0 }, subject.ratings_meta({}))
   end
 
+  test 'records_for_editorial_reviews' do
+    relation = subject.records_for_editorial_reviews
+    assert_equal 1, relation.order_values.length
+    order_value = relation.order_values.first
+    assert_kind_of Arel::Nodes::Ascending, order_value
+    assert_equal OffsiteReview.table_name, order_value.expr.relation.name
+    assert_equal :displayorder, order_value.expr.name
+  end
+
   test 'ifids' do
     subject._model.ifids.build([{ ifid: 'foo' }, { ifid: 'bar' }])
     assert_equal %w(foo bar), subject.ifids

@@ -65,6 +65,13 @@ maximal4:
   createdate: 2016-03-04
   moddate: 2016-03-04
 
+maximal_hotu:
+  game: maximal
+  special_reviewer: external
+  review: Two thumbs up!
+  createdate: 2004-10-10
+  moddate: 2004-10-10
+
 maximal_spag:
   game: maximal
   rating: 3

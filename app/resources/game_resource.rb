@@ -18,6 +18,10 @@ class GameResource < ApplicationResource
     links
   end
 
+  def records_for_editorial_reviews
+    _model.editorial_reviews.left_outer_joins(:offsite_review).merge(OffsiteReview.reorder(:displayorder))
+  end
+
   def ratings_meta(options)
     { average: ratings_average, count: _model.ratings.size }
   end
