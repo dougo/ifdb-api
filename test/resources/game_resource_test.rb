@@ -19,10 +19,12 @@ class GameResourceTest < ActiveSupport::TestCase
   test 'custom links' do
     subject._model.coverart = 'http://example.com?coverart'
     subject._model.website = 'http://example.com'
+    subject._model.bafsid = 123
     assert_equal 'http://example.com?coverart&ldesc', subject.custom_links[:coverart]
     assert_equal 'http://example.com?coverart&thumbnail=80x80', subject.custom_links[:thumbnail]
     assert_equal 'http://example.com?coverart&thumbnail=175x175', subject.custom_links[:large_thumbnail]
     assert_equal 'http://example.com', subject.custom_links[:website]
+    assert_equal 'http://www.wurb.com/if/game/123', subject.custom_links[:bafs_guide]
   end
 
   test 'custom links ignore blanks' do
@@ -32,6 +34,7 @@ class GameResourceTest < ActiveSupport::TestCase
     refute_includes subject.custom_links, :thumbnail
     refute_includes subject.custom_links, :large_thumbnail
     refute_includes subject.custom_links, :website
+    refute_includes subject.custom_links, :bafs_guide
   end
 
   test 'links when coverart has no query' do

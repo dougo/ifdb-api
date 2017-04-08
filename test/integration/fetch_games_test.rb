@@ -81,6 +81,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       license: game.license,
       system: game.system,
       bafsid: game.bafsid,
+      bafs_guide: game.links.bafs_guide.url,
       forgiveness: game.forgiveness,
       ifids: game.ifids,
       tuid: game.id,
@@ -90,15 +91,20 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
         special = review.objects.special_reviewer
         offsite = review.objects[:offsite_review] # TODO: should be .try(:offsite_review)
         {
-          display_rank: special.displayrank,
-          code: special.code,
-          display_order: offsite&.displayorder,
-          source: offsite.try(:source)&.url,
-          source_name: offsite&.sourcename,
+          special_reviewer: {
+            display_rank: special.displayrank,
+            code: special.code,
+            name: special.name
+          },
+          offsite_review: ({
+                             display_order: offsite.displayorder,
+                             source: offsite.try(:source)&.url,
+                             source_name: offsite.sourcename,
+                             full_review: offsite.full_review.url
+                           } if offsite),
           rating: review.try(:rating),
           summary: review.try(:summary),
-          review: review.review,
-          full_review: offsite&.full_review&.url
+          review: review.review
         }
       end,
       # TODO: tags
@@ -164,33 +170,55 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       license: 'Freeware',
       system: 'TADS 3',
       bafsid: 2096,
+      bafs_guide: 'http://www.wurb.com/if/game/2096',
       forgiveness: 'Polite',
       ifids: [ifids(:max1).to_s, ifids(:max2).to_s],
       tuid: max_id,
       editorial_reviews: [
         {
-          display_rank: 50,
-          code: 'external',
-          display_order: 0,
-          source: 'http://www.spagmag.org',
-          source_name: 'SPAG',
+          special_reviewer: {
+            display_rank: 10,
+            code: 'bafs',
+            name: "Baf's Guide"
+          },
+          offsite_review: nil,
+          rating: nil,
+          summary: nil,
+          review: 'At the delcot of tondam, where doshes deave.'
+        },
+        {
+          special_reviewer: {
+            display_rank: 50,
+            code: 'external',
+            name: 'External'
+          },
+          offsite_review: {
+            display_order: 0,
+            source: 'http://www.spagmag.org',
+            source_name: 'SPAG',
+            full_review: 'http://www.spagmag.org/archives/m.html#max'
+          },
           rating: 3,
           summary: 'This is space opera, in sexy pants.',
           review: 'In the end the bugs wore me down and I come away from the game somewhat dissatisfied...',
-          full_review: 'http://www.spagmag.org/archives/m.html#max'
         },
         {
-          display_rank: 50,
-          code: 'external',
-          display_order: 1,
-          source: nil,
-          source_name: 'Home of the Underdogs',
+          special_reviewer: {
+            display_rank: 50,
+            code: 'external',
+            name: 'External'
+          },
+          offsite_review: {
+            display_order: 1,
+            source: nil,
+            source_name: 'Home of the Underdogs',
+            full_review: 'http://homeoftheunderdogs.net/game.php?id=4473'
+          },
           rating: nil,
           summary: nil,
-          review: 'Two thumbs up!',
-          full_review: 'http://homeoftheunderdogs.net/game.php?id=4473'
+          review: 'Two thumbs up!'
         }
-        # TODO: Baf's Guide, From the Author, sort by display_rank
+        # TODO: From the Author, sort by display_rank
       ],
       member_reviews_count: 2,
       member_reviews: [

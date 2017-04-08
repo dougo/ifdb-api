@@ -80,3 +80,11 @@ maximal_spag:
   review: In the end the bugs wore me down and I come away from the game somewhat dissatisfied...
   createdate: 2004-09-28
   moddate: 2004-09-28
+
+maximal_bafs:
+  game: maximal
+  userid: ''
+  review: At the delcot of tondam, where doshes deave.
+  special_reviewer: bafs
+  createdate: 2004-09-15
+  moddate: 2004-09-15

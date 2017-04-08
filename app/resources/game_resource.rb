@@ -15,6 +15,7 @@ class GameResource < ApplicationResource
       links[:large_thumbnail] = add_param(_model.coverart, :thumbnail, '175x175')
     end
     links[:website] = _model.website if _model.website.present?
+    links[:bafs_guide] = "http://www.wurb.com/if/game/#{_model.bafsid}" if _model.bafsid
     links
   end
 
