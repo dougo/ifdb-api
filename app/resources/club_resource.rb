@@ -5,8 +5,9 @@ class ClubResource < ApplicationResource
   has_many :membership
   has_many :contact_profiles, class_name: 'Member', eager_load_on_include: false
 
-  def custom_links(options = {})
+  def custom_links(options)
     links = super
+    links['self'] = options[:serializer].link_builder.self_link(self) + '?include=contact-profiles'
     links[:website] = _model.url if _model.url.present?
     links
   end

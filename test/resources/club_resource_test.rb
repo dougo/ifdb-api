@@ -15,14 +15,17 @@ class ClubResourceTest < ActiveSupport::TestCase
     refute ClubResource._relationship(:contact_profiles).eager_load_on_include
   end
 
-  test 'website link' do
+  test 'custom_links' do
     subject._model.url = 'http://example.com'
-    assert_equal 'http://example.com', subject.custom_links[:website]
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(ClubResource))
+    assert_equal 'include=contact-profiles', URI(links['self']).query
+    assert_equal 'http://example.com', links[:website]
   end
 
   test 'no website link if blank' do
     subject._model.url = ''
-    refute_includes subject.custom_links, :website
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(ClubResource))
+    refute_includes links, :website
   end
 
   test 'membership_meta' do

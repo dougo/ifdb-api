@@ -30,7 +30,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
 
   test 'fetch all data needed by the club details page' do
     arthur_id = members(:arthur).id
-    club = ifdb.clubs.first.self(include: 'contact-profiles').get
+    club = ifdb.clubs.first.self.get
     vals = {
       name: club.name,
       desc: club.desc,
@@ -59,7 +59,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     memberships = ifdb.clubs.first.membership(include: %i(club member)).get
     club = memberships.first.objects.club
     vals = {
-      club: { name: club.name, url: club.url },
+      club: { name: club.name, id: club.id },
       members: memberships.map do |membership|
         member = membership.objects.member
         {
@@ -79,7 +79,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     }
     base_url = "http://www.example.com/clubs/#{prif_id}"
     expected = {
-      club: { name: 'PR-IF', url: base_url },
+      club: { name: 'PR-IF', id: prif_id },
       members: [
         {
           picture: 'http://i.imgur.com/SL9D5td.png?ldesc',
