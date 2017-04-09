@@ -89,8 +89,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
 
   def self.apply_link(rel, link_spec, hr)
     link_spec = { href: link_spec } if String === link_spec
-    template = URI(link_spec[:href]).query ? '{&include}' : '{?include}'
-    link = self::Link.new(hr, **link_spec.merge(href: link_spec[:href] + template, templated: true))
+    link = self::Link.new(hr, link_spec)
     hr.links[to_hr_key(rel)] = link
     hr.href = link.href if rel == :self
   end
