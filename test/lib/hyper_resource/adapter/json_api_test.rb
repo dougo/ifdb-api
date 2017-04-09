@@ -28,6 +28,10 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
               }
             },
             data: [ { id: 42, type: 'parts' } ]
+          },
+          'spiral-decommutator': {
+            links: { related: 'http://www.example.com/widgets/23/spiral-decommutator' },
+            data: nil
           }
         },
         links: { self: 'http://www.example.com/widgets/23' }
@@ -44,12 +48,12 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
     assert_equal 'http://www.example.com/widgets/23', resource.href
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'full_name' => 'Encabulator' }, resource.attributes)
 
-    self_link = resource.links[:self]
+    self_link = resource.links.self
     assert_same resource, self_link.resource
     assert_equal true, self_link.templated
     assert_equal 'http://www.example.com/widgets/23{?include}', self_link.base_href
 
-    hcmv_link = resource.links[:hydrocoptic_marzelvanes]
+    hcmv_link = resource.links.hydrocoptic_marzelvanes
     assert_equal true, hcmv_link.templated
     assert_equal 'http://www.example.com/widgets/23/hydrocoptic-marzelvanes{?include}', hcmv_link.base_href
     assert_equal(23, hcmv_link.meta[:count])
@@ -57,19 +61,21 @@ class HyperResource::Adapter::JSON_APITest < ActiveSupport::TestCase
                  response[:data][:relationships][:'hydrocoptic-marzelvanes'][:links][:related][:href],
                  'response body href should not be modified'
 
-    docs_link = resource.links[:docs]
+    docs_link = resource.links.docs
     assert_equal true, docs_link.templated
     assert_equal 'http://www.flobee.net/re_transcript.html?foo=bar{&include}', docs_link.base_href
 
-    hcmv_part = resource.objects[:hydrocoptic_marzelvanes].first
+    hcmv_part = resource.objects.hydrocoptic_marzelvanes.first
     assert_equal({ 'id' => 42, 'type' => 'parts', 'name' => 'ambifacient lunar waneshaft' }, hcmv_part.attributes)
+
+    refute resource.objects.respond_to?(:spiral_decommutator)
   end
 
   test 'apply when primary data is an array' do
     response = { data: [{ id: 23, type: 'widgets', attributes: { name: 'Encabulator' } }] }
     resources = HyperResource.new(root: 'http://www.example.com', adapter: subject)
     subject.apply(response, resources)
-    resource = resources.objects[:data].first
+    resource = resources.objects.data.first
     assert_equal({ 'id' => 23, 'type' => 'widgets', 'name' => 'Encabulator' }, resource.attributes)
   end
 

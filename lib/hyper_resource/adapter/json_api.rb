@@ -51,7 +51,7 @@ class HyperResource::Adapter::JSON_API < HyperResource::Adapter
     if relationships
       relationships.each do |rel, relationship|
         apply_link(rel, relationship[:links][:related], hr)
-        if relationship.key?(:data)
+        if relationship[:data]
           apply_resource_linkage(rel, relationship[:data], included, hr)
         end
       end

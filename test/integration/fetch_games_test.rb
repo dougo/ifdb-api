@@ -89,8 +89,8 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       # TODO: awards
       editorial_reviews: game.objects.editorial_reviews.map do |review|
         special = review.objects.special_reviewer
-        offsite = review.objects[:offsite_review] # TODO: should be .try(:offsite_review)
-        reviewer = review.objects[:reviewer]
+        offsite = review.objects.try(:offsite_review)
+        reviewer = review.objects.try(:reviewer)
         {
           special_reviewer: {
             display_rank: special.displayrank,
@@ -314,7 +314,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             link: review.reviewer.url,
             name: review.objects.reviewer.name,
             location: review.objects.reviewer.try(:location),
-          } if review.objects[:reviewer]), # TODO: should be review.objects.reviewer
+          } if review.objects.try(:reviewer)),
           # TODO: review tags
           review: review.try(:review)
           # TODO: review comments count & link
