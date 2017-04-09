@@ -37,7 +37,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       listed: club.listed,
       website: club.website.url,
       contacts: club.contacts,
-      contact_profiles: club.objects.contact_profiles.map(&:url),
+      contact_ids: club.objects.contact_profiles.map(&:id),
       members_count: club.membership.meta[:count]
     }
     expected = {
@@ -46,14 +46,13 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       listed: '2010-04-10T02:05:19.000Z',
       website: 'http://pr-if.org/',
       contacts: "Arthur Dent {#{arthur_id}}",
-      contact_profiles: ["http://www.example.com/members/#{arthur_id}"],
+      contact_ids: [arthur_id],
       members_count: 1
     }
     assert_equal expected, vals
   end
   
   test 'fetch all data needed by the club members page' do
-    arthur_id = members(:arthur).id
     prif_id = clubs(:prif).id
     # TODO: would this be more interesting with a second member?
     # TODO: fields[clubs]=name&fields[members]=name,location
@@ -65,7 +64,6 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
         member = membership.objects.member
         {
           picture: member.picture.url,
-          url: member.url,
           name: member.name,
           admin: membership.admin,
           location: member.location,
@@ -85,7 +83,6 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       members: [
         {
           picture: 'http://i.imgur.com/SL9D5td.png?ldesc',
-          url: "http://www.example.com/members/#{arthur_id}",
           name: 'Arthur Dent',
           admin: true,
           location: 'Cottington, England, Earth',

@@ -58,7 +58,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
       title: game.title,
-      author_profiles: game.objects.author_profiles.map(&:url),
+      author_ids: game.objects.author_profiles.map(&:id),
       author: game.author,
       episode: game.seriesnumber,
       series: game.seriesname,
@@ -66,7 +66,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       published_year: game.published.to_date.year,
       website: game.website.url,
       ratings_average: game.ratings.meta.average,
-      ratings: game.ratings.url,
       ratings_count: game.ratings.meta[:count],
       desc: game.desc,
       language: game.language,
@@ -99,7 +98,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
                              full_review: offsite.full_review.url
                            } if offsite),
           reviewer: ({
-                       link: reviewer.url,
                        name: reviewer.name,
                        location: reviewer.try(:location)
                      } if reviewer),
@@ -120,7 +118,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: review.summary,
           moddate: review.moddate.to_date.to_s,
           reviewer: {
-            link: reviewer.url,
             name: reviewer.name,
             location: reviewer.try(:location)
           },
@@ -150,14 +147,11 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       wishlists_count: game.wishlists.meta[:count]
     }
     max_id = games(:maximal).id
-    arthur_id = members(:arthur).id
-    trillian_id = members(:trillian).id
     expected = {
       coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
       large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
       title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
-      author_profiles: ["http://www.example.com/members/#{arthur_id}",
-                        "http://www.example.com/members/#{trillian_id}"],
+      author_ids: members(:arthur, :trillian).map(&:id),
       author: 'Dan Shiovitz and Emily Short',
       episode: '1',
       series: 'Max Blaster',
@@ -165,7 +159,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       published_year: 2003,
       website: 'http://example.com/max',
       ratings_average: 3.25,
-      ratings: "http://www.example.com/games/#{max_id}/ratings",
       ratings_count: 4,
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
@@ -235,7 +228,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           },
           offsite_review: nil,
           reviewer: {
-            link: "http://www.example.com/members/#{max_id}",
             name: 'Peter Molydeux',
             location: 'Twitter'
           },
@@ -251,7 +243,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Difficult',
           moddate: '2016-03-04',
           reviewer: {
-            link: "http://www.example.com/members/#{trillian_id}",
             name: 'Tricia McMillan',
             location: nil
           },
@@ -262,7 +253,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Not bad',
           moddate: '2016-02-23',
           reviewer: {
-            link: "http://www.example.com/members/#{arthur_id}",
             name: 'Arthur Dent',
             location: 'Cottington, England, Earth'
           },
@@ -306,7 +296,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: review.try(:summary),
           date: review.moddate,
           reviewer: ({
-            link: review.reviewer.url,
             name: review.objects.reviewer.name,
             location: review.objects.reviewer.try(:location),
           } if review.objects.try(:reviewer)),
@@ -323,7 +312,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: nil,
           date: '2017-01-04T00:00:00.000Z',
           reviewer: {
-            link: "http://www.example.com/members/#{members(:maximal).id}",
             name: 'Peter Molydeux',
             location: 'Twitter'
           },
@@ -334,7 +322,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: nil,
           date: '2017-01-03T00:00:00.000Z',
           reviewer: {
-            link: "http://www.example.com/members/#{members(:minimal).id}",
             name: 'Minny Malle',
             location: nil
           },
@@ -345,7 +332,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Not bad',
           date: '2016-02-23T00:00:00.000Z',
           reviewer: {
-            link: "http://www.example.com/members/#{members(:arthur).id}",
             name: 'Arthur Dent',
             location: 'Cottington, England, Earth'
           },
@@ -381,7 +367,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: review.summary,
           date: review.moddate,
           reviewer: {
-            link: review.reviewer.url,
             name: review.objects.reviewer.name,
             location: review.objects.reviewer.try(:location),
           },
@@ -398,7 +383,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Difficult',
           date: '2016-03-04T00:00:00.000Z',
           reviewer: {
-            link: "http://www.example.com/members/#{members(:trillian).id}",
             name: 'Tricia McMillan',
             location: nil
           },
@@ -409,7 +393,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Not bad',
           date: '2016-02-23T00:00:00.000Z',
           reviewer: {
-            link: "http://www.example.com/members/#{members(:arthur).id}",
             name: 'Arthur Dent',
             location: 'Cottington, England, Earth'
           },

@@ -11,7 +11,6 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       members: members.first(2).map do |member|
         {
           thumbnail: member.try(:thumbnail)&.url,
-          url: member.url,
           name: member.name,
           location: member.try(:location),
           since: member.since,
@@ -29,7 +28,6 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       members: [
         {
           thumbnail: nil,
-          url: "http://www.example.com/members/#{members(:minimal).id}",
           name: 'Minny Malle',
           location: nil,
           since: '2017-03-23T00:00:00.000Z',
@@ -37,7 +35,6 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
         },
         {
           thumbnail: 'http://ifdb.tads.org/showuser?id=lh77sr5f9w0ezc5z&pic&thumbnail=80x80',
-          url: "http://www.example.com/members/#{members(:maximal).id}",
           name: 'Peter Molydeux',
           location: 'Twitter',
           since: '2017-03-22T00:00:00.000Z',
@@ -56,7 +53,7 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the member profile page' do
-    member = ifdb.members[1].self(include: 'played-games,wishlist,not-interested').get
+    member = ifdb.members[1].self.get
     vals = {
       picture: member.picture.url,
       large_thumbnail: member.large_thumbnail.url,

@@ -6,6 +6,8 @@ class MemberResource < ApplicationResource
 
   def custom_links(options)
     links = super
+    includes = %w(played-games wishlist not-interested)
+    links['self'] = add_param(options[:serializer].link_builder.self_link(self), :include, includes.join(','))
     if _model.picture.present?
       links[:picture] = add_param(_model.picture, :ldesc)
       links[:thumbnail] = add_param(_model.picture, :thumbnail, '80x80')

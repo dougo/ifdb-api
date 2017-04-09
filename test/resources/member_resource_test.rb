@@ -12,9 +12,10 @@ class MemberResourceTest < ActiveSupport::TestCase
 
   test_has_many *%i(games played_games wishlist not_interested)
   
-  test 'picture and thumbnail links' do
+  test 'custom links' do
     subject._model.picture = 'http://example.com/showuser?pic'
-    links = subject.custom_links({})
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(MemberResource))
+    assert_equal 'include=played-games%2Cwishlist%2Cnot-interested', URI(links['self']).query
     assert_equal 'http://example.com/showuser?ldesc&pic', links[:picture]
     assert_equal 'http://example.com/showuser?pic&thumbnail=80x80', links[:thumbnail]
     assert_equal 'http://example.com/showuser?pic&thumbnail=250x250', links[:large_thumbnail]
@@ -22,7 +23,7 @@ class MemberResourceTest < ActiveSupport::TestCase
 
   test 'no picture or thumbnail links if blank' do
     subject._model.picture = ''
-    links = subject.custom_links({})
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(MemberResource))
     refute_includes links, :picture
     refute_includes links, :thumbnail
     refute_includes links, :large_thumbnail
@@ -30,7 +31,7 @@ class MemberResourceTest < ActiveSupport::TestCase
 
   test 'links when picture has no query' do
     subject._model.picture = 'http://example.com'
-    links = subject.custom_links({})
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(MemberResource))
     assert_equal 'http://example.com?ldesc', links[:picture]
     assert_equal 'http://example.com?thumbnail=80x80', links[:thumbnail]
     assert_equal 'http://example.com?thumbnail=250x250', links[:large_thumbnail]
