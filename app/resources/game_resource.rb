@@ -7,8 +7,11 @@ class GameResource < ApplicationResource
   has_one :editor, class_name: 'Member', foreign_key: :editedby
   has_many *%i(players wishlists download_links)
 
-  def custom_links(options = {})
+  def custom_links(options)
     links = super
+    includes = %w(author-profiles editorial-reviews.special-reviewer editorial-reviews.offsite-review
+                  editorial-reviews.reviewer member-reviews.reviewer download-links)
+    links['self'] = add_param(options[:serializer].link_builder.self_link(self), :include, includes.join(','))
     if _model.coverart.present?
       links[:coverart] = add_param(_model.coverart, :ldesc)
       links[:thumbnail] = add_param(_model.coverart, :thumbnail, '80x80')

@@ -20,28 +20,34 @@ class GameResourceTest < ActiveSupport::TestCase
     subject._model.coverart = 'http://example.com?coverart'
     subject._model.website = 'http://example.com'
     subject._model.bafsid = 123
-    assert_equal 'http://example.com?coverart&ldesc', subject.custom_links[:coverart]
-    assert_equal 'http://example.com?coverart&thumbnail=80x80', subject.custom_links[:thumbnail]
-    assert_equal 'http://example.com?coverart&thumbnail=175x175', subject.custom_links[:large_thumbnail]
-    assert_equal 'http://example.com', subject.custom_links[:website]
-    assert_equal 'http://www.wurb.com/if/game/123', subject.custom_links[:bafs_guide]
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(GameResource))
+    assert_equal 'include=author-profiles%2Ceditorial-reviews.special-reviewer%2C' +
+                 'editorial-reviews.offsite-review%2Ceditorial-reviews.reviewer%2C' +
+                 'member-reviews.reviewer%2Cdownload-links', URI(links['self']).query
+    assert_equal 'http://example.com?coverart&ldesc', links[:coverart]
+    assert_equal 'http://example.com?coverart&thumbnail=80x80', links[:thumbnail]
+    assert_equal 'http://example.com?coverart&thumbnail=175x175', links[:large_thumbnail]
+    assert_equal 'http://example.com', links[:website]
+    assert_equal 'http://www.wurb.com/if/game/123', links[:bafs_guide]
   end
 
   test 'custom links ignore blanks' do
     subject._model.coverart = ''
     subject._model.website = nil
-    refute_includes subject.custom_links, :coverart
-    refute_includes subject.custom_links, :thumbnail
-    refute_includes subject.custom_links, :large_thumbnail
-    refute_includes subject.custom_links, :website
-    refute_includes subject.custom_links, :bafs_guide
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(GameResource))
+    refute_includes links, :coverart
+    refute_includes links, :thumbnail
+    refute_includes links, :large_thumbnail
+    refute_includes links, :website
+    refute_includes links, :bafs_guide
   end
 
   test 'links when coverart has no query' do
     subject._model.coverart = 'http://example.com'
-    assert_equal 'http://example.com?ldesc', subject.custom_links[:coverart]
-    assert_equal 'http://example.com?thumbnail=80x80', subject.custom_links[:thumbnail]
-    assert_equal 'http://example.com?thumbnail=175x175', subject.custom_links[:large_thumbnail]
+    links = subject.custom_links(serializer: JSONAPI::ResourceSerializer.new(GameResource))
+    assert_equal 'http://example.com?ldesc', links[:coverart]
+    assert_equal 'http://example.com?thumbnail=80x80', links[:thumbnail]
+    assert_equal 'http://example.com?thumbnail=175x175', links[:large_thumbnail]
   end
 
   test 'ratings_meta' do

@@ -73,9 +73,9 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       # TODO: polls
       # TODO: reviews
       # TODO: page[size]=5 for these three play lists:
-      played_games: member.objects.played_games.map     { |g| { link: g.url, title: g.title, author: g.author } },
-      wishlist: member.objects.wishlist.map             { |g| { link: g.url, title: g.title, author: g.author } },
-      not_interested: member.objects.not_interested.map { |g| { link: g.url, title: g.title, author: g.author } },
+      played_games: member.objects.played_games.map     { |g| { title: g.title, author: g.author } },
+      wishlist: member.objects.wishlist.map             { |g| { title: g.title, author: g.author } },
+      not_interested: member.objects.not_interested.map { |g| { title: g.title, author: g.author } },
       # TODO: club memberships
     }
     expected = {
@@ -88,26 +88,22 @@ class FetchMembersTest < ActionDispatch::IntegrationTest
       public_email: 'petermolydeux@twitter.com',
       played_games: [
         {
-          link: "http://www.example.com/games/#{games(:maximal).id}",
           title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
           author: 'Dan Shiovitz and Emily Short'
         }
       ],
       wishlist: [
         {
-          link: "http://www.example.com/games/#{games(:zork).id}",
           title: 'Zork',
           author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling'
         },
         {
-          link: "http://www.example.com/games/#{games(:minimal).id}",
           title: 'The Minimalist',
           author: 'Mark Cook'
         }
       ],
       not_interested: [
         {
-          link: 'http://www.example.com/games/xyzzy',
           title: 'Adventure',
           author: 'Will Crowther'
         }

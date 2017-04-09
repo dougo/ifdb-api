@@ -11,7 +11,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       games: games.first(2).map do |game|
         {
           thumbnail: game.try(:thumbnail)&.url,
-          url: game.url,
           title: game.title,
           author: game.author,
           published_year: game.try(:published)&.to_date&.year,
@@ -29,7 +28,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       games: [
         {
           thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=fft6pu91j85y4acv&thumbnail=80x80',
-          url: 'http://www.example.com/games/xyzzy',
           title: 'Adventure',
           author: 'Will Crowther',
           published_year: nil,
@@ -37,7 +35,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
         },
         {
           thumbnail: nil,
-          url: "http://www.example.com/games/#{games(:zork).id}",
           title: 'Zork',
           author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling',
           published_year: 1979,
@@ -56,9 +53,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
 
   test 'fetch all data needed by the game details page' do
     # TODO: put these in the self URL on the server side?
-    includes = %w(author-profiles editorial-reviews.special-reviewer editorial-reviews.offsite-review
-                  editorial-reviews.reviewer member-reviews.reviewer download-links)
-    game = ifdb.games.last.data.last.self(include: includes).get
+    game = ifdb.games.last.data.last.self.get
     vals = {
       coverart: game.coverart.url,
       large_thumbnail: game.large_thumbnail.url,
