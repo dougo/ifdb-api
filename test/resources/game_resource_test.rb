@@ -55,8 +55,14 @@ class GameResourceTest < ActiveSupport::TestCase
 
   test 'records_for_editorial_reviews' do
     relation = subject.records_for_editorial_reviews
-    assert_equal 1, relation.order_values.length
+    assert_equal 2, relation.order_values.length
+
     order_value = relation.order_values.first
+    assert_kind_of Arel::Nodes::Ascending, order_value
+    assert_equal SpecialReviewer.table_name, order_value.expr.relation.name
+    assert_equal :displayrank, order_value.expr.name
+
+    order_value = relation.order_values.last
     assert_kind_of Arel::Nodes::Ascending, order_value
     assert_equal OffsiteReview.table_name, order_value.expr.relation.name
     assert_equal :displayorder, order_value.expr.name

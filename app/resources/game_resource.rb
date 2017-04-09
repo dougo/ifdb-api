@@ -20,7 +20,10 @@ class GameResource < ApplicationResource
   end
 
   def records_for_editorial_reviews
-    _model.editorial_reviews.left_outer_joins(:offsite_review).merge(OffsiteReview.reorder(:displayorder))
+    rel =_model.editorial_reviews.unscope(:order)
+    rel = rel.joins(:special_reviewer).merge(SpecialReviewer.order(:displayrank))
+    rel = rel.left_outer_joins(:offsite_review).merge(OffsiteReview.order(:displayorder))
+    rel
   end
 
   def ratings_meta(options)

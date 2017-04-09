@@ -88,3 +88,11 @@ maximal_bafs:
   special_reviewer: bafs
   createdate: 2004-09-15
   moddate: 2004-09-15
+
+maximal_author:
+  game: maximal
+  reviewer: maximal
+  special_reviewer: author
+  review: My best work.
+  createdate: 2005-01-01
+  moddate: 2005-01-01

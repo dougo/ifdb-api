@@ -57,7 +57,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the game details page' do
     # TODO: put these in the self URL on the server side?
     includes = %w(author-profiles editorial-reviews.special-reviewer editorial-reviews.offsite-review
-                  member-reviews.reviewer download-links)
+                  editorial-reviews.reviewer member-reviews.reviewer download-links)
     game = ifdb.games.last.data.last.self(include: includes).get
     vals = {
       coverart: game.coverart.url,
@@ -90,6 +90,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       editorial_reviews: game.objects.editorial_reviews.map do |review|
         special = review.objects.special_reviewer
         offsite = review.objects[:offsite_review] # TODO: should be .try(:offsite_review)
+        reviewer = review.objects[:reviewer]
         {
           special_reviewer: {
             display_rank: special.displayrank,
@@ -102,23 +103,31 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
                              source_name: offsite.sourcename,
                              full_review: offsite.full_review.url
                            } if offsite),
+          reviewer: ({
+                       link: reviewer.url,
+                       name: reviewer.name,
+                       location: reviewer.try(:location)
+                     } if reviewer),
           rating: review.try(:rating),
           summary: review.try(:summary),
           review: review.review
+          # TODO: comments_count
         }
       end,
       # TODO: tags
       # TODO: rating_histogram
       member_reviews_count: game.links.member_reviews.meta[:count],
       member_reviews: game.objects.member_reviews.map do |review|
+        reviewer = review.objects.reviewer
         {
           # TODO: votes
           rating: review.try(:rating),
           summary: review.summary,
           moddate: review.moddate.to_date.to_s,
           reviewer: {
-            name: review.objects.reviewer.name,
-            location: review.objects.reviewer.try(:location)
+            link: reviewer.url,
+            name: reviewer.name,
+            location: reviewer.try(:location)
           },
           # TODO: tags
           review: review.review
@@ -146,12 +155,14 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
       wishlists_count: game.wishlists.meta[:count]
     }
     max_id = games(:maximal).id
+    arthur_id = members(:arthur).id
+    trillian_id = members(:trillian).id
     expected = {
       coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
       large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
       title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
-      author_profiles: ["http://www.example.com/members/#{members(:arthur).id}",
-                        "http://www.example.com/members/#{members(:trillian).id}"],
+      author_profiles: ["http://www.example.com/members/#{arthur_id}",
+                        "http://www.example.com/members/#{trillian_id}"],
       author: 'Dan Shiovitz and Emily Short',
       episode: '1',
       series: 'Max Blaster',
@@ -182,6 +193,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             name: "Baf's Guide"
           },
           offsite_review: nil,
+          reviewer: nil,
           rating: nil,
           summary: nil,
           review: 'At the delcot of tondam, where doshes deave.'
@@ -198,6 +210,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             source_name: 'SPAG',
             full_review: 'http://www.spagmag.org/archives/m.html#max'
           },
+          reviewer: nil,
           rating: 3,
           summary: 'This is space opera, in sexy pants.',
           review: 'In the end the bugs wore me down and I come away from the game somewhat dissatisfied...',
@@ -214,11 +227,27 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
             source_name: 'Home of the Underdogs',
             full_review: 'http://homeoftheunderdogs.net/game.php?id=4473'
           },
+          reviewer: nil,
           rating: nil,
           summary: nil,
           review: 'Two thumbs up!'
+        },
+        {
+          special_reviewer: {
+            display_rank: 100,
+            code: 'author',
+            name: 'From the Author'
+          },
+          offsite_review: nil,
+          reviewer: {
+            link: "http://www.example.com/members/#{max_id}",
+            name: 'Peter Molydeux',
+            location: 'Twitter'
+          },
+          rating: nil,
+          summary: nil,
+          review: 'My best work.'
         }
-        # TODO: From the Author, sort by display_rank
       ],
       member_reviews_count: 2,
       member_reviews: [
@@ -227,6 +256,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Difficult',
           moddate: '2016-03-04',
           reviewer: {
+            link: "http://www.example.com/members/#{trillian_id}",
             name: 'Tricia McMillan',
             location: nil
           },
@@ -237,6 +267,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
           summary: 'Not bad',
           moddate: '2016-02-23',
           reviewer: {
+            link: "http://www.example.com/members/#{arthur_id}",
             name: 'Arthur Dent',
             location: 'Cottington, England, Earth'
           },
