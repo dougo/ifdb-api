@@ -12,6 +12,10 @@ class ClubResource < ApplicationResource
     links
   end
 
+  def membership_includes
+    %w(club member)
+  end
+
   def membership_meta(options)
     { count: _model.membership.size }
   end

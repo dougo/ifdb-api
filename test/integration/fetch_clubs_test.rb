@@ -56,7 +56,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
     prif_id = clubs(:prif).id
     # TODO: would this be more interesting with a second member?
     # TODO: fields[clubs]=name&fields[members]=name,location
-    memberships = ifdb.clubs.first.membership(include: %i(club member)).get
+    memberships = ifdb.clubs.first.membership.get
     club = memberships.first.objects.club
     vals = {
       club: { name: club.name, id: club.id },
@@ -100,7 +100,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch a club member profile via the membership' do
-    membership = ifdb.clubs(include: 'membership').first.objects.membership.first
+    membership = ifdb.clubs.first.membership.first
     assert_equal 'Arthur Dent', membership.links.member.get.name
   end
 end

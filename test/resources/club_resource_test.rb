@@ -28,6 +28,10 @@ class ClubResourceTest < ActiveSupport::TestCase
     refute_includes links, :website
   end
 
+  test 'membership_includes' do
+    assert_equal %w(club member), subject.membership_includes
+  end
+
   test 'membership_meta' do
     subject._model.membership.build([{}, {}])
     assert_equal({ count: 2 }, subject.membership_meta({}))
