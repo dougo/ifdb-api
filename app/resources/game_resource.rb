@@ -29,12 +29,20 @@ class GameResource < ApplicationResource
     rel
   end
 
+  def ratings_includes
+    %w(game.author-profiles reviewer)
+  end
+
   def ratings_meta(options)
     { average: ratings_average, count: _model.ratings.size }
   end
 
   def ifids
     _model.ifids.map &:to_s
+  end
+
+  def member_reviews_includes
+    %w(game.author-profiles reviewer)
   end
 
   def member_reviews_meta(options)

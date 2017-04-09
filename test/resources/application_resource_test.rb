@@ -34,6 +34,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
 
     attr_reader :frobs_meta_options
 
+    def garply_includes
+      %w(sifl olly)
+    end
+
     def frobs_meta(options)
       @frobs_meta_options = options
       { count: frobs.size }
@@ -61,6 +65,12 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     test_extends JSONAPI::ResourceSerializer
 
     subject { self.class.described_type.new(TestResource, serialization_options: { foo: 42 }) }
+
+    test 'foo related link has include param if foo_includes is defined' do
+      resource = TestResource.new(TestModel.new, {})
+      link = subject.object_hash(resource)['relationships']['garply']['links']['related']
+      assert_equal 'include=sifl,olly', URI(link).query
+    end
 
     test 'foo related link includes meta if foo_meta is defined' do
       resource = TestResource.new(TestModel.new, {})

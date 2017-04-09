@@ -50,6 +50,10 @@ class GameResourceTest < ActiveSupport::TestCase
     assert_equal 'http://example.com?thumbnail=175x175', links[:large_thumbnail]
   end
 
+  test 'ratings_includes' do
+    assert_equal %w(game.author-profiles reviewer), subject.ratings_includes
+  end
+
   test 'ratings_meta' do
     subject = GameResource.new(games(:maximal), {})
     assert_equal({ average: 3.25, count: 4 }, subject.ratings_meta({}))
@@ -77,6 +81,10 @@ class GameResourceTest < ActiveSupport::TestCase
   test 'ifids' do
     subject._model.ifids.build([{ ifid: 'foo' }, { ifid: 'bar' }])
     assert_equal %w(foo bar), subject.ifids
+  end
+
+  test 'member_reviews_includes' do
+    assert_equal %w(game.author-profiles reviewer), subject.member_reviews_includes
   end
 
   test 'member_reviews_meta' do

@@ -5,6 +5,12 @@ class ReviewResourceTest < ActiveSupport::TestCase
 
   test_attributes %i(summary review rating createdate moddate embargodate)
 
+  test 'game relationship' do
+    rel = ReviewResource._relationship(:game)
+    assert_kind_of JSONAPI::Relationship::ToOne, rel
+    assert_equal :gameid, rel.foreign_key
+  end
+
   test 'reviewer relationship' do
     rel = ReviewResource._relationship(:reviewer)
     assert_kind_of JSONAPI::Relationship::ToOne, rel

@@ -52,21 +52,9 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data needed by the game details page' do
-    # TODO: put these in the self URL on the server side?
     game = ifdb.games.last.data.last.self.get
+    assert_maximal_game_summary game
     vals = {
-      coverart: game.coverart.url,
-      large_thumbnail: game.large_thumbnail.url,
-      title: game.title,
-      author_ids: game.objects.author_profiles.map(&:id),
-      author: game.author,
-      episode: game.seriesnumber,
-      series: game.seriesname,
-      genre: game.genre,
-      published_year: game.published.to_date.year,
-      website: game.website.url,
-      ratings_average: game.ratings.meta.average,
-      ratings_count: game.ratings.meta[:count],
       desc: game.desc,
       language: game.language,
       language_names: game.language_names,
@@ -148,18 +136,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     }
     max_id = games(:maximal).id
     expected = {
-      coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
-      large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
-      title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
-      author_ids: members(:arthur, :trillian).map(&:id),
-      author: 'Dan Shiovitz and Emily Short',
-      episode: '1',
-      series: 'Max Blaster',
-      genre: 'Superhero/Espionage/Humor/Science Fiction',
-      published_year: 2003,
-      website: 'http://example.com/max',
-      ratings_average: 3.25,
-      ratings_count: 4,
       desc: 'Someplace on Venus a secret weapon is being built that threatens Earth with total destruction. ' \
             "You and your comrade must penetrate the Xavian base and save the world -- before it's too late!",
       language: 'en-US, de, pt-BR',
@@ -285,11 +261,12 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   # TODO: whoselist page
 
   test 'fetch all data for the ratings page' do
-    game = ifdb.games.last.data.last.self(include: 'ratings.reviewer').get
+    reviews_and_ratings = ifdb.games.last.data.last.links.ratings.get
+    assert_maximal_game_summary reviews_and_ratings.first.objects.game
     vals = {
       # TODO: sort links?
       # TODO: pagination?
-      reviews_and_ratings: game.objects.ratings.map do |review|
+      reviews_and_ratings: reviews_and_ratings.map do |review|
         {
           # TODO: review votes
           rating: review.rating,
@@ -350,17 +327,13 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     assert_equal expected, vals
   end
 
-  test 'follow the ratings link' do
-    ratings = ifdb.games.last.data.last.ratings.get
-    assert_equal [3, 4, 3, 3], ratings.map(&:rating)
-  end
-
   test 'fetch all data for the member-reviews page' do
-    game = ifdb.games.last.data.last.self(include: 'member-reviews.reviewer').get
+    member_reviews = ifdb.games.last.data.last.links.member_reviews.get
+    assert_maximal_game_summary member_reviews.first.objects.game
     vals = {
       # TODO: sort links?
       # TODO: pagination?
-      member_reviews: game.objects.member_reviews.map do |review|
+      member_reviews: member_reviews.map do |review|
         {
           # TODO: review votes
           rating: review.try(:rating),
@@ -403,11 +376,6 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
     assert_equal expected, vals
   end
 
-  test 'follow the member-reviews link' do
-    reviews = ifdb.games.last.data.last.member_reviews.get
-    assert_equal ['Difficult', 'Not bad'], reviews.map(&:summary)
-  end
-
   # TODO: fetch review comments page
   # TODO: follow review comments link
 
@@ -429,5 +397,39 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   test 'fetch a game-link resource' do
     game_link = ifdb.games.last.data.last.download_links.first.self.get
     assert_equal 'parrots.t3', game_link.title
+  end
+
+  private
+
+  def assert_maximal_game_summary(game)
+    vals = {
+      coverart: game.coverart.url,
+      large_thumbnail: game.large_thumbnail.url,
+      title: game.title,
+      author_ids: game.objects.author_profiles.map(&:id),
+      author: game.author,
+      episode: game.seriesnumber,
+      series: game.seriesname,
+      genre: game.genre,
+      published_year: game.published.to_date.year,
+      website: game.website.url,
+      ratings_average: game.ratings.meta.average,
+      ratings_count: game.ratings.meta[:count]
+    }
+    expected = {
+      coverart: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&ldesc',
+      large_thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=38iqpon2ekeryjcs&thumbnail=175x175',
+      title: 'Max Blaster and Doris de Lightning Against the Parrot Creatures of Venus',
+      author_ids: members(:arthur, :trillian).map(&:id),
+      author: 'Dan Shiovitz and Emily Short',
+      episode: '1',
+      series: 'Max Blaster',
+      genre: 'Superhero/Espionage/Humor/Science Fiction',
+      published_year: 2003,
+      website: 'http://example.com/max',
+      ratings_average: 3.25,
+      ratings_count: 4,
+    }
+    assert_equal expected, vals
   end
 end
