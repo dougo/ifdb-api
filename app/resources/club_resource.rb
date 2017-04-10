@@ -16,6 +16,10 @@ class ClubResource < ApplicationResource
     %w(club member)
   end
 
+  def membership_fields
+    { clubs: %w(name), members: %w(name location) }
+  end
+
   def membership_meta(options)
     { count: _model.membership.size }
   end

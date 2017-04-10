@@ -8,7 +8,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the clubs index page' do
     clubs = ifdb.clubs
     # TODO: would this be more interesting with a second club?
-    club = clubs.first # TODO: fields[clubs]=...
+    club = clubs.first
     vals = {
       website: club.website.url,
       name: club.name,
@@ -24,8 +24,6 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
       desc: 'The Boston area IF meetup group.',
     }
     assert_equal expected, vals
-    assert_equal 'http://www.example.com/clubs?page%5Bnumber%5D=1&page%5Bsize%5D=20', clubs.last.url
-    assert_equal clubs.last.url, clubs.links[:first].url
   end
 
   test 'fetch all data needed by the club details page' do
@@ -55,7 +53,6 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
   test 'fetch all data needed by the club members page' do
     prif_id = clubs(:prif).id
     # TODO: would this be more interesting with a second member?
-    # TODO: fields[clubs]=name&fields[members]=name,location
     memberships = ifdb.clubs.first.membership.get
     club = memberships.first.objects.club
     vals = {
@@ -69,13 +66,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           location: member.location,
           joindate: membership.joindate
         }
-      end,
-      pages: {
-        first: memberships.links[:first].url,
-        prev: memberships.try(:prev)&.url,
-        next: memberships.try(:next)&.url,
-        last: memberships.last.url
-      }
+      end
     }
     base_url = "http://www.example.com/clubs/#{prif_id}"
     expected = {
@@ -88,13 +79,7 @@ class FetchClubsTest < ActionDispatch::IntegrationTest
           location: 'Cottington, England, Earth',
           joindate: '2015-03-15T12:00:00.000Z'
         }
-      ],
-      pages: {
-        first: base_url + '/membership?include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20',
-        prev: nil,
-        next: nil,
-        last:  base_url + '/membership?include=club%2Cmember&page%5Bnumber%5D=1&page%5Bsize%5D=20'
-      }
+      ]
     }
     assert_equal expected, vals
   end

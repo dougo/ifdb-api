@@ -23,6 +23,14 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_equal({ games: %w(title author published ratings) }, subject.games_fields)
   end
 
+  test 'members_fields' do
+    assert_equal({ members: %w(name location since profile-summary) }, subject.members_fields)
+  end
+
+  test 'clubs_fields' do
+    assert_equal({ clubs: %w(name listed membership desc) }, subject.clubs_fields)
+  end
+
   class DatabaseResource::SerializerTest < ActiveSupport::TestCase
     test_extends ApplicationResource::Serializer
 

@@ -32,6 +32,10 @@ class ClubResourceTest < ActiveSupport::TestCase
     assert_equal %w(club member), subject.membership_includes
   end
 
+  test 'membership_fields' do
+    assert_equal({ clubs: %w(name), members: %w(name location) }, subject.membership_fields)
+  end
+
   test 'membership_meta' do
     subject._model.membership.build([{}, {}])
     assert_equal({ count: 2 }, subject.membership_meta({}))

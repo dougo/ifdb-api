@@ -22,6 +22,14 @@ class DatabaseResource < ApplicationResource
     { games: %w(title author published ratings) }
   end
 
+  def members_fields
+    { members: %w(name location since profile-summary) }
+  end
+
+  def clubs_fields
+    { clubs: %w(name listed membership desc) }
+  end
+
   class Serializer < superclass::Serializer
     def link_object(source, relationship, include_linkage = false)
       hash = super
