@@ -26,6 +26,7 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     attributes :foo, :bar, :baz
     has_one :garply, class_name: 'Test'
     has_one :quux, class_name: 'Test'
+    has_one :vroom, class_name: 'Test', foreign_key_on: :related
     has_many :frobs, class_name: 'Test'
 
     def self.created_field
@@ -36,6 +37,10 @@ class ApplicationResourceTest < ActiveSupport::TestCase
 
     def garply_includes
       %w(sifl olly)
+    end
+
+    def vroom_fields
+      { widgets: %w(name count), sprockets: %w(size color) }
     end
 
     def frobs_meta(options)
@@ -50,7 +55,7 @@ class ApplicationResourceTest < ActiveSupport::TestCase
 
   test 'omits blank attributes but includes all relationships' do
     resource = TestResource.new(TestModel.new, {})
-    assert_same_elements %i(id bar garply quux frobs), resource.fetchable_fields
+    assert_same_elements %i(id bar garply quux vroom frobs), resource.fetchable_fields
   end
 
   test 'created_field' do
@@ -69,9 +74,15 @@ class ApplicationResourceTest < ActiveSupport::TestCase
     test 'foo related link has include param if foo_includes is defined' do
       resource = TestResource.new(TestModel.new, {})
       link = subject.object_hash(resource)['relationships']['garply']['links']['related']
-      assert_equal 'include=sifl,olly', URI(link).query
+      assert_equal 'include=sifl%2Colly', URI(link).query
     end
 
+    test 'foo related link has fields params if foo_fields is defined' do
+      resource = TestResource.new(TestModel.new, {})
+      link = subject.object_hash(resource)['relationships']['vroom']['links']['related']
+      assert_equal 'fields%5Bsprockets%5D=size%2Ccolor&fields%5Bwidgets%5D=name%2Ccount', URI(link).query
+    end
+    
     test 'foo related link includes meta if foo_meta is defined' do
       resource = TestResource.new(TestModel.new, {})
       expected = {

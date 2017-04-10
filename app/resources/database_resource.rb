@@ -18,6 +18,10 @@ class DatabaseResource < ApplicationResource
     new(nil, {})
   end
 
+  def games_fields
+    { games: %w(title author published ratings) }
+  end
+
   class Serializer < superclass::Serializer
     def link_object(source, relationship, include_linkage = false)
       hash = super

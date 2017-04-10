@@ -28,7 +28,11 @@ class ApplicationResource < JSONAPI::Resource
     def related_link(source, relationship)
       href = super
       includes = source.try("#{relationship.name}_includes")
-      href += "?include=#{includes.join(',')}" if includes
+      fields = source.try("#{relationship.name}_fields")
+      params = {}
+      params[:include] = includes.join(',') if includes
+      params[:fields] = fields.map { |k,v| [k,v.join(',')] }.to_h if fields
+      href += "?#{params.to_query}" if params.any?
       meta = source.try("#{relationship.name}_meta", custom_generation_options)
       if meta
         { href: href, meta: meta }

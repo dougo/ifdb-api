@@ -7,52 +7,40 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
 
   test 'fetch all data needed by the games index page' do
     games = ifdb.games.get
-    vals = {
-      games: games.first(2).map do |game|
-        {
-          thumbnail: game.try(:thumbnail)&.url,
-          title: game.title,
-          author: game.author,
-          published_year: game.try(:published)&.to_date&.year,
-          ratings_average: game.ratings.meta.average
-        }
-      end,
-      pages: {
-        first: games.links[:first].url,
-        prev: games.try(:prev)&.url,
-        next: games.try(:next)&.url,
-        last: games.last.url
+    vals = games.first(2).map do |game|
+      {
+        thumbnail: game.try(:thumbnail)&.url,
+        title: game.title,
+        author: game.author,
+        published_year: game.try(:published)&.to_date&.year,
+        ratings_average: game.ratings.meta.average
       }
-    }
-    expected = {
-      games: [
-        {
-          thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=fft6pu91j85y4acv&thumbnail=80x80',
-          title: 'Adventure',
-          author: 'Will Crowther',
-          published_year: nil,
-          ratings_average: nil
-        },
-        {
-          thumbnail: nil,
-          title: 'Zork',
-          author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling',
-          published_year: 1979,
-          ratings_average: 3.6666666666666665
-        }
-      ],
-      pages: {
-        first: 'http://www.example.com/games?page%5Bnumber%5D=1&page%5Bsize%5D=20',
-        prev: nil,
-        next: 'http://www.example.com/games?page%5Bnumber%5D=2&page%5Bsize%5D=20',
-        last: 'http://www.example.com/games?page%5Bnumber%5D=6&page%5Bsize%5D=20'
+    end
+    expected = [
+      {
+        thumbnail: 'http://ifdb.tads.org/viewgame?coverart&id=fft6pu91j85y4acv&thumbnail=80x80',
+        title: 'Adventure',
+        author: 'Will Crowther',
+        published_year: nil,
+        ratings_average: nil
+      },
+      {
+        thumbnail: nil,
+        title: 'Zork',
+        author: 'Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling',
+        published_year: 1979,
+        ratings_average: 3.6666666666666665
       }
-    }
+    ]
     assert_equal expected, vals
   end
 
+  # TODO: pagination
+  # TODO: sorting
+  # TODO: filter/search?
+
   test 'fetch all data needed by the game details page' do
-    game = ifdb.games.last.data.last.self.get
+    game = ifdb.games.last.data.last.get
     assert_maximal_game_summary game
     vals = {
       desc: game.desc,
@@ -328,7 +316,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'fetch all data for the member-reviews page' do
-    member_reviews = ifdb.games.last.data.last.links.member_reviews.get
+    member_reviews = ifdb.games.last.data.last.get.links.member_reviews.get
     assert_maximal_game_summary member_reviews.first.objects.game
     vals = {
       # TODO: sort links?
@@ -380,7 +368,7 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   # TODO: follow review comments link
 
   test 'fetch a review resource' do
-    review = ifdb.games.last.data.last.ratings.first.self.get
+    review = ifdb.games.last.data.last.ratings.first.get
     assert_equal 3, review.rating
   end
 
@@ -390,12 +378,12 @@ class FetchGamesTest < ActionDispatch::IntegrationTest
   end
 
   test 'follow the download-links link' do
-    game_links = ifdb.games.last.data.last.download_links.get
+    game_links = ifdb.games.last.data.last.get.links.download_links.get
     assert_equal ['parrots.t3', 'README.txt'], game_links.map(&:title)
   end
 
   test 'fetch a game-link resource' do
-    game_link = ifdb.games.last.data.last.download_links.first.self.get
+    game_link = ifdb.games.last.data.last.get.links.download_links.first.get
     assert_equal 'parrots.t3', game_link.title
   end
 

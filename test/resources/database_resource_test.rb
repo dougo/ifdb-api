@@ -19,6 +19,10 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_kind_of self.class.described_type, self.class.described_type.find_by_key(nil, {})
   end
 
+  test 'games_fields' do
+    assert_equal({ games: %w(title author published ratings) }, subject.games_fields)
+  end
+
   class DatabaseResource::SerializerTest < ActiveSupport::TestCase
     test_extends ApplicationResource::Serializer
 
