@@ -3,6 +3,10 @@ require 'test_helper'
 class CompetitionTest < ActiveSupport::TestCase
   test_extends ApplicationRecord
 
+  should have_db_column(:title).of_type(:text)
+  should have_db_column(:awarddate).of_type(:date)
+  should have_db_column(:desc).of_type(:text)
+
   should have_many(:news).class_name('NewsItem').with_foreign_key(:sourceid)
     # .as(:newsworthy).with_foreign_type(:source)
   should have_many(:divisions).with_foreign_key(:compid)

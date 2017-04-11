@@ -9,7 +9,7 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_nil self.class.described_type._model_class
   end
 
-  test_has_many *%i(games members clubs)
+  test_has_many *%i(games competitions clubs members)
 
   test 'id' do
     assert_equal 'ifdb', subject.id
@@ -23,12 +23,16 @@ class DatabaseResourceTest < ActiveSupport::TestCase
     assert_equal({ games: %w(title author published ratings) }, subject.games_fields)
   end
 
-  test 'members_fields' do
-    assert_equal({ members: %w(name location since profile-summary) }, subject.members_fields)
+  test 'competitions_fields' do
+    assert_equal({ competitions: %w(title awarddate desc-summary) }, subject.competitions_fields)
   end
 
   test 'clubs_fields' do
     assert_equal({ clubs: %w(name listed membership desc) }, subject.clubs_fields)
+  end
+
+  test 'members_fields' do
+    assert_equal({ members: %w(name location since profile-summary) }, subject.members_fields)
   end
 
   class DatabaseResource::SerializerTest < ActiveSupport::TestCase

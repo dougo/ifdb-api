@@ -28,6 +28,10 @@ class RoutesConfigTest < ActionDispatch::IntegrationTest
     assert_routing game_link_path('xyzzy-0'), controller: 'game_links', action: 'show', id: 'xyzzy-0'
   end
 
+  test 'competitions' do
+    assert_routing competitions_path, controller: 'competitions', action: 'index'
+  end
+
   test 'members' do
     assert_routing members_path, controller: 'members', action: 'index'
     assert_routing member_path('xyzzy'), controller: 'members', action: 'show', id: 'xyzzy'

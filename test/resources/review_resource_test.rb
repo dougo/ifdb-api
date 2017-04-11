@@ -28,8 +28,8 @@ class ReviewResourceTest < ActiveSupport::TestCase
     assert_kind_of JSONAPI::Relationship::ToOne, rel
     assert_equal :related, rel.foreign_key_on
   end
-  
-  test 'created_field' do
-    assert_equal :moddate, ReviewResource.created_field
+
+  test 'default_sort' do
+    assert_equal [{ field: :moddate, direction: :desc }], self.class.described_type.default_sort
   end
 end

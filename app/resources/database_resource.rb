@@ -4,7 +4,7 @@ class DatabaseResource < ApplicationResource
     nil
   end
 
-  has_many *%i(games members clubs)
+  has_many *%i(games competitions clubs members)
 
   def initialize(*args)
     super(nil, {})
@@ -22,12 +22,16 @@ class DatabaseResource < ApplicationResource
     { games: %w(title author published ratings) }
   end
 
-  def members_fields
-    { members: %w(name location since profile-summary) }
+  def competitions_fields
+    { competitions: %w(title awarddate desc-summary) }
   end
 
   def clubs_fields
     { clubs: %w(name listed membership desc) }
+  end
+
+  def members_fields
+    { members: %w(name location since profile-summary) }
   end
 
   class Serializer < superclass::Serializer

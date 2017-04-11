@@ -1,0 +1,24 @@
+maximal:
+  title: IFComp 2112
+  series: IFComp
+  awarddate: 2112-11-17
+  desc: The annual competition for original IF with a maximum playing time of 2 hours.
+  created: 2017-09-01
+  moddate: 2017-09-01
+  editor: maximal
+  pagevsn: 1
+
+minimal:
+  title: SpeedIF 2000
+  created: 2000-01-01
+  moddate: 2000-01-01
+  editor: minimal
+  pagevsn: 1
+
+ectocomp:
+  title: EctoComp 2012
+  awarddate: 2012-11-21
+  created: 2017-10-31
+  moddate: 2017-10-31
+  editor: maximal
+  pagevsn: 1

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   jsonapi_resources :games
   jsonapi_resources :reviews, except: :index
   jsonapi_resources :game_links, except: :index
+  jsonapi_resources :competitions, only: :index
   jsonapi_resources :members
   jsonapi_resources :club_memberships, except: :index
   jsonapi_resources :clubs
